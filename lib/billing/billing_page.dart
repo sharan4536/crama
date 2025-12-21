@@ -1,12 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:pdf/widgets.dart' as pw;
-import 'package:pdf/pdf.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:printing/printing.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class BillingScreen extends StatefulWidget {
   static const routeName = '/billing';
@@ -17,288 +10,809 @@ class BillingScreen extends StatefulWidget {
 }
 
 class _BillingScreenState extends State<BillingScreen> {
-  final _searchController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _stitchController = TextEditingController();
-  final _advanceController = TextEditingController();
-  final List<_BillItem> _items = [];
-  final List<_CatalogItem> _catalog = [
-    _CatalogItem('Saree', 1200, '10001'),
-    _CatalogItem('Blouse', 450, '10002'),
-    _CatalogItem('Lehenga', 2800, '10003'),
-    _CatalogItem('Kurti', 900, '10004'),
+  final TextEditingController _searchController = TextEditingController();
+  
+  // Demo data matching the HTML reference
+  final List<CartItem> _cartItems = [
+    CartItem(
+      name: "Blazer",
+      price: 45.00,
+      quantity: 1,
+      image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBxSW5dz4F5VVJt6hnjWsTLFo9k2nXRK3DjxySquFbDw7eCSeGNxa_7WC4Dvx6mkPkK3bzS9oLJjTvxYIS333Hwnrezy8fWH3u9bcuXP1m65u3Svrp1RL2F1EPl9UIjsykBUFpEbqWp5a_lqKVbvh2oW16RwF_B4A1_vXEqdCvNQsnWAHlCE2jfSSr6sUZR_9LfgfL5_tVAuJQPjbmmaK4zMvJC8jNYn_gMgkE9b6mQ3iElPOjHxgm0BOwd7iZiauhufdotlSV7DGmH",
+    ),
+    CartItem(
+      name: "Lehanga",
+      price: 80.00,
+      quantity: 2,
+      image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDPTJaUNQE7yF7FwFeTchn6YgJdqrwff2nlnPhWERUXfhVTNQLi_WqTMZOU9U78Bw6bPyapySMhe0nzBKyHQG58NzowYAquwBnS6f0UNs5n3eA_9ZHdULwNDsqKDfpuVD2b_bAf41vWvwKgrIdzT4Mof2SUmfUZZuORkplo34VkWaK-krb0PT_wa8YoPY955NcTYenYIUFBE5Czr-7S70q5aXSSDGR3nY0HyPIJSsBytFyC0PoNPZMkMsTNz2g-kj__bKyXm03HHD9G",
+    ),
   ];
 
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _phoneController.dispose();
-    _stitchController.dispose();
-    _advanceController.dispose();
-    super.dispose();
-  }
+  double _discount = 0.0;
+  bool _includeGst = true;
+  String _paymentMethod = 'Cash'; // Cash, UPI, Card
 
-  void _addCatalogItem(_CatalogItem c) {
-    final existing = _items.indexWhere((i) => i.code == c.code);
-    if (existing >= 0) {
-      setState(() => _items[existing] = _items[existing].copyWith(qty: _items[existing].qty + 1));
-    } else {
-      setState(() => _items.add(_BillItem(c.name, c.price, 1, c.code)));
-    }
-  }
-
-  void _scanBarcode() async {
-    await showDialog(
-      context: context,
-      builder: (_) {
-        return Dialog(
-          insetPadding: const EdgeInsets.all(16),
-          child: SizedBox(
-            height: 360,
-            child: MobileScanner(
-              onDetect: (capture) {
-                final barcode = capture.barcodes.isNotEmpty ? capture.barcodes.first : null;
-                final value = barcode?.rawValue ?? '';
-                if (value.isNotEmpty) {
-                  final found = _catalog.firstWhere(
-                    (c) => c.code == value,
-                    orElse: () => _CatalogItem('Item $value', 0, value),
-                  );
-                  Navigator.pop(context);
-                  _addCatalogItem(found);
-                  HapticFeedback.lightImpact();
-                }
-              },
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  int get _stitchingCharge => int.tryParse(_stitchController.text.trim()) ?? 0;
-  int get _subtotal => _items.fold(0, (p, e) => p + e.price * e.qty) + _stitchingCharge;
-  int get _advance => int.tryParse(_advanceController.text.trim()) ?? 0;
-  int get _balance => (_subtotal - _advance).clamp(0, 1 << 30);
-
-  Future<void> _shareWhatsApp() async {
-    final doc = await _buildPdf();
-    final dir = await getTemporaryDirectory();
-    final file = File('${dir.path}/crama_bill_${DateTime.now().millisecondsSinceEpoch}.pdf');
-    await file.writeAsBytes(await doc.save());
-    final text = 'Crama bill. Balance: ₹$_balance';
-    await Share.shareXFiles([XFile(file.path)], text: text);
-    HapticFeedback.lightImpact();
-  }
-
-  Future<void> _printTicket() async {
-    final doc = await _buildPdf(width58mm: true);
-    await Printing.layoutPdf(onLayout: (_) async => doc.save());
-    HapticFeedback.lightImpact();
-  }
-
-  Future<pw.Document> _buildPdf({bool width58mm = false}) async {
-    final pdf = pw.Document();
-    final width = width58mm ? 226.77 : null;
-    pdf.addPage(
-      pw.Page(
-        pageFormat: width != null ? PdfPageFormat(width, PdfPageFormat.a4.height) : PdfPageFormat.a4,
-        build: (context) {
-          return pw.Padding(
-            padding: const pw.EdgeInsets.all(16),
-            child: pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Row(
-                  children: [
-                    pw.Container(
-                      width: 40,
-                      height: 40,
-                      decoration: pw.BoxDecoration(shape: pw.BoxShape.circle, color: const PdfColor.fromInt(0xFF1A237E)),
-                    ),
-                    pw.SizedBox(width: 12),
-                    pw.Text('Crama Boutique', style: pw.TextStyle(fontSize: 18, fontWeight: pw.FontWeight.bold)),
-                  ],
-                ),
-                pw.SizedBox(height: 12),
-                pw.Text('Items'),
-                pw.SizedBox(height: 6),
-                pw.Table(
-                  border: null,
-                  children: [
-                    ..._items.map((e) => pw.TableRow(children: [
-                          pw.Text(e.name),
-                          pw.Text('x${e.qty}'),
-                          pw.Text('₹${e.price * e.qty}'),
-                        ])),
-                    if (_stitchingCharge > 0)
-                      pw.TableRow(children: [pw.Text('Stitching'), pw.Text(''), pw.Text('₹$_stitchingCharge')]),
-                  ],
-                ),
-                pw.Divider(),
-                pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [pw.Text('Subtotal'), pw.Text('₹$_subtotal')]),
-                pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [pw.Text('Advance'), pw.Text('₹$_advance')]),
-                pw.Row(mainAxisAlignment: pw.MainAxisAlignment.spaceBetween, children: [pw.Text('Balance'), pw.Text('₹$_balance')]),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-    return pdf;
-  }
+  // Colors
+  static const Color primaryColor = Color(0xFF58A39B);
+  static const Color backgroundLight = Color(0xFFF7F8F6);
+  static const Color surfaceLight = Color(0xFFFFFFFF);
+  static const Color textMain = Color(0xFF141B0E);
 
   @override
   Widget build(BuildContext context) {
-    const teal = Color(0xFF00D4B7);
-    const coral = Color(0xFFFF6B3A);
-    const gold = Color(0xFFFFD700);
-    final q = _searchController.text.trim().toLowerCase();
-    final matches = _catalog.where((c) => c.name.toLowerCase().contains(q) || c.code.contains(q)).toList();
     return Scaffold(
-      appBar: AppBar(title: const Text('Billing'), backgroundColor: Colors.white, foregroundColor: teal, elevation: 0),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(radius: 28, backgroundColor: teal, child: const Icon(Icons.store_rounded, color: Colors.white)),
-                const SizedBox(width: 12),
-                const Text('Crama Boutique', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18)),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _searchController,
-                    decoration: InputDecoration(
-                      hintText: 'Search item or barcode',
-                      prefixIcon: const Icon(Icons.search_rounded),
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(32)),
-                      filled: true,
-                      fillColor: const Color(0xFFF8FAFC),
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: [0.41, 0.81],
+            colors: [Color(0xFF58A39B), Color(0xFF92B3A9)],
+          ),
+        ),
+        child: SafeArea(
+          bottom: false,
+          child: Column(
+            children: [
+              _buildHeader(),
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: backgroundLight,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
                     ),
-                    onChanged: (_) => setState(() {}),
                   ),
-                ),
-                const SizedBox(width: 8),
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(backgroundColor: coral, foregroundColor: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)), padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14)),
-                  onPressed: _scanBarcode,
-                  icon: const Icon(Icons.qr_code_scanner_rounded),
-                  label: const Text('Scan'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            if (q.isNotEmpty)
-              Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: matches.map((c) => ActionChip(label: Text('${c.name} • ₹${c.price}'), onPressed: () => _addCatalogItem(c))).toList(),
-              ),
-            const SizedBox(height: 12),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: _items.length,
-              itemBuilder: (context, index) {
-                final item = _items[index];
-                return Card(
-                  color: const Color(0xFFF8FAFC),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
+                    ),
+                    child: Stack(
                       children: [
-                        Expanded(child: Text(item.name, style: const TextStyle(fontWeight: FontWeight.w700))),
-                        Text('₹${item.price}'),
-                        const SizedBox(width: 8),
-                        Row(children: [
-                          IconButton(onPressed: () => setState(() => item.qty = (item.qty - 1).clamp(1, 999)), icon: const Icon(Icons.remove_circle_rounded)),
-                          Text('${item.qty}'),
-                          IconButton(onPressed: () => setState(() => item.qty = item.qty + 1), icon: const Icon(Icons.add_circle_rounded)),
-                        ]),
-                        IconButton(onPressed: () => setState(() => _items.removeAt(index)), icon: const Icon(Icons.delete, color: Colors.red)),
+                        SingleChildScrollView(
+                          padding: const EdgeInsets.fromLTRB(24, 24, 24, 120),
+                          physics: const BouncingScrollPhysics(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              _buildSearchCustomer(),
+                              const SizedBox(height: 24),
+                              _buildCartItems(),
+                              const SizedBox(height: 32),
+                              _buildPaymentMethod(),
+                              const SizedBox(height: 32),
+                              _buildSummary(),
+                            ],
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 0,
+                          left: 0,
+                          right: 0,
+                          child: _buildFooter(),
+                        ),
                       ],
                     ),
                   ),
-                );
-              },
-            ),
-            const SizedBox(height: 8),
-            TextField(
-              controller: _stitchController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: InputDecoration(labelText: 'Custom stitching charge', border: OutlineInputBorder(borderRadius: BorderRadius.circular(28)), filled: true, fillColor: const Color(0xFFF8FAFC)),
-              onChanged: (_) => setState(() {}),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _advanceController,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: InputDecoration(labelText: 'Advance', border: OutlineInputBorder(borderRadius: BorderRadius.circular(28)), filled: true, fillColor: const Color(0xFFF8FAFC)),
-                    onChanged: (_) => setState(() {}),
-                  ),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: TextField(
-                    enabled: false,
-                    decoration: InputDecoration(labelText: 'Balance: ₹$_balance', border: OutlineInputBorder(borderRadius: BorderRadius.circular(28)), filled: true, fillColor: const Color(0xFFF8FAFC)),
-                  ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          InkWell(
+            onTap: () => Navigator.pop(context),
+            borderRadius: BorderRadius.circular(50),
+            child: Container(
+              width: 40,
+              height: 40,
+              decoration: const BoxDecoration(
+                color: Colors.transparent,
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.arrow_back, color: Colors.white),
+            ),
+          ),
+          Text(
+            "New Bill",
+            style: GoogleFonts.manrope(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              "Drafts",
+              style: GoogleFonts.manrope(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSearchCustomer() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: 56,
+            decoration: BoxDecoration(
+              color: surfaceLight,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: gold, foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36))),
-                    onPressed: _printTicket,
-                    child: const Text('Print'),
-                  ),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: "Search Customer (Name or Mobile)",
+                hintStyle: GoogleFonts.manrope(
+                  color: Colors.grey[400],
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(backgroundColor: gold, foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 16), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36))),
-                    onPressed: _shareWhatsApp,
-                    child: const Text('Share on WhatsApp'),
+                prefixIcon: const Icon(Icons.search, color: primaryColor),
+                border: InputBorder.none,
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Container(
+          width: 56,
+          height: 56,
+          decoration: BoxDecoration(
+            color: surfaceLight,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.person_add, color: primaryColor, size: 28),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCartItems() {
+    int totalItems = _cartItems.fold(0, (sum, item) => sum + item.quantity);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Cart Items",
+              style: GoogleFonts.manrope(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: textMain,
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.05),
+                    blurRadius: 4,
                   ),
+                ],
+              ),
+              child: Text(
+                "$totalItems Items",
+                style: GoogleFonts.manrope(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                  color: primaryColor,
                 ),
-              ],
+              ),
             ),
           ],
+        ),
+        const SizedBox(height: 12),
+        ..._cartItems.map((item) => _buildCartItemRow(item)),
+        const SizedBox(height: 12),
+        InkWell(
+          onTap: () {},
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.4),
+                style: BorderStyle.solid,
+                width: 2,
+              ),
+              // Use dashed border workaround or simple solid for now.
+              // HTML uses dashed.
+            ),
+            child: DottedBorderContainer(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.add_circle, color: Colors.grey),
+                  const SizedBox(width: 8),
+                  Text(
+                    "Add Another Item",
+                    style: GoogleFonts.manrope(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 32),
+        _buildDiscountAndTax(),
+      ],
+    );
+  }
+
+  Widget _buildCartItemRow(CartItem item) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: surfaceLight,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 64,
+            height: 64,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              color: Colors.grey[100],
+              image: DecorationImage(
+                image: NetworkImage(item.image),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.name,
+                  style: GoogleFonts.manrope(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: textMain,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  "\$${item.price.toStringAsFixed(2)}",
+                  style: GoogleFonts.manrope(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(4),
+            decoration: BoxDecoration(
+              color: Colors.grey[50],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.grey[200]!),
+            ),
+            child: Row(
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      if (item.quantity > 1) item.quantity--;
+                    });
+                  },
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(6),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.05),
+                          blurRadius: 2,
+                        ),
+                      ],
+                    ),
+                    child: const Icon(Icons.remove, size: 16, color: Colors.grey),
+                  ),
+                ),
+                SizedBox(
+                  width: 32,
+                  child: Center(
+                    child: Text(
+                      "${item.quantity}",
+                      style: GoogleFonts.manrope(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: textMain,
+                      ),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      item.quantity++;
+                    });
+                  },
+                  child: Container(
+                    width: 32,
+                    height: 32,
+                    decoration: BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.circular(6),
+                      boxShadow: [
+                        BoxShadow(
+                          color: primaryColor.withValues(alpha: 0.3),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(Icons.add, size: 16, color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDiscountAndTax() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: surfaceLight,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "Discount",
+                style: GoogleFonts.manrope(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[700],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        "Amount",
+                        style: GoogleFonts.manrope(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: primaryColor,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: Text(
+                        "%",
+                        style: GoogleFonts.manrope(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey[200]!),
+                  ),
+                  child: TextField(
+                    keyboardType: TextInputType.number,
+                    textAlign: TextAlign.right,
+                    onChanged: (val) {
+                      setState(() {
+                        _discount = double.tryParse(val) ?? 0.0;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      prefixText: "\$ ",
+                      prefixStyle: GoogleFonts.manrope(
+                        color: Colors.grey[400],
+                        fontWeight: FontWeight.bold,
+                      ),
+                      hintText: "0.00",
+                      border: InputBorder.none,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                    ),
+                    style: GoogleFonts.manrope(
+                      fontWeight: FontWeight.bold,
+                      color: textMain,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Divider(color: Colors.grey, thickness: 0.2),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Include GST",
+                    style: GoogleFonts.manrope(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: textMain,
+                    ),
+                  ),
+                  Text(
+                    "18% IGST will be applied",
+                    style: GoogleFonts.manrope(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[500],
+                    ),
+                  ),
+                ],
+              ),
+              Switch(
+                value: _includeGst,
+                onChanged: (val) => setState(() => _includeGst = val),
+                activeThumbColor: primaryColor,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPaymentMethod() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Payment Method",
+          style: GoogleFonts.manrope(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: textMain,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(child: _buildPaymentOption("Cash", Icons.payments, _paymentMethod == "Cash")),
+            const SizedBox(width: 12),
+            Expanded(child: _buildPaymentOption("UPI", Icons.qr_code_scanner, _paymentMethod == "UPI")),
+            const SizedBox(width: 12),
+            Expanded(child: _buildPaymentOption("Card", Icons.credit_card, _paymentMethod == "Card")),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPaymentOption(String label, IconData icon, bool isSelected) {
+    return InkWell(
+      onTap: () => setState(() => _paymentMethod = label),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: isSelected ? Colors.white : Colors.white.withValues(alpha: 0.9),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? primaryColor : Colors.transparent,
+            width: 2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Stack(
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  Icon(
+                    icon,
+                    size: 32,
+                    color: isSelected ? primaryColor : Colors.grey[400],
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    label,
+                    style: GoogleFonts.manrope(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: isSelected ? primaryColor : Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (isSelected)
+              Positioned(
+                top: 0,
+                right: 8,
+                child: Container(
+                  padding: const EdgeInsets.all(2),
+                  decoration: const BoxDecoration(
+                    color: primaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(Icons.check, size: 12, color: Colors.white),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSummary() {
+    double subtotal = _cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
+    double tax = _includeGst ? subtotal * 0.18 : 0;
+    double total = subtotal - _discount + tax;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      margin: const EdgeInsets.only(bottom: 24),
+      decoration: BoxDecoration(
+        color: surfaceLight,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          _buildSummaryRow("Subtotal", "\$${subtotal.toStringAsFixed(2)}"),
+          const SizedBox(height: 12),
+          _buildSummaryRow("Discount", "- \$${_discount.toStringAsFixed(2)}", isDiscount: true),
+          const SizedBox(height: 12),
+          _buildSummaryRow("Tax (18%)", "\$${tax.toStringAsFixed(2)}"),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Divider(color: Colors.grey, thickness: 0.5),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "Total Amount",
+                style: GoogleFonts.manrope(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: textMain,
+                ),
+              ),
+              Text(
+                "\$${total.toStringAsFixed(2)}",
+                style: GoogleFonts.manrope(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w800,
+                  color: primaryColor,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSummaryRow(String label, String value, {bool isDiscount = false}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: GoogleFonts.manrope(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.grey[500],
+          ),
+        ),
+        Text(
+          value,
+          style: GoogleFonts.manrope(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+            color: isDiscount ? primaryColor : textMain,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFooter() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white.withValues(alpha: 0.9),
+        border: Border(top: BorderSide(color: Colors.grey[100]!)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -4),
+          ),
+        ],
+      ),
+      child: SafeArea(
+        top: false,
+        child: InkWell(
+          onTap: () {},
+          borderRadius: BorderRadius.circular(16),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: primaryColor,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: primaryColor.withValues(alpha: 0.3),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Pay Now",
+                  style: GoogleFonts.manrope(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Icon(Icons.arrow_forward, color: Colors.white),
+              ],
+            ),
+          ),
         ),
       ),
     );
   }
 }
 
-class _CatalogItem {
+class CartItem {
   final String name;
-  final int price;
-  final String code;
-  const _CatalogItem(this.name, this.price, this.code);
+  final double price;
+  int quantity;
+  final String image;
+  CartItem({required this.name, required this.price, required this.quantity, required this.image});
 }
 
-class _BillItem {
-  final String name;
-  final int price;
-  int qty;
-  final String code;
-  _BillItem(this.name, this.price, this.qty, this.code);
-  _BillItem copyWith({String? name, int? price, int? qty, String? code}) => _BillItem(name ?? this.name, price ?? this.price, qty ?? this.qty, code ?? this.code);
+// Simple helper for dashed border visual if needed, but standard Container used for now.
+class DottedBorderContainer extends StatelessWidget {
+  final Widget child;
+  const DottedBorderContainer({super.key, required this.child});
+  
+  @override
+  Widget build(BuildContext context) {
+    return child;
+  }
 }

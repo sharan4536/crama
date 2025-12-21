@@ -10,7 +10,7 @@ import 'screens/auth/registration.dart';
 import 'screens/auth/otp.dart';
 import 'screens/customers/add_customer.dart';
 import 'screens/orders/order_tracking.dart';
-import 'screens/billing/billing_page.dart';
+import 'package:crama/billing/billing_page.dart';
 import 'screens/settings.dart';
 
 void main() {
@@ -56,11 +56,11 @@ class MyApp extends StatelessWidget {
           titleLarge: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: teal),
           bodyMedium: GoogleFonts.poppins(color: Colors.black87),
         ),
-        cardTheme: CardTheme(
-          color: lightGray,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
-          elevation: 0,
-        ),
+        // cardTheme: CardTheme(
+        //   color: lightGray,
+        //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
+        //   elevation: 0,
+        // ),
       ),
       onGenerateRoute: (settings) {
         if (settings.name == OnboardingScreen.routeName) {
@@ -120,7 +120,7 @@ class MyApp extends StatelessWidget {
         }
         return MaterialPageRoute(builder: (_) => const SplashScreen());
       },
-      home: const SplashScreen(),
+      home: const LoginScreen(),
     );
   }
 }

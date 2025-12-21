@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Verify OTP</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#58A39B",
+                        "primary-dark": "#46827b",
+                        "background-light": "#f7f8f6",
+                        "background-dark": "#192111",
+                        "text-main": "#141b0e",
+                        "text-muted": "#6b7a60", 
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+        .custom-gradient {
+            background: linear-gradient(180deg, #58A39B 41%, #92B3A9 81%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="custom-gradient font-display text-text-main antialiased transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full max-w-md mx-auto flex-col overflow-hidden custom-gradient">
+<header class="flex items-center px-4 py-3 justify-between sticky top-0 z-10">
+<button aria-label="Go back" class="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-black/10 transition-colors">
+<span class="material-symbols-outlined text-white" style="font-size: 24px;">arrow_back_ios_new</span>
+</button>
+<h1 class="text-white text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">
+                Verify OTP
+            </h1>
+</header>
+<main class="flex-1 flex flex-col items-center pt-8 px-6 bg-white rounded-t-[32px] mt-6 shadow-2xl">
+<div class="w-full text-center mb-10 mt-4">
+<div class="mb-6 flex justify-center">
+<div class="size-20 rounded-full bg-[#58A39B]/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-[#58A39B]" style="font-size: 40px;">sms</span>
+</div>
+</div>
+<h2 class="text-2xl font-bold text-text-main mb-3">Verification Code</h2>
+<p class="text-text-muted text-base font-medium leading-relaxed max-w-[280px] mx-auto">
+                    Enter the 6-digit code sent to your mobile number
+                </p>
+<p class="text-text-main font-bold mt-2">+91 *******480</p>
+</div>
+<div class="w-full mb-8">
+<fieldset class="flex gap-2 justify-center sm:gap-3">
+<input autofocus="" class="flex h-14 w-12 sm:w-14 rounded-xl text-center border border-gray-200 bg-white focus:border-[#58A39B] focus:ring-2 focus:ring-[#58A39B]/50 outline-none text-xl font-bold transition-all placeholder-transparent shadow-sm text-gray-800" inputmode="numeric" maxlength="1" type="tel" value=""/>
+<input class="flex h-14 w-12 sm:w-14 rounded-xl text-center border border-gray-200 bg-white focus:border-[#58A39B] focus:ring-2 focus:ring-[#58A39B]/50 outline-none text-xl font-bold transition-all placeholder-transparent shadow-sm text-gray-800" inputmode="numeric" maxlength="1" type="tel" value=""/>
+<input class="flex h-14 w-12 sm:w-14 rounded-xl text-center border border-gray-200 bg-white focus:border-[#58A39B] focus:ring-2 focus:ring-[#58A39B]/50 outline-none text-xl font-bold transition-all placeholder-transparent shadow-sm text-gray-800" inputmode="numeric" maxlength="1" type="tel" value=""/>
+<input class="flex h-14 w-12 sm:w-14 rounded-xl text-center border border-gray-200 bg-white focus:border-[#58A39B] focus:ring-2 focus:ring-[#58A39B]/50 outline-none text-xl font-bold transition-all placeholder-transparent shadow-sm text-gray-800" inputmode="numeric" maxlength="1" type="tel" value=""/>
+<input class="flex h-14 w-12 sm:w-14 rounded-xl text-center border border-gray-200 bg-white focus:border-[#58A39B] focus:ring-2 focus:ring-[#58A39B]/50 outline-none text-xl font-bold transition-all placeholder-transparent shadow-sm text-gray-800" inputmode="numeric" maxlength="1" type="tel" value=""/>
+<input class="flex h-14 w-12 sm:w-14 rounded-xl text-center border border-gray-200 bg-white focus:border-[#58A39B] focus:ring-2 focus:ring-[#58A39B]/50 outline-none text-xl font-bold transition-all placeholder-transparent shadow-sm text-gray-800" inputmode="numeric" maxlength="1" type="tel" value=""/>
+</fieldset>
+</div>
+<div class="mb-10 text-center">
+<p class="text-sm text-text-muted font-medium">
+                    Didn't receive the code? 
+                    <button class="ml-1 text-[#58A39B] hover:text-[#46827b] font-bold transition-colors">
+                        Resend OTP
+                    </button>
+</p>
+<p class="text-xs text-text-muted/70 mt-2">Resend code in 00:30</p>
+</div>
+<button class="w-full max-w-[400px] h-14 bg-[#58A39B] hover:bg-[#46827b] active:scale-[0.98] rounded-xl flex items-center justify-center text-white text-base font-bold tracking-wide shadow-lg shadow-[#58A39B]/30 transition-all mb-8">
+                Verify
+            </button>
+</main>
+</div>
+</body></html>

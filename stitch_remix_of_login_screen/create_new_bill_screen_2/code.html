@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create New Bill</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#58A39B",
+                        "primary-dark": "#44817a", 
+                        "primary-light": "#92B3A9",
+                        "background-light": "#f7f8f6",
+                        "background-dark": "#192111",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#232a1e",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                    backgroundImage: {
+                        'custom-gradient': 'linear-gradient(180deg, #58A39B 41%, #92B3A9 81%)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-custom-gradient font-display text-gray-900 dark:text-gray-100 antialiased min-h-screen relative pb-32">
+<div class="mx-auto w-full max-w-md min-h-screen flex flex-col relative bg-transparent shadow-2xl overflow-hidden">
+<header class="sticky top-0 z-20 bg-transparent px-4 py-3 flex items-center justify-between border-b border-white/20">
+<div class="flex items-center justify-center w-10 h-10 -ml-2 rounded-full active:bg-white/10 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-white">arrow_back</span>
+</div>
+<h2 class="text-lg font-bold text-white">New Bill</h2>
+<button class="text-white font-bold text-sm px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 backdrop-blur-sm shadow-sm transition-colors">
+                Drafts
+            </button>
+</header>
+<div class="px-4 pt-6 pb-2">
+<div class="flex gap-3 items-stretch h-14">
+<label class="flex-1 relative group cursor-pointer">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-primary group-focus-within:text-primary-dark transition-colors">search</span>
+</div>
+<input class="block w-full h-full pl-11 pr-4 rounded-xl border-none bg-surface-light text-gray-900 shadow-md ring-1 ring-gray-100 focus:ring-2 focus:ring-primary placeholder-gray-400 text-base font-medium transition-all" placeholder="Search Customer (Name or Mobile)" type="text"/>
+</label>
+<button class="w-14 h-14 flex items-center justify-center rounded-xl bg-surface-light text-primary shadow-md ring-1 ring-gray-100 active:scale-95 transition-transform hover:bg-gray-50">
+<span class="material-symbols-outlined text-[28px]">person_add</span>
+</button>
+</div>
+</div>
+<div class="flex-1 flex flex-col">
+<div class="flex items-center justify-between px-4 pt-6 pb-2">
+<h3 class="text-xl font-bold text-white">Cart Items</h3>
+<span class="text-xs font-semibold text-primary bg-white px-2 py-1 rounded-md shadow-sm">3 Items</span>
+</div>
+<div class="space-y-3 px-4">
+<div class="flex items-center gap-4 bg-surface-light p-3 rounded-2xl shadow-md border border-transparent hover:border-primary/20 transition-colors">
+<div class="h-16 w-16 rounded-xl bg-gray-100 bg-cover bg-center shrink-0 border border-gray-100" data-alt="Blazer" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCoa-3lg3ZRddwyjgWoxHfI37Uf5yJ2KdvCRiHsiKqNxFjv_qUHd9gU1Truwgz7ONcyiVOBIZ3nq0ogg8z0JD8M2wKdWYFwGUf3Q2AW3FluHEp3cxPkYWk9oIWoyQqfLhepjumo_ZFxgxsjvv2dM46bbon3jD8MeGZv5b0ug7R4h2OyficnPKvdg5JCJN2hWptHdWT3nhSsLabFLKPHyC8zWzX6MnE8lRufA1huTO1esytfathm0U6BTbMyx5H1xo8reGuIqjyK8kcX');"></div>
+<div class="flex-1 min-w-0">
+<p class="text-gray-900 text-base font-bold truncate">Blazer</p>
+<p class="text-primary text-sm font-bold mt-0.5">$45.00</p>
+</div>
+<div class="flex items-center gap-3 bg-gray-50 p-1.5 rounded-lg border border-gray-100">
+<button class="w-9 h-9 flex items-center justify-center rounded-md bg-white shadow-sm text-gray-500 hover:text-red-500 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-lg">remove</span>
+</button>
+<span class="w-4 text-center font-bold text-base text-gray-900">1</span>
+<button class="w-9 h-9 flex items-center justify-center rounded-md bg-primary text-white shadow-sm hover:bg-primary-dark active:scale-90 transition-all">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-surface-light p-3 rounded-2xl shadow-md border border-transparent hover:border-primary/20 transition-colors">
+<div class="h-16 w-16 rounded-xl bg-gray-100 bg-cover bg-center shrink-0 border border-gray-100" data-alt="Lehanga" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA8F3xvgkxq8IKUnuzAyKFhZ9wixaxeE9Tw2qCav5SDxOs5uKmN37_aakq_31rgOmMDsNNmgOiyIPVshDifVDOBZTs9k6tf545SA5p2aiFBdNSxvAYDLdXPoAllflOAUNZHCx5q0KoM5Kw8c_h3_-c0eye3pHE6ExX6zBUJXYfsl2dNDpKGq7jPv0X6uJsxKkTg-c1KLzNljn6eg4JKT_iDfu0FO3BtAlUMnrxXN1CX2oW0_Qq-Xyd-SPBVUjW-M0gD9EcjQAdisGkZ');"></div>
+<div class="flex-1 min-w-0">
+<p class="text-gray-900 text-base font-bold truncate">Lehanga</p>
+<p class="text-primary text-sm font-bold mt-0.5">$80.00</p>
+</div>
+<div class="flex items-center gap-3 bg-gray-50 p-1.5 rounded-lg border border-gray-100">
+<button class="w-9 h-9 flex items-center justify-center rounded-md bg-white shadow-sm text-gray-500 hover:text-red-500 active:scale-90 transition-all">
+<span class="material-symbols-outlined text-lg">remove</span>
+</button>
+<span class="w-4 text-center font-bold text-base text-gray-900">2</span>
+<button class="w-9 h-9 flex items-center justify-center rounded-md bg-primary text-white shadow-sm hover:bg-primary-dark active:scale-90 transition-all">
+<span class="material-symbols-outlined text-lg">add</span>
+</button>
+</div>
+</div>
+<button class="w-full py-3 border-2 border-dashed border-white/40 bg-white/10 rounded-xl text-white font-semibold flex items-center justify-center gap-2 hover:bg-white/20 hover:border-white transition-colors backdrop-blur-sm">
+<span class="material-symbols-outlined">add_circle</span>
+                    Add Another Item
+                </button>
+</div>
+<div class="px-4 mt-8 space-y-4">
+<div class="bg-surface-light rounded-2xl p-5 shadow-lg space-y-5">
+<div>
+<div class="flex justify-between mb-2">
+<label class="text-sm font-bold text-gray-700">Discount</label>
+</div>
+<div class="flex gap-3">
+<div class="bg-gray-100 p-1 rounded-xl flex shrink-0">
+<button class="px-4 py-2 bg-white text-primary rounded-lg shadow-sm font-bold text-sm transition-all border border-gray-100">Amount</button>
+<button class="px-4 py-2 text-gray-500 hover:text-gray-900 rounded-lg font-medium text-sm transition-all">%</button>
+</div>
+<div class="flex-1 relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-bold">$</span>
+<input class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-8 pr-4 text-right font-bold text-gray-900 focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-sm" placeholder="0.00" type="number"/>
+</div>
+</div>
+</div>
+<hr class="border-gray-100"/>
+<div class="flex items-center justify-between">
+<div>
+<p class="font-bold text-gray-900">Include GST</p>
+<p class="text-xs text-gray-500 mt-0.5">18% IGST will be applied</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-12 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-2 peer-focus:ring-primary/30 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-primary shadow-inner"></div>
+</label>
+</div>
+</div>
+</div>
+<div class="px-4 mt-8">
+<h3 class="text-lg font-bold text-white mb-4">Payment Method</h3>
+<div class="grid grid-cols-3 gap-3">
+<button class="relative flex flex-col items-center justify-center p-4 rounded-2xl bg-white border-2 border-primary transition-all shadow-md transform scale-[1.02]">
+<div class="w-6 h-6 rounded-full bg-primary flex items-center justify-center absolute top-2 right-2 shadow-sm">
+<span class="material-symbols-outlined text-white text-[16px] font-bold">check</span>
+</div>
+<span class="material-symbols-outlined text-3xl text-primary mb-2">payments</span>
+<span class="text-sm font-bold text-primary">Cash</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/90 border-2 border-transparent hover:bg-white transition-all shadow-sm backdrop-blur-sm">
+<span class="material-symbols-outlined text-3xl text-gray-400 mb-2">qr_code_scanner</span>
+<span class="text-sm font-semibold text-gray-600">UPI</span>
+</button>
+<button class="flex flex-col items-center justify-center p-4 rounded-2xl bg-white/90 border-2 border-transparent hover:bg-white transition-all shadow-sm backdrop-blur-sm">
+<span class="material-symbols-outlined text-3xl text-gray-400 mb-2">credit_card</span>
+<span class="text-sm font-semibold text-gray-600">Card</span>
+</button>
+</div>
+</div>
+<div class="px-4 mt-8 mb-6">
+<div class="bg-surface-light rounded-2xl p-5 shadow-lg space-y-3">
+<div class="flex justify-between items-center text-sm">
+<span class="text-gray-500 font-medium">Subtotal</span>
+<span class="text-gray-900 font-bold">$205.00</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-gray-500 font-medium">Discount</span>
+<span class="text-primary font-bold">- $0.00</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-gray-500 font-medium">Tax (18%)</span>
+<span class="text-gray-900 font-bold">$12.50</span>
+</div>
+<div class="border-t border-dashed border-gray-200 my-2 pt-2"></div>
+<div class="flex justify-between items-end">
+<span class="text-gray-900 font-bold text-lg">Total Amount</span>
+<span class="text-primary font-extrabold text-2xl leading-none">$217.50</span>
+</div>
+</div>
+</div>
+</div>
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-white/90 backdrop-blur-lg border-t border-gray-100 z-30 max-w-md mx-auto shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
+<button class="group relative w-full bg-primary hover:bg-primary-dark text-white font-bold text-lg py-4 rounded-2xl shadow-xl shadow-primary/30 transition-all active:scale-[0.98] flex items-center justify-center gap-3 overflow-hidden">
+<span class="relative z-10">Pay Now</span>
+<span class="material-symbols-outlined relative z-10 transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+</div>
+</div>
+
+</body></html>

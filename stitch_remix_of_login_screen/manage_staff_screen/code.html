@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Manage Staff</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#57a29b",
+                        "primary-dark": "#46827c",
+                        "background-light": "#f6f7f7",
+                        "background-dark": "#161c1b",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom Gradient Background based on request */
+        .boutique-gradient {
+            background: linear-gradient(180deg, #58A39B 41%, #92B3A9 81%);
+            background-attachment: fixed;
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+        }
+        
+        .material-symbols-outlined.filled {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display antialiased text-slate-800">
+<!-- Main Container with Gradient Background -->
+<div class="boutique-gradient relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+<!-- Header Section -->
+<header class="sticky top-0 z-10 w-full px-4 pt-4 pb-2">
+<div class="flex items-center justify-between">
+<!-- Back Button -->
+<button class="group flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-colors hover:bg-white/30 active:scale-95">
+<span class="material-symbols-outlined text-white">arrow_back</span>
+</button>
+<!-- Title -->
+<h2 class="text-xl font-bold leading-tight text-white tracking-wide drop-shadow-sm">Manage Staff</h2>
+<!-- Add Button -->
+<button class="group flex h-10 w-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm transition-colors hover:bg-white/30 active:scale-95">
+<span class="material-symbols-outlined text-white">add</span>
+</button>
+</div>
+</header>
+<!-- Search Bar Section -->
+<div class="px-4 py-4 sticky top-[64px] z-10 backdrop-blur-md bg-transparent -mx-4 px-8 mb-2">
+<div class="mx-auto w-full">
+<div class="relative flex h-12 w-full items-center overflow-hidden rounded-xl bg-white shadow-lg shadow-primary/10 transition-all focus-within:shadow-xl focus-within:shadow-primary/20">
+<div class="flex h-full w-12 items-center justify-center text-primary">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="h-full w-full border-none bg-transparent p-0 pr-4 text-base font-medium text-slate-800 placeholder:text-slate-400 focus:ring-0" placeholder="Search staff by name or role..." type="text"/>
+</div>
+</div>
+</div>
+<!-- Scrollable Staff List -->
+<main class="flex-1 px-4 pb-8 space-y-4">
+<!-- List Item 1: Sarah Jenkins -->
+<div class="group relative flex w-full flex-col rounded-2xl bg-white p-4 shadow-md transition-all hover:shadow-lg hover:translate-y-[-2px]">
+<div class="flex items-start gap-4">
+<!-- Avatar -->
+<div class="h-16 w-16 shrink-0 rounded-full bg-slate-100 bg-cover bg-center shadow-inner" data-alt="Portrait of Sarah Jenkins looking professional" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCmZHqdPlOV92FACdUpVTMp3v_jlTpVkr5xEP8WG73y1wqYwFblL4JdUE0j3vPjIVRVA8qEMulBPZjXpHnSeGkqzzKaMXZl05bW9qJN8HmQFOR4xuZpaqU_q5Zl8rWP2QqiH5lfi1NpEFG3AdQoao0ryGhA6mC_WaG0ImwGyi9SEySA0UZBi29_2iq6EvUAHy3IVVRMCjw2C7HXhu-rUv6YuoetNSBCejFVOf2Rvk1S4plOy611lVycbPi-DzkNf8D7vlsHbWaL0Zpi");'>
+</div>
+<!-- Info -->
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex items-center justify-between">
+<h3 class="truncate text-lg font-bold text-slate-900">Sarah Jenkins</h3>
+<span class="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-bold text-primary">
+                                Manager
+                            </span>
+</div>
+<p class="mt-0.5 text-sm font-medium text-primary">Store Manager</p>
+<div class="mt-2 flex items-center gap-1.5 text-sm text-slate-500">
+<span class="material-symbols-outlined text-[16px] filled text-slate-400">call</span>
+<span>+1 (555) 123-4567</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons (Divider + Actions) -->
+<div class="mt-4 flex items-center justify-end gap-3 border-t border-slate-100 pt-3">
+<button class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 active:scale-95">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+                        Edit
+                    </button>
+<button class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-red-500 transition-colors hover:bg-red-50 active:scale-95">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+                        Delete
+                    </button>
+</div>
+</div>
+<!-- List Item 2: Mike Ross -->
+<div class="group relative flex w-full flex-col rounded-2xl bg-white p-4 shadow-md transition-all hover:shadow-lg hover:translate-y-[-2px]">
+<div class="flex items-start gap-4">
+<!-- Avatar -->
+<div class="h-16 w-16 shrink-0 rounded-full bg-slate-100 bg-cover bg-center shadow-inner" data-alt="Portrait of Mike Ross in a suit" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA801tB5uYLMLieDm-irTosxQDIRzhwptlupPc5qSGQ3cJi_COQr0MW9KTj7WO4YzF1jbfLKwoShrDIisdhAJghLDID4xnb6Na3dy9mU_Aj2uzGodAli5zRUB12giZsFtMI7uo__iMzhWd_nr6ktvX_Cdz7cY9lVIPhot_rJKvcwIlvDlS_NCAQKfylyTRbZ5uvytcdsbrF8sHVm35Fwgz45ESIPHXCl91jIsKXkLu9D8p9pIf8E6CaG91ekajvFXO492qgjfTbzx4n");'>
+</div>
+<!-- Info -->
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex items-center justify-between">
+<h3 class="truncate text-lg font-bold text-slate-900">Mike Ross</h3>
+</div>
+<p class="mt-0.5 text-sm font-medium text-slate-500">Sales Associate</p>
+<div class="mt-2 flex items-center gap-1.5 text-sm text-slate-500">
+<span class="material-symbols-outlined text-[16px] filled text-slate-400">call</span>
+<span>+1 (555) 987-6543</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="mt-4 flex items-center justify-end gap-3 border-t border-slate-100 pt-3">
+<button class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 active:scale-95">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+                        Edit
+                    </button>
+<button class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-red-500 transition-colors hover:bg-red-50 active:scale-95">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+                        Delete
+                    </button>
+</div>
+</div>
+<!-- List Item 3: Jessica Pearson -->
+<div class="group relative flex w-full flex-col rounded-2xl bg-white p-4 shadow-md transition-all hover:shadow-lg hover:translate-y-[-2px]">
+<div class="flex items-start gap-4">
+<!-- Avatar -->
+<div class="h-16 w-16 shrink-0 rounded-full bg-slate-100 bg-cover bg-center shadow-inner" data-alt="Portrait of Jessica Pearson smiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuChibhHZwoWiRRxpB4sopB086isdzufHN761-Zii5JrBlzreKGl9vYNJjxRCOOVRWx8pLxAhzQ3OkCg107oK5JtMQiibeBhb9wVf_MlxtVRGZ5lUZT_z6RTjS4BwlpYhrWZgo9aFC56MB2bRafCdQX7jXv8JL7ANY33Urjbyex56pV4M5U5HB162192qTMul3wOVZGaE3iOwhYA1Hgvz0dd_ggpbWB_F9iV4EQUYfLedOMSeGu1eMHogoBn1piG7j7wJW0FTeanSSBf");'>
+</div>
+<!-- Info -->
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex items-center justify-between">
+<h3 class="truncate text-lg font-bold text-slate-900">Jessica Pearson</h3>
+</div>
+<p class="mt-0.5 text-sm font-medium text-slate-500">Cashier</p>
+<div class="mt-2 flex items-center gap-1.5 text-sm text-slate-500">
+<span class="material-symbols-outlined text-[16px] filled text-slate-400">call</span>
+<span>+1 (555) 555-0199</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="mt-4 flex items-center justify-end gap-3 border-t border-slate-100 pt-3">
+<button class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 active:scale-95">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+                        Edit
+                    </button>
+<button class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-red-500 transition-colors hover:bg-red-50 active:scale-95">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+                        Delete
+                    </button>
+</div>
+</div>
+<!-- List Item 4: Harvey Specter -->
+<div class="group relative flex w-full flex-col rounded-2xl bg-white p-4 shadow-md transition-all hover:shadow-lg hover:translate-y-[-2px]">
+<div class="flex items-start gap-4">
+<!-- Avatar -->
+<div class="h-16 w-16 shrink-0 rounded-full bg-slate-100 bg-cover bg-center shadow-inner" data-alt="Portrait of Harvey Specter in a suit" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBBi52G77YXAgm7HGAGTlIfgjqDBJYOP4BuR0IYUuBDBpgWJS0EMhO2HXR9DodFPfWKAPgdPzI9qsi-UVkSb3SfG7kNDtKP1L9KtKwgc0ICnsKdxbUzSELALdXK3Mnn_yYCalwHMVa2-gqbcwHOvrHCsGO6FTJ1MgVKzGW8k6PjgicZ5RI8OeZRM_zec1GtYFFg5DrV_r4wHmKC59YpW4C1dqLGtdme2q9qNciEsT3wurO19ZdNE85yKjllskwCb4SRDLmYSNyzXu15");'>
+</div>
+<!-- Info -->
+<div class="flex flex-1 flex-col justify-center min-w-0">
+<div class="flex items-center justify-between">
+<h3 class="truncate text-lg font-bold text-slate-900">Harvey Specter</h3>
+</div>
+<p class="mt-0.5 text-sm font-medium text-slate-500">Inventory Specialist</p>
+<div class="mt-2 flex items-center gap-1.5 text-sm text-slate-500">
+<span class="material-symbols-outlined text-[16px] filled text-slate-400">call</span>
+<span>+1 (555) 234-8900</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="mt-4 flex items-center justify-end gap-3 border-t border-slate-100 pt-3">
+<button class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/10 active:scale-95">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+                        Edit
+                    </button>
+<button class="flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-semibold text-red-500 transition-colors hover:bg-red-50 active:scale-95">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+                        Delete
+                    </button>
+</div>
+</div>
+</main>
+<!-- Floating "Add" Button for extra accessibility (Optional but good for mobile) -->
+<div class="fixed bottom-6 right-6 z-20">
+<button class="flex h-14 w-14 items-center justify-center rounded-full bg-white text-primary shadow-xl shadow-slate-900/10 transition-transform hover:scale-105 active:scale-95">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+</div>
+</div>
+</body></html>

@@ -5,8 +5,10 @@ import 'dart:io';
 import '../services/customer_store.dart';
 import '../models/customer.dart';
 import 'customers/add_customer.dart';
+import 'customers/customer_profile.dart';
 import 'orders/order_tracking.dart';
 import 'staff/add_staff.dart';
+import 'staff/edit_staff.dart';
 
 class CustomersListScreen extends StatefulWidget {
   static const routeName = '/customers';
@@ -82,7 +84,7 @@ class StaffListScreen extends StatelessWidget {
     return _IosListScaffold(
       title: 'Staff',
       items: items,
-      detailBuilder: (item) => DetailScreen(item: item),
+      detailBuilder: (item) => EditStaffScreen(name: item.title, role: 'Tailor'),
       floatingActionButton: FloatingActionButton(
         backgroundColor: coral,
         foregroundColor: Colors.white,
@@ -214,7 +216,10 @@ class _CustomerRowState extends State<_CustomerRow> {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () => HapticFeedback.lightImpact(),
+          onTap: () {
+             HapticFeedback.lightImpact();
+             Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: CustomerProfileScreen(customer: c)));
+          },
           onHighlightChanged: (v) => setState(() => _pressed = v),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),

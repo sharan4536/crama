@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add Staff Screen</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#58A39B", 
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#102220",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2c2a",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "2rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>.no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased text-slate-900 dark:text-white transition-colors duration-200">
+<div class="relative flex min-h-screen w-full flex-col overflow-hidden max-w-md mx-auto shadow-xl bg-white">
+<header class="sticky top-0 z-10 flex items-center justify-between p-4 bg-white/80 backdrop-blur-md">
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-slate-100 transition-colors">
+<span class="material-symbols-outlined text-slate-900" style="font-size: 24px;">arrow_back_ios_new</span>
+</button>
+<h2 class="text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10 text-slate-900">Add New Staff</h2>
+</header>
+<main class="flex-1 flex flex-col px-5 pt-2 pb-24 gap-6 overflow-y-auto no-scrollbar">
+<div class="flex flex-col gap-4">
+<div class="flex gap-4">
+<label class="flex flex-col w-full">
+<p class="text-sm font-semibold leading-normal pb-2 text-slate-900">First Name</p>
+<input class="form-input flex w-full rounded-xl border-0 bg-surface-light text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-primary placeholder:text-slate-400 h-14 px-4 text-base transition-all" placeholder="Ex: Sarah" type="text"/>
+</label>
+<label class="flex flex-col w-full">
+<p class="text-sm font-semibold leading-normal pb-2 text-slate-900">Last Name</p>
+<input class="form-input flex w-full rounded-xl border-0 bg-surface-light text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-primary placeholder:text-slate-400 h-14 px-4 text-base transition-all" placeholder="Ex: Jones" type="text"/>
+</label>
+</div>
+</div>
+<div class="flex flex-col">
+<label class="flex flex-col w-full">
+<p class="text-sm font-semibold leading-normal pb-2 text-slate-900">Mobile Number</p>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+<span class="material-symbols-outlined text-slate-400" style="font-size: 20px;">call</span>
+</div>
+<input class="form-input flex w-full rounded-xl border-0 bg-surface-light text-slate-900 shadow-sm ring-1 ring-inset ring-slate-200 focus:ring-2 focus:ring-primary placeholder:text-slate-400 h-14 pl-11 pr-4 text-base transition-all" placeholder="987 654 3210" type="tel"/>
+</div>
+</label>
+</div>
+<div class="flex flex-col gap-3">
+<h3 class="text-lg font-bold leading-tight text-slate-900">Select Role</h3>
+<div class="grid grid-cols-3 gap-3">
+<label class="cursor-pointer group relative">
+<input checked="" class="peer sr-only" name="role" type="radio" value="owner"/>
+<div class="flex h-12 w-full items-center justify-center rounded-xl bg-surface-light border border-slate-200 shadow-sm hover:shadow-md peer-checked:bg-primary peer-checked:border-primary peer-checked:shadow-md transition-all duration-200">
+<span class="text-sm font-semibold text-slate-600 peer-checked:text-slate-900">Owner</span>
+</div>
+</label>
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" name="role" type="radio" value="cashier"/>
+<div class="flex h-12 w-full items-center justify-center rounded-xl bg-surface-light border border-slate-200 shadow-sm hover:shadow-md peer-checked:bg-primary peer-checked:border-primary peer-checked:shadow-md transition-all duration-200">
+<span class="text-sm font-semibold text-slate-600 peer-checked:text-slate-900">Cashier</span>
+</div>
+</label>
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" name="role" type="radio" value="tailor"/>
+<div class="flex h-12 w-full items-center justify-center rounded-xl bg-surface-light border border-slate-200 shadow-sm hover:shadow-md peer-checked:bg-primary peer-checked:border-primary peer-checked:shadow-md transition-all duration-200">
+<span class="text-sm font-semibold text-slate-600 peer-checked:text-slate-900">Tailor</span>
+</div>
+</label>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<h3 class="text-lg font-bold leading-tight text-slate-900">Salary Type</h3>
+<div class="grid grid-cols-2 gap-4">
+<label class="cursor-pointer relative">
+<input class="peer sr-only" name="salary" type="radio" value="daily"/>
+<div class="flex flex-col gap-2 p-4 rounded-xl bg-surface-light border-2 border-transparent ring-1 ring-slate-200 shadow-sm hover:shadow-md peer-checked:border-primary peer-checked:bg-primary/10 transition-all">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary" style="font-size: 24px;">calendar_view_day</span>
+<div class="w-5 h-5 rounded-full border-2 border-slate-300 peer-checked:border-primary peer-checked:bg-primary transition-colors flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+</div>
+</div>
+<div>
+<p class="font-bold text-slate-900">Daily</p>
+<p class="text-xs text-slate-500">Paid per day</p>
+</div>
+</div>
+</label>
+<label class="cursor-pointer relative">
+<input checked="" class="peer sr-only" name="salary" type="radio" value="monthly"/>
+<div class="flex flex-col gap-2 p-4 rounded-xl bg-surface-light border-2 border-transparent ring-1 ring-slate-200 shadow-sm hover:shadow-md peer-checked:border-primary peer-checked:bg-primary/10 transition-all">
+<div class="flex items-center justify-between">
+<span class="material-symbols-outlined text-primary" style="font-size: 24px;">calendar_month</span>
+<div class="w-5 h-5 rounded-full border-2 border-slate-300 peer-checked:border-primary peer-checked:bg-primary transition-colors flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+</div>
+</div>
+<div>
+<p class="font-bold text-slate-900">Monthly</p>
+<p class="text-xs text-slate-500">Fixed salary</p>
+</div>
+</div>
+</label>
+</div>
+</div>
+<div class="mt-4 rounded-2xl bg-primary/5 p-6 relative overflow-hidden border border-primary/10 shadow-sm">
+<div class="relative z-10 flex gap-4 items-center">
+<div class="bg-white p-3 rounded-full text-primary shadow-sm border border-slate-100">
+<span class="material-symbols-outlined">info</span>
+</div>
+<p class="text-sm text-slate-700">Staff members will receive an invite via SMS to join the platform.</p>
+</div>
+<div class="absolute -right-6 -bottom-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl" data-alt="Abstract soft glow for decoration"></div>
+</div>
+</main>
+<div class="fixed bottom-0 left-0 right-0 p-5 bg-surface-light/90 backdrop-blur-md z-20 max-w-md mx-auto rounded-t-2xl shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] border-t border-slate-100">
+<button class="w-full h-14 bg-primary hover:brightness-105 active:scale-[0.98] rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-primary/25">
+<span class="text-slate-900 text-base font-bold tracking-wide">Save Staff Member</span>
+<span class="material-symbols-outlined text-slate-900 text-lg">check</span>
+</button>
+</div>
+</div>
+</body></html>

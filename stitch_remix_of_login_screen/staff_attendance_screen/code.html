@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Staff Attendance</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#57a29b",
+              "primary-dark": "#45817c",
+              "background-light": "#f6f7f7",
+              "background-dark": "#161c1b",
+              "boutique-green": "#58A39B",
+              "boutique-teal": "#92B3A9",
+            },
+            fontFamily: {
+              "display": ["Manrope", "sans-serif"],
+              "body": ["Noto Sans", "sans-serif"],
+            },
+            backgroundImage: {
+              'boutique-gradient': 'linear-gradient(180deg, #58A39B 0%, #58A39B 41%, #92B3A9 81%, #f6f7f7 100%)',
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+          font-variation-settings:
+          'FILL' 0,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+        .filled-icon {
+          font-variation-settings:
+          'FILL' 1,
+          'wght' 400,
+          'GRAD' 0,
+          'opsz' 24
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display min-h-screen">
+<div class="relative flex h-full min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<!-- Header Section with Gradient -->
+<div class="bg-[linear-gradient(180deg,#58A39B_41%,#92B3A9_81%)] pb-8 pt-4 rounded-b-[2rem] shadow-lg relative z-10">
+<!-- Top Bar -->
+<div class="flex items-center p-4 pb-2 justify-between text-white">
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors">
+<span class="material-symbols-outlined text-white">arrow_back</span>
+</button>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">Staff Attendance</h2>
+<button class="flex size-10 shrink-0 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors">
+<span class="material-symbols-outlined text-white">calendar_month</span>
+</button>
+</div>
+<!-- Date Headline -->
+<div class="px-6 pt-4">
+<p class="text-white/80 text-sm font-medium uppercase tracking-wider mb-1">Today</p>
+<h2 class="text-white tracking-tight text-3xl font-extrabold leading-tight">Monday, Oct 24</h2>
+</div>
+<!-- Summary Stats -->
+<div class="flex gap-3 px-6 pt-6 overflow-x-auto no-scrollbar pb-2">
+<div class="flex min-w-[100px] flex-col gap-1 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 p-3 text-white">
+<p class="text-xs font-medium opacity-80">Total Staff</p>
+<p class="text-2xl font-bold">12</p>
+</div>
+<div class="flex min-w-[100px] flex-col gap-1 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 p-3 text-white shadow-sm">
+<p class="text-xs font-medium opacity-80">Present</p>
+<p class="text-2xl font-bold">10</p>
+</div>
+<div class="flex min-w-[100px] flex-col gap-1 rounded-xl bg-white/10 backdrop-blur-md border border-white/20 p-3 text-white">
+<p class="text-xs font-medium opacity-80">Absent</p>
+<p class="text-2xl font-bold">2</p>
+</div>
+</div>
+</div>
+<!-- Main Content List -->
+<div class="flex-1 -mt-6 px-4 pb-24 z-20 space-y-4">
+<!-- Staff Card 1: Active/Present -->
+<div class="bg-white dark:bg-zinc-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-zinc-700">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12 border-2 border-primary" data-alt="Portrait of Sarah Jenkins smiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBMNWtbBzpzE8_bTwKvHYVlNVGdbZgBZ_FyQhc1A0WmQWpMjHjwlL9CwtY__PUfRvSQ-h8obbh-_oBa0BAgdzZSXZ-CAfBF6ghyElkqzGrdnKbvpN3c6kZca9YP7MDsPfhQ1nEE8vH9EzrZXFUByHgXCQ638nZbxfXfefZSrPqK2IDpcc8VG9zwM_MFMktAqitYwE1namKRHr58iQW24oXAlFWxXZZOs9LACl3X0vf4L-ra1ixV5rIdqxbTjXnKCl09Cjw9cB9R7K15");'></div>
+<div>
+<h3 class="text-[#121716] dark:text-white text-base font-bold leading-tight">Sarah Jenkins</h3>
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Sales Associate</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-bold">
+<span class="size-1.5 rounded-full bg-green-500 animate-pulse"></span>
+                        Present
+                    </span>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-4">
+<div class="bg-background-light dark:bg-zinc-900/50 rounded-xl p-2.5">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-gray-400 text-[18px]">login</span>
+<span class="text-xs text-gray-500 dark:text-gray-400 font-medium">In Time</span>
+</div>
+<p class="text-[#121716] dark:text-white font-bold text-sm ml-6">09:15 AM</p>
+</div>
+<div class="bg-background-light dark:bg-zinc-900/50 rounded-xl p-2.5 opacity-50">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-gray-400 text-[18px]">logout</span>
+<span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Out Time</span>
+</div>
+<p class="text-[#121716] dark:text-white font-bold text-sm ml-6">--:--</p>
+</div>
+</div>
+<div class="flex items-center justify-between border-t border-gray-100 dark:border-zinc-700 pt-3">
+<div class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="text-xs font-medium">Active: 4h 30m</span>
+</div>
+<button class="bg-[#f2f4f4] dark:bg-zinc-700 text-[#121716] dark:text-white hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+                        Check Out
+                    </button>
+</div>
+</div>
+<!-- Staff Card 2: Late Entry -->
+<div class="bg-white dark:bg-zinc-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-zinc-700">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12 border-2 border-orange-200" data-alt="Portrait of Mike Ross serious" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCj1NpY7hQM5ozJzysnRkR6V_8S8hDrWlN0jICwlcwhQ-vxzSQXYoEBOZAsBYI1MV2vJLZCWN4VSY3huIxbZ2tK2rIA8-fS4SR-HCJtHxKxsc4NLZkdHyiQzQyevxcUxvp0x5ipPiS5DbcYLCCUCQ-eNCnmCqfX890qMuhASksVPatDMO2QpkGQgyVa0iPwAd5P8bMWY8mlybnG5MdlVAySzWBkIkjgKCQ7kKetzcShzPdukEEKSavdqcNgODRshhwuNqjFRww5T9x3");'></div>
+<div>
+<h3 class="text-[#121716] dark:text-white text-base font-bold leading-tight">Mike Ross</h3>
+<div class="flex items-center gap-2">
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Store Manager</p>
+<span class="size-1 rounded-full bg-gray-300"></span>
+<span class="text-orange-600 dark:text-orange-400 text-[10px] font-bold uppercase tracking-wide bg-orange-50 dark:bg-orange-900/20 px-1.5 py-0.5 rounded">Late</span>
+</div>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs font-bold">
+                        Present
+                    </span>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-4">
+<div class="bg-background-light dark:bg-zinc-900/50 rounded-xl p-2.5 border border-orange-100 dark:border-orange-900/30">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-orange-400 text-[18px]">login</span>
+<span class="text-xs text-gray-500 dark:text-gray-400 font-medium">In Time</span>
+</div>
+<p class="text-[#121716] dark:text-white font-bold text-sm ml-6">10:30 AM</p>
+</div>
+<div class="bg-background-light dark:bg-zinc-900/50 rounded-xl p-2.5 opacity-50">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-gray-400 text-[18px]">logout</span>
+<span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Out Time</span>
+</div>
+<p class="text-[#121716] dark:text-white font-bold text-sm ml-6">--:--</p>
+</div>
+</div>
+<div class="flex items-center justify-between border-t border-gray-100 dark:border-zinc-700 pt-3">
+<div class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-[18px]">schedule</span>
+<span class="text-xs font-medium">Active: 3h 15m</span>
+</div>
+<button class="bg-[#f2f4f4] dark:bg-zinc-700 text-[#121716] dark:text-white hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-colors px-4 py-2 rounded-lg text-sm font-semibold flex items-center gap-2">
+                        Check Out
+                    </button>
+</div>
+</div>
+<!-- Staff Card 3: Absent -->
+<div class="bg-white dark:bg-zinc-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-zinc-700 opacity-90">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12 grayscale" data-alt="Portrait of Jessica Pearson confident" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA-j3K-3vZEk6tQ-NWj2q29yw5rJDL7u01f7TuVW1BWSiwLSo0a7NSsWa2PIpIOJZEjUg-T-QWe90SfVjK2DqpafwRx5y_l9dwkvAzA47lHZJ94xkpy6Si4n9LG2QyCeJ3CZqzIpKxw8-sTV-awODQjxxa1qq7PL7godnHmiaQ4LRYHA5SodGHi1loRDRZAC_7ALq6vp09lQtTIXiTbGzGWlmZRUdrooFwMQ53LQ8ocjP39oobiOlQfsuzKyWWkuPr-ICBt1fJsJg5f");'></div>
+<div>
+<h3 class="text-[#121716] dark:text-white text-base font-bold leading-tight">Jessica Pearson</h3>
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Inventory Lead</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 text-xs font-bold">
+                        Absent
+                    </span>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-4 opacity-50">
+<div class="bg-background-light dark:bg-zinc-900/50 rounded-xl p-2.5">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-gray-400 text-[18px]">login</span>
+<span class="text-xs text-gray-500 dark:text-gray-400 font-medium">In Time</span>
+</div>
+<p class="text-[#121716] dark:text-white font-bold text-sm ml-6">--:--</p>
+</div>
+<div class="bg-background-light dark:bg-zinc-900/50 rounded-xl p-2.5">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-gray-400 text-[18px]">logout</span>
+<span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Out Time</span>
+</div>
+<p class="text-[#121716] dark:text-white font-bold text-sm ml-6">--:--</p>
+</div>
+</div>
+<div class="flex items-center justify-end border-t border-gray-100 dark:border-zinc-700 pt-3">
+<button class="bg-primary text-white hover:bg-primary-dark transition-colors px-6 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 shadow-sm shadow-primary/30">
+                        Mark Present
+                    </button>
+</div>
+</div>
+<!-- Staff Card 4: Half Day/Checked Out -->
+<div class="bg-white dark:bg-zinc-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-zinc-700">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12 border-2 border-gray-100" data-alt="Portrait of Alex smiling" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCIIT1Xoo8r2dEAMA4JejCU3QBRdDPtqAa2fnF2UKUXHhsDz6qQWHkxDp_yW4e49xrjLWrlRA3-aY1xDC9Qey1pcBrHJMnErGC_3UJqMaGhqD3rGYQKkU3inuowk7cdzCrrn4dibtz8MehjxZ1bzm8P3xtd_eYoG9CLMWjF2AU0b-24u5UokOK60jRsz5XLexF9jSggQgJZPUP9myKwReY-mIg4GMOFMhFmZPz54KLL3Jej4576ndxO9sNCyJMihF3o6YcmwGm5rE21");'></div>
+<div>
+<h3 class="text-[#121716] dark:text-white text-base font-bold leading-tight">Alex Wong</h3>
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium">Intern</p>
+</div>
+</div>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 text-xs font-bold">
+                        Half-day
+                    </span>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-4">
+<div class="bg-background-light dark:bg-zinc-900/50 rounded-xl p-2.5">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-gray-400 text-[18px]">login</span>
+<span class="text-xs text-gray-500 dark:text-gray-400 font-medium">In Time</span>
+</div>
+<p class="text-[#121716] dark:text-white font-bold text-sm ml-6">09:00 AM</p>
+</div>
+<div class="bg-background-light dark:bg-zinc-900/50 rounded-xl p-2.5">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-[18px]">check_circle</span>
+<span class="text-xs text-gray-500 dark:text-gray-400 font-medium">Out Time</span>
+</div>
+<p class="text-[#121716] dark:text-white font-bold text-sm ml-6">01:30 PM</p>
+</div>
+</div>
+<div class="flex items-center justify-between border-t border-gray-100 dark:border-zinc-700 pt-3">
+<div class="flex items-center gap-1.5 text-gray-500 dark:text-gray-400">
+<span class="material-symbols-outlined text-[18px]">hourglass_bottom</span>
+<span class="text-xs font-medium">Total: 4h 30m</span>
+</div>
+<div class="text-gray-400 text-xs font-medium italic px-2">
+                        Shift completed
+                    </div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation -->
+<div class="sticky bottom-0 z-30 w-full bg-white dark:bg-zinc-900 border-t border-gray-200 dark:border-zinc-800 pb-safe">
+<div class="flex justify-around items-center h-16 px-2">
+<button class="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">home</span>
+<span class="text-[10px] font-medium">Home</span>
+</button>
+<button class="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-[10px] font-medium">Billing</span>
+</button>
+<button class="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-primary">
+<span class="material-symbols-outlined filled-icon">group</span>
+<span class="text-[10px] font-medium">Staff</span>
+</button>
+<button class="flex flex-1 flex-col items-center justify-center gap-1 py-1 text-gray-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-[10px] font-medium">Settings</span>
+</button>
+</div>
+<!-- Safe area spacing for iOS home indicator -->
+<div class="h-4 w-full bg-white dark:bg-zinc-900"></div>
+</div>
+</div>
+</body></html>

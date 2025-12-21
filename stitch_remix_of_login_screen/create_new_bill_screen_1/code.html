@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add Staff Screen</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#58A39B",
+                        "primary-dark": "#44817a", 
+                        "primary-light": "#92B3A9",
+                        "background-light": "#f7f8f6",
+                        "background-dark": "#192111",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#232a1e",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                    backgroundImage: {
+                        'custom-gradient': 'linear-gradient(180deg, #58A39B 41%, #92B3A9 81%)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-custom-gradient font-display text-gray-900 dark:text-gray-100 antialiased min-h-screen relative pb-32">
+<div class="mx-auto w-full max-w-md min-h-screen flex flex-col relative bg-transparent shadow-2xl overflow-hidden">
+<header class="sticky top-0 z-20 bg-transparent px-4 py-3 flex items-center justify-between border-b border-white/10">
+<div class="flex items-center justify-center w-10 h-10 -ml-2 rounded-full active:bg-white/10 transition-colors cursor-pointer group">
+<span class="material-symbols-outlined text-white group-hover:-translate-x-1 transition-transform">arrow_back</span>
+</div>
+<h2 class="text-xl font-bold text-white tracking-tight">Add Staff</h2>
+<div class="w-10"></div> 
+</header>
+<div class="flex-1 px-4 py-6 overflow-y-auto no-scrollbar">
+<form class="bg-surface-light rounded-[2rem] p-6 shadow-xl shadow-black/5 space-y-8 animate-fade-in-up">
+<div class="space-y-5">
+<h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">badge</span>
+                        Personal Details
+                    </h3>
+<div class="space-y-1.5">
+<label class="text-sm font-semibold text-gray-600 ml-1">Full Name</label>
+<input class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-medium outline-none" placeholder="e.g. Rahul Sharma" type="text"/>
+</div>
+<div class="space-y-1.5">
+<label class="text-sm font-semibold text-gray-600 ml-1">Mobile Number</label>
+<div class="relative">
+<input class="w-full bg-gray-50 border border-gray-200 rounded-xl pl-12 pr-4 py-3.5 text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-primary focus:border-primary transition-all font-medium outline-none" placeholder="e.g. 98765 43210" type="tel"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">call</span>
+</div>
+</div>
+</div>
+<hr class="border-gray-100"/>
+<div class="space-y-4">
+<h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">work</span>
+                        Assign Role
+                    </h3>
+<div class="grid grid-cols-3 gap-3">
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" name="role" type="radio"/>
+<div class="flex flex-col items-center justify-center p-3 rounded-2xl bg-white border-2 border-gray-100 peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/30 transition-all h-28 shadow-sm">
+<div class="w-10 h-10 rounded-full bg-gray-100 peer-checked:bg-primary peer-checked:text-white flex items-center justify-center mb-2 transition-colors text-gray-500">
+<span class="material-symbols-outlined text-2xl">storefront</span>
+</div>
+<span class="text-sm font-bold text-gray-600 peer-checked:text-primary">Owner</span>
+</div>
+<div class="absolute top-2 right-2 opacity-0 peer-checked:opacity-100 transition-all scale-50 peer-checked:scale-100">
+<span class="material-symbols-outlined text-primary text-xl font-bold">check_circle</span>
+</div>
+</label>
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" name="role" type="radio"/>
+<div class="flex flex-col items-center justify-center p-3 rounded-2xl bg-white border-2 border-gray-100 peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/30 transition-all h-28 shadow-sm">
+<div class="w-10 h-10 rounded-full bg-gray-100 peer-checked:bg-primary peer-checked:text-white flex items-center justify-center mb-2 transition-colors text-gray-500">
+<span class="material-symbols-outlined text-2xl">point_of_sale</span>
+</div>
+<span class="text-sm font-bold text-gray-600 peer-checked:text-primary">Cashier</span>
+</div>
+<div class="absolute top-2 right-2 opacity-0 peer-checked:opacity-100 transition-all scale-50 peer-checked:scale-100">
+<span class="material-symbols-outlined text-primary text-xl font-bold">check_circle</span>
+</div>
+</label>
+<label class="cursor-pointer group relative">
+<input class="peer sr-only" name="role" type="radio"/>
+<div class="flex flex-col items-center justify-center p-3 rounded-2xl bg-white border-2 border-gray-100 peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/30 transition-all h-28 shadow-sm">
+<div class="w-10 h-10 rounded-full bg-gray-100 peer-checked:bg-primary peer-checked:text-white flex items-center justify-center mb-2 transition-colors text-gray-500">
+<span class="material-symbols-outlined text-2xl">content_cut</span>
+</div>
+<span class="text-sm font-bold text-gray-600 peer-checked:text-primary">Tailor</span>
+</div>
+<div class="absolute top-2 right-2 opacity-0 peer-checked:opacity-100 transition-all scale-50 peer-checked:scale-100">
+<span class="material-symbols-outlined text-primary text-xl font-bold">check_circle</span>
+</div>
+</label>
+</div>
+</div>
+<hr class="border-gray-100"/>
+<div class="space-y-4">
+<h3 class="text-lg font-bold text-gray-900 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">payments</span>
+                        Salary Type
+                    </h3>
+<div class="bg-gray-100 p-1.5 rounded-xl flex relative">
+<label class="flex-1 cursor-pointer">
+<input checked="" class="peer sr-only" name="salary" type="radio"/>
+<div class="w-full py-3 rounded-lg text-center font-bold text-sm text-gray-500 peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">calendar_view_day</span>
+                                Daily
+                            </div>
+</label>
+<label class="flex-1 cursor-pointer">
+<input class="peer sr-only" name="salary" type="radio"/>
+<div class="w-full py-3 rounded-lg text-center font-bold text-sm text-gray-500 peer-checked:bg-white peer-checked:text-primary peer-checked:shadow-sm transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-lg">calendar_month</span>
+                                Monthly
+                            </div>
+</label>
+</div>
+</div>
+</form>
+</div>
+<div class="fixed bottom-0 left-0 right-0 p-4 bg-white/80 backdrop-blur-md border-t border-white/20 z-30 max-w-md mx-auto">
+<button class="w-full bg-primary hover:bg-primary-dark text-white font-bold text-lg py-4 rounded-2xl shadow-lg shadow-primary/30 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">save</span>
+                Save Staff Member
+            </button>
+</div>
+</div>
+
+</body></html>

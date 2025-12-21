@@ -25,6 +25,14 @@ class CustomerStore extends ChangeNotifier {
     notifyListeners();
   }
 
+  void update(Customer c) {
+    final index = _customers.indexWhere((existing) => existing.id == c.id);
+    if (index != -1) {
+      _customers[index] = c;
+      notifyListeners();
+    }
+  }
+
   void remove(String id) {
     _customers.removeWhere((c) => c.id == id);
     notifyListeners();

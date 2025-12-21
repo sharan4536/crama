@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Home Screen</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "primary": "#58A39B",
+                    "background-light": "#f7f8f6",
+                    "background-dark": "#192111",
+                    "surface-light": "#ffffff",
+                    "surface-dark": "#232a1b",
+                    "text-main": "#141b0e",
+                    "text-secondary": "#5e6e52",
+                },
+                fontFamily: {
+                    "display": ["Manrope", "sans-serif"]
+                },
+                borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                boxShadow: {
+                    "soft": "0 4px 20px -2px rgba(20, 27, 14, 0.05)",
+                    "card": "0 2px 12px -2px rgba(20, 27, 14, 0.04)"
+                }
+            },
+        },
+    }
+</script>
+<style type="text/tailwindcss">
+    @layer utilities {
+        .bg-theme-gradient {
+            background: linear-gradient(180deg, #58A39B 41%, #92B3A9 81%);
+        }
+    }
+</style>
+<style>
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    body {
+      min-height: max(884px, 100dvh);
+    }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-text-main dark:text-white transition-colors duration-200">
+<div class="relative min-h-screen w-full flex flex-col max-w-md mx-auto overflow-x-hidden shadow-2xl bg-theme-gradient">
+<header class="flex items-center justify-between p-6 pb-2">
+<div class="flex flex-col gap-1">
+<h1 class="text-2xl font-extrabold tracking-tight text-white leading-none">Chic Boutique</h1>
+<p class="text-white/80 text-sm font-medium">Oct 24, 2023</p>
+</div>
+<button class="relative flex items-center justify-center p-1 rounded-full hover:bg-white/20 transition-colors">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-10 w-10 ring-2 ring-white ring-offset-2 ring-offset-transparent" data-alt="Portrait of the boutique owner" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC6lwNYWA1pLXMALT03RKbuVZJBcJiA8sTiFOolzTT-XMqnuLTTaEvpZB-g_d_MZq2X0hKRe5DQ7BxcNuqwyDA_HSPnHohJIFvAikcsj2_w3HhGi8PwzHf7HLL5wyhZ5CK5YC8Bo-2GFpMte9Agg6S6AlBT-oWSxBdL2tGr6CpiL5WU87yq1FCpFexqryEPTu_98RtD5u6HLnmz4Y1xQOEIWTagx2scpfzfZYCTQNfVm72CMK5m6DOfacZRTlhJ0xZoCxCMSneZ9Frh");'>
+</div>
+<div class="absolute bottom-1 right-1 h-2.5 w-2.5 bg-primary rounded-full border-2 border-white"></div>
+</button>
+</header>
+<main class="flex-1 px-4 pt-4 pb-24 flex flex-col gap-6">
+<section class="w-full">
+<div class="relative overflow-hidden rounded-2xl bg-surface-light dark:bg-surface-dark shadow-soft p-6">
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
+<div class="absolute -bottom-10 -left-10 w-32 h-32 bg-primary/10 rounded-full blur-2xl"></div>
+<div class="relative z-10 flex flex-col gap-1">
+<div class="flex items-center justify-between mb-2">
+<h2 class="text-text-secondary dark:text-gray-400 text-sm font-semibold uppercase tracking-wider">Total Revenue Today</h2>
+<span class="material-symbols-outlined text-primary text-xl" data-icon="payments">payments</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="text-4xl font-extrabold text-text-main dark:text-white tracking-tight">$840.50</span>
+</div>
+<div class="flex items-center gap-2 mt-3">
+<div class="flex items-center gap-1 bg-primary/10 px-2.5 py-1 rounded-lg">
+<span class="material-symbols-outlined text-primary text-sm font-bold">trending_up</span>
+<span class="text-primary text-xs font-bold">+12% vs yesterday</span>
+</div>
+<span class="text-xs text-text-secondary dark:text-gray-500 font-medium ml-auto">15 Orders processed</span>
+</div>
+</div>
+</div>
+</section>
+<section class="flex flex-col gap-3">
+<h3 class="text-lg font-bold text-white px-1">Quick Actions</h3>
+<div class="flex flex-col gap-3">
+<button class="flex items-center gap-4 p-4 rounded-xl bg-surface-light dark:bg-surface-dark shadow-card active:scale-[0.98] transition-all duration-200 group">
+<div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">add</span>
+</div>
+<div class="flex flex-col items-start flex-1">
+<span class="font-bold text-lg text-text-main dark:text-white">New Bill</span>
+<span class="text-xs text-text-secondary dark:text-gray-400">Create invoice for customer</span>
+</div>
+<span class="material-symbols-outlined text-gray-300 dark:text-gray-600">chevron_right</span>
+</button>
+<button class="flex items-center gap-4 p-4 rounded-xl bg-surface-light dark:bg-surface-dark shadow-card active:scale-[0.98] transition-transform group">
+<div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">sell</span>
+</div>
+<span class="font-bold text-base text-text-main dark:text-white flex-1 text-left">Products</span>
+<span class="material-symbols-outlined text-gray-300 dark:text-gray-600">chevron_right</span>
+</button>
+<button class="flex items-center gap-4 p-4 rounded-xl bg-surface-light dark:bg-surface-dark shadow-card active:scale-[0.98] transition-transform group">
+<div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<span class="font-bold text-base text-text-main dark:text-white flex-1 text-left">Inventory</span>
+<span class="material-symbols-outlined text-gray-300 dark:text-gray-600">chevron_right</span>
+</button>
+<button class="flex items-center gap-4 p-4 rounded-xl bg-surface-light dark:bg-surface-dark shadow-card active:scale-[0.98] transition-transform group">
+<div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">groups</span>
+</div>
+<span class="font-bold text-base text-text-main dark:text-white flex-1 text-left">Customers</span>
+<span class="material-symbols-outlined text-gray-300 dark:text-gray-600">chevron_right</span>
+</button>
+<button class="flex items-center gap-4 p-4 rounded-xl bg-surface-light dark:bg-surface-dark shadow-card active:scale-[0.98] transition-transform group">
+<div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">bar_chart</span>
+</div>
+<span class="font-bold text-base text-text-main dark:text-white flex-1 text-left">Reports</span>
+<span class="material-symbols-outlined text-gray-300 dark:text-gray-600">chevron_right</span>
+</button>
+<button class="flex items-center gap-4 p-4 rounded-xl bg-surface-light dark:bg-surface-dark shadow-card active:scale-[0.98] transition-transform group">
+<div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">settings</span>
+</div>
+<div class="flex flex-col items-start flex-1">
+<span class="font-bold text-base text-text-main dark:text-white">Settings</span>
+</div>
+<span class="material-symbols-outlined text-gray-300 dark:text-gray-600">chevron_right</span>
+</button>
+</div>
+</section>
+</main>
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-t border-gray-100 dark:border-gray-800 pb-safe pt-2">
+<div class="max-w-md mx-auto flex justify-around items-center h-16 px-2">
+<button class="flex flex-col items-center justify-center w-16 gap-1 text-primary">
+<span class="material-symbols-outlined font-variation-settings-fill">home</span>
+<span class="text-[10px] font-bold">Home</span>
+</button>
+<button class="flex flex-col items-center justify-center w-16 gap-1 text-gray-400 dark:text-gray-500 hover:text-text-main dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="text-[10px] font-medium">History</span>
+</button>
+<button class="flex flex-col items-center justify-center w-16 gap-1 text-gray-400 dark:text-gray-500 hover:text-text-main dark:hover:text-white transition-colors">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+<div class="h-5 w-full"></div>
+</nav>
+</div>
+<script>
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // document.documentElement.classList.add('dark');
+    }
+</script>
+
+</body></html>
