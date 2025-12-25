@@ -120,7 +120,7 @@ class MyApp extends StatelessWidget {
         }
         return MaterialPageRoute(builder: (_) => const SplashScreen());
       },
-      home: const LoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }

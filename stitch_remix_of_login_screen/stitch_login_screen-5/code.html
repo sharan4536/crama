@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Boutique Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#57a29b",
+                        "background-light": "#f6f7f7",
+                        "background-dark": "#161c1b",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display antialiased">
+<div class="relative flex min-h-screen w-full flex-col bg-[linear-gradient(180deg,#58A39B_41%,#92B3A9_81%)] overflow-hidden group/design-root">
+<!-- Header Section: Logo & Titles -->
+<!-- Placed on the gradient background for contrast -->
+<div class="flex flex-col items-center justify-center pt-20 pb-10 px-6 text-center z-10">
+<!-- Logo Container -->
+<div class="h-24 w-24 rounded-2xl bg-white/10 backdrop-blur-md shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/20 flex items-center justify-center mb-6 p-4">
+<!-- Using a background image for the logo as per component style -->
+<div class="w-full h-full bg-contain bg-center bg-no-repeat" data-alt="Boutique App Logo white icon on transparent" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBF-6ToSTIUrCfY7SUsZ11txtKJigdgABF0_f7v0T1Ono8O5DkBbr2ORnfFqDg0OO6Q-GRTtdOzNJHkVadHleulTRg-efG0ZmcZdRRT3-GOiRjiNq4EPL9lZG9XaTxFFvGSw0X_HPwDvajPy3MdznZ8bBf-5fvjcUi39ndzvOxTYymv1VYD35QmB2bM0X3bPQk2blE81Awkqjt6zFBurBulMHZ7m4ZD-HejJM4N-axs7RXjy1Wj_tD4oJfcMiCUiB7UOnLeAd416NIp");'></div>
+</div>
+<h1 class="text-white text-[32px] font-bold tracking-tight leading-tight mb-2 drop-shadow-sm">Welcome Back</h1>
+<p class="text-white/90 text-base font-medium tracking-wide">Login to manage your boutique</p>
+</div>
+<!-- Main Content Sheet -->
+<!-- Rounded top corners to create a bottom-sheet effect standard in iOS apps -->
+<div class="flex-1 w-full bg-background-light dark:bg-background-dark rounded-t-[2.5rem] px-6 py-10 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] flex flex-col items-center justify-start animate-in slide-in-from-bottom-4 duration-500">
+<div class="w-full max-w-[480px] flex flex-col gap-6">
+<!-- Email Field -->
+<div class="flex flex-col gap-2">
+<label class="text-[#121716] dark:text-white font-semibold text-sm ml-1">Email address</label>
+<div class="relative flex items-center">
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#121716] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#d7e0df] dark:border-gray-700 bg-white dark:bg-[#222827] focus:border-primary h-14 placeholder:text-[#9aaeb3] p-[15px] text-base font-normal leading-normal transition-all" placeholder="name@boutique.com" type="email"/>
+<span class="material-symbols-outlined absolute right-4 text-[#9aaeb3] pointer-events-none">mail</span>
+</div>
+</div>
+<!-- Password Field -->
+<div class="flex flex-col gap-2">
+<label class="text-[#121716] dark:text-white font-semibold text-sm ml-1">Password</label>
+<div class="flex w-full flex-1 items-stretch rounded-xl relative">
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#121716] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-[#d7e0df] dark:border-gray-700 bg-white dark:bg-[#222827] focus:border-primary h-14 placeholder:text-[#9aaeb3] p-[15px] pr-12 text-base font-normal leading-normal transition-all" placeholder="Enter your password" type="password"/>
+<button class="absolute right-0 top-0 h-full px-4 text-[#9aaeb3] hover:text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+<!-- Forgot Password Link -->
+<div class="flex justify-end mt-1">
+<a class="text-primary font-semibold text-sm hover:opacity-80 transition-opacity" href="#">Forgot password?</a>
+</div>
+</div>
+<!-- Spacer -->
+<div class="h-4"></div>
+<!-- Login Button -->
+<button class="w-full h-14 bg-primary hover:bg-[#4a8f89] text-white font-bold rounded-xl text-lg shadow-lg shadow-primary/20 transition-all active:scale-[0.98] flex items-center justify-center gap-2">
+<span>Login</span>
+<span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+</button>
+<!-- Footer Sign Up -->
+<div class="mt-4 text-center">
+<p class="text-[#65817e] dark:text-gray-400 text-base">
+                        Don’t have an account? 
+                        <a class="text-primary font-bold hover:underline ml-1" href="#">Sign Up</a>
+</p>
+</div>
+</div>
+<!-- Bottom spacing for mobile safe areas -->
+<div class="h-8"></div>
+</div>
+</div>
+</body></html>

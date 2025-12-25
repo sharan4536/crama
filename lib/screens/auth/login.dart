@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'registration.dart';
+import 'email_login.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -331,7 +332,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                   height: 48,
                                   child: OutlinedButton(
                                     onPressed: () {
-                                      // Email login logic
+                                      Navigator.push(
+                                        context,
+                                        PageTransition(
+                                          type: PageTransitionType.rightToLeft,
+                                          child: const EmailLoginScreen(),
+                                        ),
+                                      );
                                     },
                                     style: OutlinedButton.styleFrom(
                                       backgroundColor: Colors.white,

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fast &amp; Easy Billing - Splash Screen</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#57a29b",
+                        "primary-dark": "#3d736e",
+                        "secondary": "#92B3A9",
+                        "background-light": "#f6f7f7",
+                        "background-dark": "#161c1b",
+                        "text-dark": "#121716",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: { "DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>.splash-gradient {
+            background: linear-gradient(180deg, #58A39B 41%, #92B3A9 81%);
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display antialiased text-gray-900 bg-background-light dark:bg-background-dark">
+<div class="relative flex h-screen w-full flex-col overflow-hidden splash-gradient">
+<div class="flex-1 flex flex-col items-center justify-center w-full max-w-md mx-auto px-6 pt-10 pb-6">
+<div class="flex-1 flex flex-col justify-end items-center w-full mb-8">
+<div class="relative flex items-center justify-center w-64 h-64 rounded-full bg-white/10 backdrop-blur-sm shadow-xl ring-1 ring-white/20 mb-6 animate-fade-in-up">
+<div class="absolute inset-0 rounded-full border border-white/20"></div>
+<div class="w-48 h-48 bg-contain bg-center bg-no-repeat drop-shadow-lg" data-alt="Stylized 3D illustration of a receipt and shopping bag" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCuh7jjUVYCh85tFP98U5NCEjyEMBo0OVxZszb30PXBd8Hev6XKGjFdjm7dbQtspX3iKYZvObK65Ywk19ls5PJntx9uXeAzrZF7Op2-g9Kozy6demg4jr0u67ImA9BkXI0j4rLUYiY7jHlC2tx85z__a-j-ZTlWVe4xioAyPilCToWLd09O_F9M3WqPyGptJaQy1Ipo94tDEu-piNEcwlxyMp0swJIKgxCoC9RUL9hvB2oA5lT-YseOmbnQODC8gD7__MSIunfEwLIF");'>
+</div>
+</div>
+</div>
+<div class="w-full text-center space-y-4 mb-8">
+<h1 class="text-white tracking-tight text-[36px] font-extrabold leading-[1.1] drop-shadow-sm">
+                Fast &amp; Easy Billing
+            </h1>
+<p class="text-white/90 text-lg font-medium leading-relaxed px-2">
+                Create bills, manage customers, and track payments in seconds
+            </p>
+</div>
+<div class="flex flex-row items-center justify-center gap-3 mb-8">
+<div class="h-2 w-8 rounded-full bg-white shadow-sm"></div>
+<div class="h-2 w-2 rounded-full bg-white/40"></div>
+<div class="h-2 w-2 rounded-full bg-white/40"></div>
+</div>
+<div class="w-full space-y-4">
+<button class="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-xl h-14 px-6 bg-white text-[#58A39B] hover:bg-gray-50 active:scale-[0.98] transition-all duration-200 shadow-lg group">
+<span class="text-lg font-bold tracking-wide mr-2">Get Started</span>
+<span class="material-symbols-outlined text-[20px] transition-transform group-hover:translate-x-1">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="h-6 w-full"></div>
+</div>
+
+</body></html>

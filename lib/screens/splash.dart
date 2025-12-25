@@ -111,6 +111,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                             color: Colors.white,
                             letterSpacing: -0.5,
                             height: 1.2,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withOpacity(0.1),
+                                offset: const Offset(0, 1),
+                                blurRadius: 2,
+                              ),
+                            ],
                           ),
                         ),
                         const SizedBox(height: 12),
