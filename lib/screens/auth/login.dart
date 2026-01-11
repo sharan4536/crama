@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
-import 'registration.dart';
+import 'otp.dart';
 import 'email_login.dart';
+import '../home.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -45,7 +46,13 @@ class _LoginScreenState extends State<LoginScreen> {
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     setState(() => _submitting = false);
-    Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const ShopRegistrationScreen()));
+    Navigator.pushReplacement(
+      context,
+      PageTransition(
+        type: PageTransitionType.rightToLeft,
+        child: OtpScreen(phone: _phoneController.text),
+      ),
+    );
   }
 
   @override

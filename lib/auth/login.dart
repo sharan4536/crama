@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
-import 'registration.dart';
+import '../home.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -35,9 +35,12 @@ class _LoginScreenState extends State<LoginScreen> {
     await Future.delayed(const Duration(milliseconds: 500));
     if (!mounted) return;
     setState(() => _submitting = false);
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
-      PageTransition(type: PageTransitionType.rightToLeft, child: const ShopRegistrationScreen()),
+      PageTransition(
+        type: PageTransitionType.rightToLeft,
+        child: const HomePage(),
+      ),
     );
   }
 
@@ -110,4 +113,3 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
-

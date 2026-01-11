@@ -253,11 +253,11 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
   Widget _buildStatsRow() {
     return Row(
       children: [
-        Expanded(child: _buildStatCard("Spend", "\$1,240", null)),
+        Expanded(child: _buildStatCard("Spend", "₹1,240", null)),
         const SizedBox(width: 12),
         Expanded(child: _buildStatCard("Visits", "12", null)),
         const SizedBox(width: 12),
-        Expanded(child: _buildStatCard("Credits", "\$0.00", Colors.green)),
+        Expanded(child: _buildStatCard("Credits", "₹0.00", Colors.green)),
       ],
     );
   }

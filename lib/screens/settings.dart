@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'shop_profile.dart';
 
 class SettingsScreen extends StatelessWidget {
   static const routeName = '/settings';
@@ -16,11 +17,13 @@ class SettingsScreen extends StatelessWidget {
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: const [
-          _SettingTile(icon: Icons.person_rounded, title: 'Profile'),
-          _SettingTile(icon: Icons.chat_bubble_rounded, title: 'WhatsApp Templates'),
-          _SettingTile(icon: Icons.print_rounded, title: 'Printer Connection'),
-          _SettingTile(icon: Icons.receipt_long_rounded, title: 'Billing Preferences'),
+        children: [
+          _SettingTile(icon: Icons.person_rounded, title: 'Profile', onTap: () {
+            Navigator.pushNamed(context, ShopProfileScreen.routeName);
+          }),
+          const _SettingTile(icon: Icons.chat_bubble_rounded, title: 'WhatsApp Templates'),
+          const _SettingTile(icon: Icons.print_rounded, title: 'Printer Connection'),
+          const _SettingTile(icon: Icons.receipt_long_rounded, title: 'Billing Preferences'),
         ],
       ),
     );
@@ -30,7 +33,8 @@ class SettingsScreen extends StatelessWidget {
 class _SettingTile extends StatelessWidget {
   final IconData icon;
   final String title;
-  const _SettingTile({required this.icon, required this.title});
+  final VoidCallback? onTap;
+  const _SettingTile({required this.icon, required this.title, this.onTap});
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -40,7 +44,7 @@ class _SettingTile extends StatelessWidget {
         leading: CircleAvatar(backgroundColor: const Color(0xFF00D4B7).withValues(alpha: 0.16), child: Icon(icon, color: const Color(0xFF00D4B7))),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w700)),
         trailing: const Icon(Icons.chevron_right_rounded),
-        onTap: () {},
+        onTap: onTap,
       ),
     );
   }

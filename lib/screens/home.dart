@@ -4,6 +4,9 @@ import 'package:page_transition/page_transition.dart';
 import 'lists.dart';
 import 'package:crama/billing/billing_page.dart';
 import 'settings.dart';
+import 'inventory.dart';
+import 'shop_profile.dart';
+import 'package:crama/screens/reports/sales_reports.dart';
 
 class HomePage extends StatefulWidget {
   static const routeName = '/home';
@@ -149,9 +152,13 @@ class _HomePageState extends State<HomePage> {
               shape: BoxShape.circle,
               border: Border.all(color: Colors.white.withOpacity(0.5), width: 1),
             ),
-            child: const CircleAvatar(
-              radius: 20,
-              backgroundImage: NetworkImage("https://lh3.googleusercontent.com/aida-public/AB6AXuC6lwNYWA1pLXMALT03RKbuVZJBcJiA8sTiFOolzTT-XMqnuLTTaEvpZB-g_d_MZq2X0hKRe5DQ7BxcNuqwyDA_HSPnHohJIFvAikcsj2_w3HhGi8PwzHf7HLL5wyhZ5CK5YC8Bo-2GFpMte9Agg6S6AlBT-oWSxBdL2tGr6CpiL5WU87yq1FCpFexqryEPTu_98RtD5u6HLnmz4Y1xQOEIWTagx2scpfzfZYCTQNfVm72CMK5m6DOfacZRTlhJ0xZoCxCMSneZ9Frh"),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(22),
+              onTap: () => Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const ShopProfileScreen())),
+              child: const CircleAvatar(
+                radius: 20,
+                backgroundImage: NetworkImage("https://lh3.googleusercontent.com/aida-public/AB6AXuC6lwNYWA1pLXMALT03RKbuVZJBcJiA8sTiFOolzTT-XMqnuLTTaEvpZB-g_d_MZq2X0hKRe5DQ7BxcNuqwyDA_HSPnHohJIFvAikcsj2_w3HhGi8PwzHf7HLL5wyhZ5CK5YC8Bo-2GFpMte9Agg6S6AlBT-oWSxBdL2tGr6CpiL5WU87yq1FCpFexqryEPTu_98RtD5u6HLnmz4Y1xQOEIWTagx2scpfzfZYCTQNfVm72CMK5m6DOfacZRTlhJ0xZoCxCMSneZ9Frh"),
+              ),
             ),
           ),
         ],
@@ -209,7 +216,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 8),
               Text(
-                "\$${todaysSales.toStringAsFixed(2)}",
+                "₹${todaysSales.toStringAsFixed(2)}",
                 style: GoogleFonts.manrope(
                   fontSize: 36,
                   fontWeight: FontWeight.w800,
@@ -279,13 +286,19 @@ class _HomePageState extends State<HomePage> {
         _buildActionItem(
           icon: Icons.inventory_2_outlined,
           title: "Inventory",
-          onTap: () {}, // Add navigation
+          onTap: () => Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const InventoryScreen())),
         ),
         const SizedBox(height: 12),
         _buildActionItem(
           icon: Icons.groups_outlined,
           title: "Customers",
           onTap: () => Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const CustomersListScreen())),
+        ),
+        const SizedBox(height: 12),
+        _buildActionItem(
+          icon: Icons.person_outline,
+          title: "Profile",
+          onTap: () => Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const ShopProfileScreen())),
         ),
         const SizedBox(height: 12),
         _buildActionItem(
@@ -297,7 +310,7 @@ class _HomePageState extends State<HomePage> {
         _buildActionItem(
           icon: Icons.bar_chart_outlined,
           title: "Reports",
-          onTap: () {}, // Add navigation
+          onTap: () => Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const SalesReportsPage())),
         ),
         const SizedBox(height: 12),
         _buildActionItem(
@@ -432,7 +445,10 @@ class _HomePageState extends State<HomePage> {
                   icon: Icons.person,
                   label: "Profile",
                   isSelected: false,
-                  onTap: () => Navigator.pop(context),
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const ShopProfileScreen()));
+                  },
                 ),
               ],
             ),

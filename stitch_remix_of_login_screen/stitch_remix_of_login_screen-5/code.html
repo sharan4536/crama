@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings Screen</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#1edcc9",
+                "brand-accent": "#58A39B",
+                "background-light": "#f6f8f8",
+                "background-dark": "#11211f",
+              },
+              fontFamily: {
+                "display": ["Manrope", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            },
+          },
+        }
+      </script>
+<style>
+        /* Custom gradient as per request, overriding standard background for this specific screen design */
+        .settings-gradient {
+            background: linear-gradient(180deg, #58A39B 41%, #92B3A9 81%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display antialiased text-slate-900 dark:text-white">
+<div class="relative flex min-h-screen w-full flex-col settings-gradient group/design-root overflow-x-hidden">
+<!-- Top App Bar -->
+<div class="flex items-center p-4 pb-2 justify-between text-white">
+<div class="flex size-12 shrink-0 items-center justify-start cursor-pointer transition-opacity hover:opacity-80">
+<span class="material-symbols-outlined" style="font-size: 24px;">arrow_back</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Settings</h2>
+</div>
+<!-- Profile Header -->
+<div class="flex p-4 pb-6 flex-col items-center">
+<div class="flex w-full flex-col items-center gap-4">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-24 w-24 border-4 border-white/20 shadow-lg" data-alt="Profile picture of the boutique owner" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAXcYkF_kEJL7KrJjMrTLPgihAKV6_EjaMWZHV2Tgjgd4vR6eMSrh7OgIqOy5AgmRbXSztEKo0Z7vHE859OitNZYTqLX1Jygu2wdrVKRxwCF8eeeaZ5ffRrUq0x3Wj24PkHHhMFRVs3QrGLnkVoK4j1zSORJ3rqk3i11nUWblHo0-Zz0DgyArhpatzTNMs90pc6689XWxYEII1p7b2RyQblZis5pjpIvmGfIpUSZ-fBz8PoJiSbnu-c8lDCAga8yxoGQH1VZH_d2HI2");'>
+</div>
+<div class="absolute bottom-0 right-0 bg-white rounded-full p-1.5 shadow-sm cursor-pointer hover:bg-gray-100">
+<span class="material-symbols-outlined text-[#58A39B]" style="font-size: 16px;">edit</span>
+</div>
+</div>
+<div class="flex flex-col justify-center items-center text-white">
+<p class="text-2xl font-bold leading-tight tracking-[-0.015em]">Chic Boutique</p>
+<p class="text-white/80 text-base font-medium leading-normal">Jane Doe • Owner</p>
+</div>
+</div>
+</div>
+<!-- Scrollable Content Area -->
+<div class="flex-1 w-full px-4 pb-12 flex flex-col gap-6 max-w-md mx-auto w-full">
+<!-- Section: Shop & Billing -->
+<div class="flex flex-col gap-2">
+<h3 class="text-white/90 text-sm font-bold tracking-wide uppercase px-2">Shop &amp; Billing</h3>
+<div class="bg-background-light dark:bg-background-dark rounded-xl overflow-hidden shadow-sm flex flex-col divide-y divide-gray-100 dark:divide-gray-800">
+<!-- Item: Shop Details -->
+<div class="flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer transition-colors group">
+<div class="text-[#58A39B] flex items-center justify-center rounded-lg bg-[#58A39B]/10 shrink-0 size-10 group-hover:bg-[#58A39B]/20 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">storefront</span>
+</div>
+<div class="flex-1 flex flex-col">
+<p class="text-slate-900 dark:text-white text-base font-semibold leading-normal truncate">Shop Details</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-normal">Address, Contact Info, Logo</p>
+</div>
+<span class="material-symbols-outlined text-slate-400" style="font-size: 24px;">chevron_right</span>
+</div>
+<!-- Item: GST & Tax -->
+<div class="flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer transition-colors group">
+<div class="text-[#58A39B] flex items-center justify-center rounded-lg bg-[#58A39B]/10 shrink-0 size-10 group-hover:bg-[#58A39B]/20 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">percent</span>
+</div>
+<div class="flex-1 flex flex-col">
+<p class="text-slate-900 dark:text-white text-base font-semibold leading-normal truncate">GST &amp; Tax Settings</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-normal">Tax Slabs, HSN Codes</p>
+</div>
+<span class="material-symbols-outlined text-slate-400" style="font-size: 24px;">chevron_right</span>
+</div>
+<!-- Item: Invoice Format -->
+<div class="flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer transition-colors group">
+<div class="text-[#58A39B] flex items-center justify-center rounded-lg bg-[#58A39B]/10 shrink-0 size-10 group-hover:bg-[#58A39B]/20 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">receipt_long</span>
+</div>
+<div class="flex-1 flex flex-col">
+<p class="text-slate-900 dark:text-white text-base font-semibold leading-normal truncate">Invoice Format</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-normal">Templates, Terms &amp; Conditions</p>
+</div>
+<span class="material-symbols-outlined text-slate-400" style="font-size: 24px;">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Section: Data Management -->
+<div class="flex flex-col gap-2">
+<h3 class="text-white/90 text-sm font-bold tracking-wide uppercase px-2">Data Management</h3>
+<div class="bg-background-light dark:bg-background-dark rounded-xl overflow-hidden shadow-sm flex flex-col divide-y divide-gray-100 dark:divide-gray-800">
+<!-- Item: Backup -->
+<div class="flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer transition-colors group">
+<div class="text-[#58A39B] flex items-center justify-center rounded-lg bg-[#58A39B]/10 shrink-0 size-10 group-hover:bg-[#58A39B]/20 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">cloud_upload</span>
+</div>
+<div class="flex-1 flex flex-col">
+<p class="text-slate-900 dark:text-white text-base font-semibold leading-normal truncate">Backup &amp; Restore</p>
+</div>
+<span class="material-symbols-outlined text-slate-400" style="font-size: 24px;">chevron_right</span>
+</div>
+<!-- Item: Export -->
+<div class="flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-white/5 cursor-pointer transition-colors group">
+<div class="text-[#58A39B] flex items-center justify-center rounded-lg bg-[#58A39B]/10 shrink-0 size-10 group-hover:bg-[#58A39B]/20 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">ios_share</span>
+</div>
+<div class="flex-1 flex flex-col">
+<p class="text-slate-900 dark:text-white text-base font-semibold leading-normal truncate">Export Data</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-normal">PDF, Excel, CSV</p>
+</div>
+<span class="material-symbols-outlined text-slate-400" style="font-size: 24px;">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Section: Account -->
+<div class="flex flex-col gap-2">
+<h3 class="text-white/90 text-sm font-bold tracking-wide uppercase px-2">Account</h3>
+<div class="bg-background-light dark:bg-background-dark rounded-xl overflow-hidden shadow-sm flex flex-col">
+<!-- Item: Logout -->
+<div class="flex items-center gap-4 p-4 hover:bg-red-50 dark:hover:bg-red-900/10 cursor-pointer transition-colors group">
+<div class="text-red-500 flex items-center justify-center rounded-lg bg-red-50 dark:bg-red-900/20 shrink-0 size-10 group-hover:bg-red-100 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 24px;">logout</span>
+</div>
+<div class="flex-1">
+<p class="text-red-500 text-base font-semibold leading-normal truncate">Logout</p>
+</div>
+</div>
+</div>
+<p class="text-white/60 text-xs text-center mt-4">App Version 1.0.4</p>
+</div>
+</div>
+</div>
+</body></html>

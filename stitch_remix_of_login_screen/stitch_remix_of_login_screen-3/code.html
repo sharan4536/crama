@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Order Status Tracking</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#57a29b",
+                        "primary-dark": "#3d736e",
+                        "background-light": "#f6f7f7",
+                        "background-dark": "#161c1b",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"],
+                        "body": ["Manrope", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .brand-gradient {
+            background: linear-gradient(180deg, #58A39B 41%, #92B3A9 81%);
+        }
+    </style>
+<style>
+        body {
+            min-height: max(884px, 100dvh);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-display antialiased text-[#121716] bg-background-light dark:bg-background-dark">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-hidden brand-gradient">
+<header class="flex items-center justify-between px-4 py-6 pt-12 lg:pt-6 z-10">
+<div class="flex items-center gap-3 text-white">
+<button class="flex size-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-colors">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="text-2xl font-bold tracking-tight drop-shadow-sm">Order Tracking</h1>
+</div>
+<button class="flex items-center justify-center gap-2 rounded-full bg-white/20 backdrop-blur-md px-4 py-2 text-sm font-bold text-white hover:bg-white/30 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[20px]">filter_list</span>
+<span>Filter</span>
+</button>
+</header>
+<main class="flex-1 flex flex-col w-full max-w-md mx-auto lg:max-w-3xl pb-6">
+<div class="w-full overflow-x-auto hide-scrollbar px-4 pb-6 pt-2">
+<div class="flex gap-3">
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white text-primary font-bold px-5 shadow-lg shadow-primary/10 transition-transform active:scale-95 border border-white">
+<span class="text-sm">All Orders</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white/20 backdrop-blur-md text-white font-medium px-5 border border-white/30 hover:bg-white/30 transition-all active:scale-95">
+<span class="text-sm">Processing</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white/20 backdrop-blur-md text-white font-medium px-5 border border-white/30 hover:bg-white/30 transition-all active:scale-95">
+<span class="text-sm">Ready for Pickup</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white/20 backdrop-blur-md text-white font-medium px-5 border border-white/30 hover:bg-white/30 transition-all active:scale-95">
+<span class="text-sm">Delivered</span>
+</button>
+<button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-white/20 backdrop-blur-md text-white font-medium px-5 border border-white/30 hover:bg-white/30 transition-all active:scale-95">
+<span class="text-sm">Cancelled</span>
+</button>
+</div>
+</div>
+<div class="flex flex-col gap-4 px-4 pb-20">
+<article class="flex flex-col gap-3 rounded-2xl bg-white dark:bg-[#1e2625] p-4 shadow-lg shadow-[#58A39B]/10 transition-transform hover:scale-[1.01]">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-700 bg-cover bg-center shrink-0 border-2 border-white dark:border-slate-600 shadow-sm" data-alt="Portrait of Sarah Jenkins" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDZyR0uo8VSzNUqAPLYQOXstLujdMcyy0WHhi0FRIudKwH08ooN1t8m-3iMD9_ympeQIeFBUfbshDCgn2P4v3Q489ywbPOC5epUDRNFkkTXDOy86atIZZyancO6797cumEm4rVGV9icWhPCmhoEvdRID0q6mYsFtYiAr4OSmJpP9MXs3MAHXoT_h5Im9B9XtWNL3MlWau0ARhNB3lKr9RYLaKpQ76D6Gd6XSz1TCpv1ZUhwJ0b4pCsLRMEz-S7-ZlYhDzO2UkoPkBNg");'>
+</div>
+<div>
+<h3 class="text-[#121716] dark:text-white text-base font-bold leading-tight">Sarah Jenkins</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-0.5">#ORD-1024 • Today, 10:30 AM</p>
+</div>
+</div>
+<span class="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2.5 py-1 text-xs font-bold text-amber-700 dark:text-amber-400 ring-1 ring-inset ring-amber-600/20">
+                            Processing
+                        </span>
+</div>
+<div class="mt-4 mb-2 relative px-2">
+<div class="absolute top-[5px] left-0 w-full h-0.5 bg-slate-100 dark:bg-slate-700 rounded-full"></div>
+<div class="absolute top-[5px] left-0 h-0.5 bg-primary rounded-full z-0 transition-all duration-500" style="width: 25%"></div>
+<div class="flex justify-between items-start relative z-10 w-full text-center">
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-bold text-primary mt-1.5 leading-tight">Order<br/>Started</span>
+</div>
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-white dark:ring-[#1e2625] relative">
+<span class="absolute inline-flex h-full w-full rounded-full bg-primary opacity-25 animate-ping"></span>
+</div>
+<span class="text-[9px] font-bold text-primary mt-1.5 leading-tight">Stitching</span>
+</div>
+<div class="flex flex-col items-center w-12">
+<div class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-slate-600 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-400 mt-1.5 leading-tight">Embroidery</span>
+</div>
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-slate-600 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-400 mt-1.5 leading-tight">Packed</span>
+</div>
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-slate-600 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-400 mt-1.5 leading-tight">Delivered</span>
+</div>
+</div>
+</div>
+<div class="h-px w-full bg-slate-100 dark:bg-slate-700/50 my-1"></div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px]">shopping_bag</span>
+<span class="text-xs font-medium">3 Items</span>
+</div>
+<button class="flex items-center justify-center rounded-lg bg-primary/10 px-4 py-2 text-sm font-bold text-primary dark:text-primary-light hover:bg-primary/20 transition-colors">
+                        View Details
+                    </button>
+</div>
+</article>
+<article class="flex flex-col gap-3 rounded-2xl bg-white dark:bg-[#1e2625] p-4 shadow-lg shadow-[#58A39B]/10 transition-transform hover:scale-[1.01]">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-700 bg-cover bg-center shrink-0 border-2 border-white dark:border-slate-600 shadow-sm" data-alt="Portrait of Mike Ross" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDC-CIZeRB733mXRltlTTPZP-68yw2Csv9R032uhEeBCvlTKn2k73Eu5uco85MSLkPrWFdmQXskD4gmwOFKqoVkrMcUEI0iCQDFPe7PYqptD9Qdkf5sDseqZyokRffEB4ra3FwhuFjL3brDc5-iekddtF_nF26Up8XiF5-RA3xNIhfxr7bGI3R6yDZJbODxklemIIgDOl6jHQ36ELehyJV6uCNeenoqUzWfQhAVBHQSGbKJvVjKsZxVOcraF87wPgYPDKLuIcjN6LFE");'>
+</div>
+<div>
+<h3 class="text-[#121716] dark:text-white text-base font-bold leading-tight">Mike Ross</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-0.5">#ORD-1023 • Yesterday</p>
+</div>
+</div>
+<span class="inline-flex items-center rounded-full bg-primary/15 dark:bg-primary/20 px-2.5 py-1 text-xs font-bold text-primary-dark dark:text-primary ring-1 ring-inset ring-primary/20">
+                            Ready for Pickup
+                        </span>
+</div>
+<div class="mt-4 mb-2 relative px-2">
+<div class="absolute top-[5px] left-0 w-full h-0.5 bg-slate-100 dark:bg-slate-700 rounded-full"></div>
+<div class="absolute top-[5px] left-0 h-0.5 bg-primary rounded-full z-0 transition-all duration-500" style="width: 75%"></div>
+<div class="flex justify-between items-start relative z-10 w-full text-center">
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-400 mt-1.5 leading-tight">Order<br/>Started</span>
+</div>
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-400 mt-1.5 leading-tight">Stitching</span>
+</div>
+<div class="flex flex-col items-center w-12">
+<div class="w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-400 mt-1.5 leading-tight">Embroidery</span>
+</div>
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-primary ring-2 ring-white dark:ring-[#1e2625] relative">
+<span class="absolute inline-flex h-full w-full rounded-full bg-primary opacity-25 animate-ping"></span>
+</div>
+<span class="text-[9px] font-bold text-primary mt-1.5 leading-tight">Packed</span>
+</div>
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-slate-600 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-400 mt-1.5 leading-tight">Delivered</span>
+</div>
+</div>
+</div>
+<div class="h-px w-full bg-slate-100 dark:bg-slate-700/50 my-1"></div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px]">shopping_bag</span>
+<span class="text-xs font-medium">1 Item</span>
+</div>
+<button class="flex items-center justify-center rounded-lg bg-primary/10 px-4 py-2 text-sm font-bold text-primary dark:text-primary-light hover:bg-primary/20 transition-colors">
+                        View Details
+                    </button>
+</div>
+</article>
+<article class="flex flex-col gap-3 rounded-2xl bg-white dark:bg-[#1e2625] p-4 shadow-lg shadow-[#58A39B]/10 transition-transform hover:scale-[1.01] opacity-90">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-700 bg-cover bg-center shrink-0 border-2 border-white dark:border-slate-600 shadow-sm" data-alt="Portrait of Jessica Pearson" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAZCby4ZPaPiSm2lYm3BZNNhE8dMtiOvSCByJZMbLPiEnVHTmJmoDj4-43zqu0HlVGGMbI9zvNTiKup4axv-z2SoRYGETQgLb1PfjAQ9K_F15Ls_y29U-Fhqv8uPauGR5EDyMGLlYqDYRQGRPzHSDEc6sRE1lFSNKJ_eY6Vd_pXe7fgz0Voe6hKE_efbIN5jlWHFj0VyDlMZUkNaOBzCYPsml4xASjN6yEp15bBDx2ihdQc9yyyO0EJUMNkGOsJVdy17YFy1Kx33369");'>
+</div>
+<div>
+<h3 class="text-[#121716] dark:text-white text-base font-bold leading-tight">Jessica Pearson</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-0.5">#ORD-1020 • Oct 24</p>
+</div>
+</div>
+<span class="inline-flex items-center rounded-full bg-emerald-100 dark:bg-emerald-900/30 px-2.5 py-1 text-xs font-bold text-emerald-700 dark:text-emerald-400 ring-1 ring-inset ring-emerald-600/20">
+                            Delivered
+                        </span>
+</div>
+<div class="mt-4 mb-2 relative px-2">
+<div class="absolute top-[5px] left-0 w-full h-0.5 bg-slate-100 dark:bg-slate-700 rounded-full"></div>
+<div class="absolute top-[5px] left-0 h-0.5 bg-emerald-500 rounded-full z-0 transition-all duration-500" style="width: 100%"></div>
+<div class="flex justify-between items-start relative z-10 w-full text-center">
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-400 mt-1.5 leading-tight">Order<br/>Started</span>
+</div>
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-400 mt-1.5 leading-tight">Stitching</span>
+</div>
+<div class="flex flex-col items-center w-12">
+<div class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-400 mt-1.5 leading-tight">Embroidery</span>
+</div>
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-400 mt-1.5 leading-tight">Packed</span>
+</div>
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 mt-1.5 leading-tight">Delivered</span>
+</div>
+</div>
+</div>
+<div class="h-px w-full bg-slate-100 dark:bg-slate-700/50 my-1"></div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px]">local_shipping</span>
+<span class="text-xs font-medium">Shipped</span>
+</div>
+<button class="flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                        View Details
+                    </button>
+</div>
+</article>
+<article class="flex flex-col gap-3 rounded-2xl bg-white dark:bg-[#1e2625] p-4 shadow-lg shadow-[#58A39B]/10 transition-transform hover:scale-[1.01] opacity-75">
+<div class="flex justify-between items-start">
+<div class="flex items-center gap-3">
+<div class="h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-700 bg-cover bg-center shrink-0 border-2 border-white dark:border-slate-600 shadow-sm grayscale" data-alt="Portrait of Louis Litt" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCJsHtt6crJMGuJj1kUjxURWFzoH4J1yiZ2Pfs54CEsDvT7wsiQYBHy1aV4XNCshGXeZHVDqYOjbjr48utQytW5itNk-aqeebCQ65KYHwoHpTpMTMtGMXkUmh2RFO0v34CcpBiYtWGLO9MuPQmVsKAcMVEwT0BFD8co0BeJr2njztlC-Z9NT_mv8W3gu_6GPl-zX_OrwNIGMW_s3W2VEXOOpVsYjV5kViWM7_Dljl0un44ZN1F9g8aEUqGJiTeWowQT8_hKXDktA2CM");'>
+</div>
+<div>
+<h3 class="text-[#121716] dark:text-white text-base font-bold leading-tight text-slate-600 dark:text-slate-300">Louis Litt</h3>
+<p class="text-slate-500 dark:text-slate-400 text-xs font-medium mt-0.5">#ORD-1015 • Oct 20</p>
+</div>
+</div>
+<span class="inline-flex items-center rounded-full bg-red-100 dark:bg-red-900/30 px-2.5 py-1 text-xs font-bold text-red-700 dark:text-red-400 ring-1 ring-inset ring-red-600/20">
+                            Cancelled
+                        </span>
+</div>
+<div class="mt-4 mb-2 relative px-2 grayscale opacity-60">
+<div class="absolute top-[5px] left-0 w-full h-0.5 bg-slate-100 dark:bg-slate-700 rounded-full"></div>
+<div class="absolute top-[5px] left-0 h-0.5 bg-slate-400 rounded-full z-0" style="width: 0%"></div>
+<div class="flex justify-between items-start relative z-10 w-full text-center">
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-slate-400 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-500 mt-1.5 leading-tight">Order<br/>Started</span>
+</div>
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-slate-600 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-300 mt-1.5 leading-tight">Stitching</span>
+</div>
+<div class="flex flex-col items-center w-12">
+<div class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-slate-600 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-300 mt-1.5 leading-tight">Embroidery</span>
+</div>
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-slate-600 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-300 mt-1.5 leading-tight">Packed</span>
+</div>
+<div class="flex flex-col items-center w-8">
+<div class="w-2.5 h-2.5 rounded-full bg-slate-200 dark:bg-slate-600 ring-2 ring-white dark:ring-[#1e2625]"></div>
+<span class="text-[9px] font-medium text-slate-300 mt-1.5 leading-tight">Delivered</span>
+</div>
+</div>
+</div>
+<div class="h-px w-full bg-slate-100 dark:bg-slate-700/50 my-1"></div>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-[18px]">cancel</span>
+<span class="text-xs font-medium">Refunded</span>
+</div>
+<button class="flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-700 px-4 py-2 text-sm font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-600 transition-colors">
+                        View Details
+                    </button>
+</div>
+</article>
+</div>
+</main>
+<button class="fixed bottom-6 right-6 flex h-14 w-14 items-center justify-center rounded-full bg-white text-primary shadow-xl shadow-teal-900/20 hover:scale-105 active:scale-95 transition-all z-50 group">
+<span class="material-symbols-outlined text-[32px] group-hover:rotate-90 transition-transform duration-300">add</span>
+</button>
+</div>
+
+</body></html>

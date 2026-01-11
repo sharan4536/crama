@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Inventory Tracking</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#56a46d",
+                        "background-light": "#f6f7f7",
+                        "background-dark": "#161c18",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#232924",
+                        "brand-teal": "#58A39B",
+                        "brand-sage": "#92B3A9",
+                        "status-warning": "#f59e0b",
+                        "status-danger": "#ef4444",
+                    },
+                    fontFamily: {
+                        "display": ["Manrope", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#121713] dark:text-gray-100 flex flex-col min-h-screen overflow-hidden">
+<!-- Gradient Header -->
+<header class="relative shrink-0" style="background: linear-gradient(90deg, #58A39B 41%, #92B3A9 81%);">
+<div class="px-4 pt-12 pb-6">
+<div class="flex items-center justify-between mb-6 text-white">
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[28px]">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight">Inventory</h1>
+<button class="flex items-center justify-center p-2 rounded-full hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-[28px]">search</span>
+</button>
+</div>
+<!-- Stats Summary (Optional context for Boutique Owner) -->
+<div class="flex gap-4 px-2 mb-2">
+<div class="flex flex-col text-white">
+<span class="text-xs opacity-80 font-medium uppercase tracking-wider">Total Value</span>
+<span class="text-2xl font-bold">$12,450.00</span>
+</div>
+</div>
+</div>
+<!-- Bottom Curve/Decoration for clean transition -->
+<div class="h-4 bg-background-light dark:bg-background-dark rounded-t-[24px] w-full absolute bottom-0 translate-y-[1px]"></div>
+</header>
+<!-- Tabs Navigation -->
+<div class="bg-background-light dark:bg-background-dark px-4 pb-2 shrink-0 z-10">
+<div class="flex gap-6 border-b border-gray-200 dark:border-gray-800 overflow-x-auto no-scrollbar">
+<!-- Active Tab -->
+<button class="relative flex items-center gap-2 pb-3 px-1 border-b-[3px] border-primary transition-all">
+<span class="text-primary font-bold text-sm whitespace-nowrap">All Products</span>
+<span class="bg-primary/10 text-primary text-xs font-bold px-2 py-0.5 rounded-full">142</span>
+</button>
+<!-- Inactive Tab -->
+<button class="relative flex items-center gap-2 pb-3 px-1 border-b-[3px] border-transparent hover:border-gray-300 dark:hover:border-gray-600 transition-all text-gray-500 dark:text-gray-400">
+<span class="font-semibold text-sm whitespace-nowrap">Low Stock</span>
+<span class="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 text-xs font-bold px-2 py-0.5 rounded-full">5</span>
+</button>
+<!-- Inactive Tab -->
+<button class="relative flex items-center gap-2 pb-3 px-1 border-b-[3px] border-transparent hover:border-gray-300 dark:hover:border-gray-600 transition-all text-gray-500 dark:text-gray-400">
+<span class="font-semibold text-sm whitespace-nowrap">Out of Stock</span>
+<span class="bg-status-danger/10 text-status-danger text-xs font-bold px-2 py-0.5 rounded-full">2</span>
+</button>
+</div>
+</div>
+<!-- Product List -->
+<main class="flex-1 overflow-y-auto p-4 space-y-3 pb-24">
+<!-- Item 1: Normal -->
+<div class="group bg-surface-light dark:bg-surface-dark p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-center justify-between gap-3 hover:shadow-md transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="relative shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+<div class="w-full h-full bg-cover bg-center" data-alt="Floral patterned summer dress on hanger" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDioCvInjJ6_LNODATpn6UgMu-bUyO338X2QSqKttM0iywCAaM3ZhhC2oxWsD8lW3MNCpXmmyENSkLRNDLdfu62u9NmsnNDYOVUxmSCpTxzsRTmAEMTDw3mw2vhvYCYCHbgtzkSE2PX2w1Iyi6FUHGWvQNxHmgGduBmbaqBrw1v1feJLZ-c11qdAp_b9wjaMC0FFvNvJevLBdc_1WP8DL8wFi2Poz3gefl62mvtnYQnePVbfSDNnSPCmyQxt-pNpcGI6Vcq_UN3Ylcc');"></div>
+</div>
+<div class="flex flex-col">
+<h3 class="font-bold text-[#121713] dark:text-white text-base leading-tight mb-1">Floral Summer Dress</h3>
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-1">SKU: FD-2023-001</p>
+<p class="text-[#121713] dark:text-gray-200 font-bold text-sm">$45.00</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center justify-center bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-lg px-2.5 py-1 min-w-[3rem]">
+<span class="text-xs font-bold">24</span>
+</div>
+<button class="text-gray-400 hover:text-primary p-1 -mr-2">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Item 2: Low Stock Alert -->
+<div class="group bg-surface-light dark:bg-surface-dark p-3 rounded-xl shadow-sm border border-l-4 border-l-status-warning border-y-gray-100 border-r-gray-100 dark:border-y-gray-800 dark:border-r-gray-800 flex items-center justify-between gap-3 hover:shadow-md transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="relative shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+<div class="w-full h-full bg-cover bg-center" data-alt="Blue silk scarf texture close up" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCca_dPzMxthm_fOlUIVNjQcSHEGvYWP2mA8tVU8PmAwZ7o35Pmvi26j3r4o-sDpj06uZP1lPsKIckSVRuaSmI66JpvxN8QBYXN5kt3SGA7xH5-tWcbsAjvWo5z8hICUqq0cR61DOvMgWzcZq0of1IUU8fQjfrEMLjxgBk95BbbqTRZu1XqEly6ecuRBQ-KRkb4ECaVxcIVijxii5q_cQVNSpmg0Lr0kAyk5KY4wvJjewXl2GOeLqop5E7IRviIanXJb0612rfOLJvr');"></div>
+<!-- Overlay for image if needed -->
+</div>
+<div class="flex flex-col">
+<h3 class="font-bold text-[#121713] dark:text-white text-base leading-tight mb-1">Silk Scarf - Blue</h3>
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-status-warning/10 text-status-warning text-[10px] font-extrabold uppercase tracking-wide px-1.5 py-0.5 rounded">Low Stock</span>
+</div>
+<p class="text-[#121713] dark:text-gray-200 font-bold text-sm">$22.00</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center justify-center bg-amber-50 dark:bg-amber-900/20 text-status-warning rounded-lg px-2.5 py-1 min-w-[3rem]">
+<span class="text-xs font-bold">3</span>
+</div>
+<button class="text-gray-400 hover:text-primary p-1 -mr-2">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Item 3: Out of Stock Alert -->
+<div class="group bg-surface-light dark:bg-surface-dark p-3 rounded-xl shadow-sm border border-l-4 border-l-status-danger border-y-gray-100 border-r-gray-100 dark:border-y-gray-800 dark:border-r-gray-800 flex items-center justify-between gap-3 hover:shadow-md transition-shadow cursor-pointer opacity-90">
+<div class="flex items-center gap-4">
+<div class="relative shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gray-100 grayscale">
+<div class="w-full h-full bg-cover bg-center" data-alt="Brown leather belt coiled up" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDhqePxVccIA1CZwQdiyRNzLMct_HrBT0tcFCiahx03Ej85tiUkTDvL0N4zqYYlTuddBo_LSe7A116nnje8re-M_rcmXNqkIFOhLtOZs2Hxj6YewVW8L2Nko-doNwdbhvTH07biPZJjh5Z55UcvYNa9ChZBnM28Fgj3eWWPTA3OjB_v3EtAP1wVPXrEclBTmnBogQVP7Cvqfbfy6tFpyR0vD9b-kKAh4-lN884cIQ6dP3NxbPGq8ii3XGqfQCFw6RJRbx-QT4UpsI8D');"></div>
+</div>
+<div class="flex flex-col">
+<h3 class="font-bold text-gray-500 dark:text-gray-400 text-base leading-tight mb-1">Leather Belt - Brown</h3>
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-status-danger/10 text-status-danger text-[10px] font-extrabold uppercase tracking-wide px-1.5 py-0.5 rounded">Out of Stock</span>
+</div>
+<p class="text-gray-400 dark:text-gray-500 font-bold text-sm">$35.00</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center justify-center bg-red-50 dark:bg-red-900/20 text-status-danger rounded-lg px-2.5 py-1 min-w-[3rem]">
+<span class="text-xs font-bold">0</span>
+</div>
+<button class="text-gray-400 hover:text-primary p-1 -mr-2">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Item 4: Normal -->
+<div class="group bg-surface-light dark:bg-surface-dark p-3 rounded-xl shadow-sm border border-gray-100 dark:border-gray-800 flex items-center justify-between gap-3 hover:shadow-md transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="relative shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+<div class="w-full h-full bg-cover bg-center" data-alt="Red sport sneaker on white background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDBvwJpnIvvuWpd_aAiqHl6tuzJVWN-bv0bDS0wm61ce3Vwg-Ljy2RlFMPzkfdKq9rAIv-kv_fQgDi5MI_vI_qqGYcynJiKeQtvtZKGENyJ6YDlzf-qkv9zql1_ckXBujJQJzzh8aqBc8Cj1nEa9fQQWesZ3yLcHIuJRV_tUVGPm8YbJgJlhETJtQnQBTgHHCA3ewXd6G7giK9j43s2J-zC32F-zIChRE4lGvaUxfFTbCNxGgT_DPvpCI6qE5BZcbCnspy9hqrRibsl');"></div>
+</div>
+<div class="flex flex-col">
+<h3 class="font-bold text-[#121713] dark:text-white text-base leading-tight mb-1">Running Sneakers</h3>
+<p class="text-gray-500 dark:text-gray-400 text-xs font-medium mb-1">SKU: SNK-RD-42</p>
+<p class="text-[#121713] dark:text-gray-200 font-bold text-sm">$89.99</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center justify-center bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 rounded-lg px-2.5 py-1 min-w-[3rem]">
+<span class="text-xs font-bold">18</span>
+</div>
+<button class="text-gray-400 hover:text-primary p-1 -mr-2">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Item 5: Low Stock -->
+<div class="group bg-surface-light dark:bg-surface-dark p-3 rounded-xl shadow-sm border border-l-4 border-l-status-warning border-y-gray-100 border-r-gray-100 dark:border-y-gray-800 dark:border-r-gray-800 flex items-center justify-between gap-3 hover:shadow-md transition-shadow cursor-pointer">
+<div class="flex items-center gap-4">
+<div class="relative shrink-0 w-16 h-16 rounded-lg overflow-hidden bg-gray-100">
+<div class="w-full h-full bg-cover bg-center" data-alt="Classic canvas tote bag beige" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDVpzJy7xamu4taxpVTiguNXNZYU_g7-9lrWKDhddfF71sgNXrAmJx0mq9cew_v-xAiHtkZ8nBMHvLBom1--ffKNowBHy_96DdLffiVDaJwUVyno0lrKwhthdSwd4clWCpOMUGYuxyBhE37ZzVrGoW_tNwGQrebSqOx302DUs2bI3XsLZjqIohzGisZ1A7gxR2DeJQO4A4BKt3KuLqSQg-IG1-JldD3ntXox_bLAcUHffJFBeTlL39qhSc9WOH-gKKMm-zHFpJQ0Ua2');"></div>
+</div>
+<div class="flex flex-col">
+<h3 class="font-bold text-[#121713] dark:text-white text-base leading-tight mb-1">Canvas Tote Bag</h3>
+<div class="flex items-center gap-2 mb-1">
+<span class="bg-status-warning/10 text-status-warning text-[10px] font-extrabold uppercase tracking-wide px-1.5 py-0.5 rounded">Low Stock</span>
+</div>
+<p class="text-[#121713] dark:text-gray-200 font-bold text-sm">$15.00</p>
+</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<div class="flex items-center justify-center bg-amber-50 dark:bg-amber-900/20 text-status-warning rounded-lg px-2.5 py-1 min-w-[3rem]">
+<span class="text-xs font-bold">4</span>
+</div>
+<button class="text-gray-400 hover:text-primary p-1 -mr-2">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Floating Action Button -->
+<div class="fixed bottom-6 right-6 z-20">
+<button class="flex items-center justify-center w-14 h-14 bg-primary text-white rounded-full shadow-lg hover:bg-[#4a8f5e] hover:scale-105 transition-all focus:ring-4 focus:ring-primary/30">
+<span class="material-symbols-outlined text-[32px]">add</span>
+</button>
+</div>
+</body></html>

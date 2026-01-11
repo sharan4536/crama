@@ -339,7 +339,7 @@ class _BillingScreenState extends State<BillingScreen> {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  "\$${item.price.toStringAsFixed(2)}",
+                  "₹${item.price.toStringAsFixed(2)}",
                   style: GoogleFonts.manrope(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -517,7 +517,7 @@ class _BillingScreenState extends State<BillingScreen> {
                       });
                     },
                     decoration: InputDecoration(
-                      prefixText: "\$ ",
+                      prefixText: "₹ ",
                       prefixStyle: GoogleFonts.manrope(
                         color: Colors.grey[400],
                         fontWeight: FontWeight.bold,
@@ -683,11 +683,11 @@ class _BillingScreenState extends State<BillingScreen> {
       ),
       child: Column(
         children: [
-          _buildSummaryRow("Subtotal", "\$${subtotal.toStringAsFixed(2)}"),
+          _buildSummaryRow("Subtotal", "₹${subtotal.toStringAsFixed(2)}"),
           const SizedBox(height: 12),
-          _buildSummaryRow("Discount", "- \$${_discount.toStringAsFixed(2)}", isDiscount: true),
+          _buildSummaryRow("Discount", "- ₹${_discount.toStringAsFixed(2)}", isDiscount: true),
           const SizedBox(height: 12),
-          _buildSummaryRow("Tax (18%)", "\$${tax.toStringAsFixed(2)}"),
+          _buildSummaryRow("Tax (18%)", "₹${tax.toStringAsFixed(2)}"),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 12),
             child: Divider(color: Colors.grey, thickness: 0.5),
@@ -705,7 +705,7 @@ class _BillingScreenState extends State<BillingScreen> {
                 ),
               ),
               Text(
-                "\$${total.toStringAsFixed(2)}",
+                "₹${total.toStringAsFixed(2)}",
                 style: GoogleFonts.manrope(
                   fontSize: 24,
                   fontWeight: FontWeight.w800,

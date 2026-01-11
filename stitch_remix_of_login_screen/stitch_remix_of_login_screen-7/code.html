@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sales Reports</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "primary": "#57a29b",
+                "background-light": "#f6f7f7",
+                "background-dark": "#161c1b",
+              },
+              fontFamily: {
+                "display": ["Manrope", "Noto Sans", "sans-serif"]
+              },
+              borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for clean UI */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="antialiased">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-[linear-gradient(180deg,#58A39B_41%,#92B3A9_81%)] text-white overflow-x-hidden font-display">
+<!-- Top App Bar -->
+<div class="flex items-center p-4 pb-2 justify-between">
+<button class="flex size-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors">
+<span class="material-symbols-outlined text-white" style="font-size: 20px;">arrow_back</span>
+</button>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em] text-center">Sales Reports</h2>
+<button class="flex size-10 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-colors">
+<span class="material-symbols-outlined text-white" style="font-size: 20px;">share</span>
+</button>
+</div>
+<!-- Date Filter -->
+<div class="px-4 py-4">
+<div class="flex h-12 w-full items-center justify-center rounded-xl bg-black/10 p-1 backdrop-blur-md">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-primary text-white/80 transition-all duration-200">
+<span class="text-sm font-semibold">Daily</span>
+<input class="invisible w-0 absolute" name="date-filter" type="radio" value="Daily"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-primary text-white/80 transition-all duration-200">
+<span class="text-sm font-semibold">Weekly</span>
+<input checked="" class="invisible w-0 absolute" name="date-filter" type="radio" value="Weekly"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg has-[:checked]:bg-white has-[:checked]:shadow-sm has-[:checked]:text-primary text-white/80 transition-all duration-200">
+<span class="text-sm font-semibold">Monthly</span>
+<input class="invisible w-0 absolute" name="date-filter" type="radio" value="Monthly"/>
+</label>
+</div>
+</div>
+<!-- Scrollable Content Area -->
+<div class="flex-1 flex flex-col gap-5 pb-8">
+<!-- Hero Chart Card -->
+<div class="mx-4 mt-2 flex flex-col rounded-3xl bg-white text-background-dark shadow-xl overflow-hidden">
+<div class="p-5 pb-0">
+<p class="text-gray-500 text-sm font-medium">Total Revenue</p>
+<div class="flex items-end gap-3 mt-1">
+<h1 class="text-[#121716] text-4xl font-bold tracking-tight">$4,250.00</h1>
+<div class="flex items-center gap-1 mb-1.5 px-2 py-0.5 rounded-full bg-green-100">
+<span class="material-symbols-outlined text-[#078830] text-[16px]">trending_up</span>
+<span class="text-[#078830] text-xs font-bold">+12%</span>
+</div>
+</div>
+</div>
+<!-- Chart Visualization -->
+<div class="w-full h-[220px] relative mt-4">
+<svg fill="none" height="100%" preserveaspectratio="none" viewbox="0 0 375 220" width="100%" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<lineargradient gradientunits="userSpaceOnUse" id="chartGradient" x1="187.5" x2="187.5" y1="0" y2="220">
+<stop stop-color="#57a29b" stop-opacity="0.2"></stop>
+<stop offset="1" stop-color="#57a29b" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Filled Area -->
+<path d="M0 160 C40 160, 50 80, 90 80 C130 80, 140 140, 180 140 C220 140, 230 60, 270 60 C310 60, 320 120, 375 100 V 220 H 0 V 160 Z" fill="url(#chartGradient)"></path>
+<!-- Stroke Line -->
+<path d="M0 160 C40 160, 50 80, 90 80 C130 80, 140 140, 180 140 C220 140, 230 60, 270 60 C310 60, 320 120, 375 100" fill="none" stroke="#57a29b" stroke-linecap="round" stroke-width="4"></path>
+<!-- Interactive Dot -->
+<circle cx="270" cy="60" fill="#ffffff" r="6" stroke="#57a29b" stroke-width="3"></circle>
+</svg>
+<!-- Tooltip Overlay (Static for visual) -->
+<div class="absolute top-[20px] left-[235px] bg-[#121716] text-white text-xs font-bold py-1 px-3 rounded-lg shadow-lg">
+                    $1,200
+                    <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#121716] rotate-45"></div>
+</div>
+</div>
+<!-- X-Axis Labels -->
+<div class="flex justify-between px-6 pb-6 pt-2">
+<span class="text-xs text-gray-400 font-medium">Mon</span>
+<span class="text-xs text-gray-400 font-medium">Tue</span>
+<span class="text-xs text-gray-400 font-medium">Wed</span>
+<span class="text-xs text-gray-400 font-medium">Thu</span>
+<span class="text-xs text-primary font-bold">Fri</span>
+<span class="text-xs text-gray-400 font-medium">Sat</span>
+<span class="text-xs text-gray-400 font-medium">Sun</span>
+</div>
+</div>
+<!-- Best Sellers Section -->
+<div class="mx-4 flex flex-col gap-3">
+<div class="flex items-center justify-between text-white px-1">
+<h3 class="text-lg font-bold">Best Sellers</h3>
+<a class="text-sm font-medium opacity-80 hover:opacity-100" href="#">View All</a>
+</div>
+<div class="bg-white rounded-3xl p-2 shadow-lg text-background-dark">
+<!-- Item 1 -->
+<div class="flex items-center gap-3 p-3 border-b border-gray-100">
+<div class="h-14 w-14 rounded-xl bg-gray-100 overflow-hidden shrink-0">
+<img alt="Silk Scarf" class="h-full w-full object-cover" data-alt="A stylish silk scarf with floral patterns folded neatly" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDxvdGYeWXIMAnnMSYtvKYN-VYFfA94OcrN6SbCNV-eqUHmCx2vpaCen_iVvcxyPHLgtwZYZfq_bowtT3b9F6PGsAM-ZYP48-0waE9538Tz87-jpWV0qhImnf9_0U1ufYThPyizh3Bw1xmUkTfxuJpO0Cf9u9ubN4bYRhU3Oe6cg9aNeiC421qkKZXfcGUEowVWXkawsHClanTgccCowJeQVWx2SgoK8snGMN9Q10X3CfJdCdyMurN0MtjTnyXTgQGx2jB5MNd0qxYc"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-bold text-[#121716] truncate">Silk Floral Scarf</h4>
+<p class="text-xs text-gray-500 font-medium mt-0.5">42 sold</p>
+</div>
+<div class="text-right">
+<span class="block font-bold text-[#121716]">$840.00</span>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex items-center gap-3 p-3 border-b border-gray-100">
+<div class="h-14 w-14 rounded-xl bg-gray-100 overflow-hidden shrink-0">
+<img alt="Leather Belt" class="h-full w-full object-cover" data-alt="Close up of a premium brown leather belt buckle" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeY2ltlyFMtQuAefOsXXzxixyOczjjJ1-YYmHbNg6b4W0llzxnEs76eR-gMFm23vMBTSE9OSpvHhPfoU96vdy0OGotsF4RuoklHtYlkitYFTdKmGhzZbhHyz3ZJ5rMHc-V2te4UCo6vRe8a94erJvR1d32bV8nLZvaULMHtm4qwzK3JqvySdhD3r9322QpDexB3afj15S045DRvaHkbKuBj3MUT_MXGIHIPhRlHOumOra-eNCODrjhE7E10Te3ZCudqZ1VXOs71TUl"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-bold text-[#121716] truncate">Leather Belt</h4>
+<p class="text-xs text-gray-500 font-medium mt-0.5">30 sold</p>
+</div>
+<div class="text-right">
+<span class="block font-bold text-[#121716]">$1,200.00</span>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex items-center gap-3 p-3">
+<div class="h-14 w-14 rounded-xl bg-gray-100 overflow-hidden shrink-0">
+<img alt="Evening Dress" class="h-full w-full object-cover" data-alt="An elegant evening dress on a hanger" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoZRClVU7mYf82VlxYX7Z_Y_y650nwjB2zi00CKAgT8eRsE1vmGEGUQSD9EvfpOJn9Be4K6uOogJwLOVx6BFYBkEilBh1g5GfLN5SyP4cRS7d_9XyoLIAmigalEwUBMLTm9rBnywIHv1xdtfnZddLJ64Wq3jyzyJ60Q9vvErsDEURnQu1TJsDTFFd3Fc1wipggrSg3SaoUUjjvRpPG5JW7Beon5UF_3bWadVGihF_FpQwrHnONcoz_GufG0hctmGjV_geS1ClQJCCV"/>
+</div>
+<div class="flex-1 min-w-0">
+<h4 class="font-bold text-[#121716] truncate">Evening Dress</h4>
+<p class="text-xs text-gray-500 font-medium mt-0.5">12 sold</p>
+</div>
+<div class="text-right">
+<span class="block font-bold text-[#121716]">$1,800.00</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Payment Breakdown Section -->
+<div class="mx-4 mb-4 flex flex-col gap-3">
+<h3 class="text-lg font-bold text-white px-1">Sales by Payment</h3>
+<div class="bg-white rounded-3xl p-5 shadow-lg text-background-dark">
+<!-- Row 1 -->
+<div class="mb-4">
+<div class="flex justify-between items-center mb-2">
+<div class="flex items-center gap-2">
+<div class="p-1.5 rounded-lg bg-indigo-100 text-indigo-600">
+<span class="material-symbols-outlined text-[20px]">credit_card</span>
+</div>
+<span class="text-sm font-bold text-[#121716]">Credit Card</span>
+</div>
+<span class="text-sm font-bold text-[#121716]">60%</span>
+</div>
+<div class="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-indigo-500 rounded-full" style="width: 60%"></div>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="mb-4">
+<div class="flex justify-between items-center mb-2">
+<div class="flex items-center gap-2">
+<div class="p-1.5 rounded-lg bg-emerald-100 text-emerald-600">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+</div>
+<span class="text-sm font-bold text-[#121716]">Cash</span>
+</div>
+<span class="text-sm font-bold text-[#121716]">30%</span>
+</div>
+<div class="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-emerald-500 rounded-full" style="width: 30%"></div>
+</div>
+</div>
+<!-- Row 3 -->
+<div>
+<div class="flex justify-between items-center mb-2">
+<div class="flex items-center gap-2">
+<div class="p-1.5 rounded-lg bg-orange-100 text-orange-600">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+</div>
+<span class="text-sm font-bold text-[#121716]">Digital Wallet</span>
+</div>
+<span class="text-sm font-bold text-[#121716]">10%</span>
+</div>
+<div class="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+<div class="h-full bg-orange-500 rounded-full" style="width: 10%"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</body></html>

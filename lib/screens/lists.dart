@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'dart:io';
 import '../services/customer_store.dart';
+import '../data/staff_store.dart';
 import '../models/customer.dart';
 import 'customers/add_customer.dart';
 import 'customers/customer_profile.dart';
@@ -64,32 +66,675 @@ class _CustomersListScreenState extends State<CustomersListScreen> {
   }
 }
 
-class OrdersListScreen extends StatelessWidget {
+class OrdersListScreen extends StatefulWidget {
   static const routeName = '/orders';
   const OrdersListScreen({super.key});
   @override
+  State<OrdersListScreen> createState() => _OrdersListScreenState();
+}
+
+class _OrdersListScreenState extends State<OrdersListScreen> {
+  static const Color primary = Color(0xFF58A39B);
+  static const Color primaryDark = Color(0xFF3D736E);
+  static const Color backgroundLight = Color(0xFFF6F7F7);
+
+  final List<String> _filters = const [
+    'All Orders',
+    'Processing',
+    'Ready for Pickup',
+    'Delivered',
+    'Cancelled',
+  ];
+  int _selectedFilter = 0;
+
+  List<_Order> get _orders {
+    final all = <_Order>[
+      const _Order(
+        customerName: 'Sarah Jenkins',
+        orderId: '#ORD-1024',
+        dateLabel: 'Today, 10:30 AM',
+        status: 'Processing',
+        statusKind: _OrderStatus.processing,
+        progress: 0.25,
+        itemsCount: 3,
+        avatarUrl:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuDZyR0uo8VSzNUqAPLYQOXstLujdMcyy0WHhi0FRIudKwH08ooN1t8m-3iMD9_ympeQIeFBUfbshDCgn2P4v3Q489ywbPOC5epUDRNFkkTXDOy86atIZZyancO6797cumEm4rVGV9icWhPCmhoEvdRID0q6mYsFtYiAr4OSmJpP9MXs3MAHXoT_h5Im9B9XtWNL3MlWau0ARhNB3lKr9RYLaKpQ76D6Gd6XSz1TCpv1ZUhwJ0b4pCsLRMEz-S7-ZlYhDzO2UkoPkBNg',
+      ),
+      const _Order(
+        customerName: 'Mike Ross',
+        orderId: '#ORD-1023',
+        dateLabel: 'Yesterday',
+        status: 'Ready for Pickup',
+        statusKind: _OrderStatus.readyForPickup,
+        progress: 0.75,
+        itemsCount: 1,
+        avatarUrl:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuDC-CIZeRB733mXRltlTTPZP-68yw2Csv9R032uhEeBCvlTKn2k73Eu5uco85MSLkPrWFdmQXskD4gmwOFKqoVkrMcUEI0iCQDFPe7PYqptD9Qdkf5sDseqZyokRffEB4ra3FwhuFjL3brDc5-iekddtF_nF26Up8XiF5-RA3xNIhfxr7bGI3R6yDZJbODxklemIIgDOl6jHQ36ELehyJV6uCNeenoqUzWfQhAVBHQSGbKJvVjKsZxVOcraF87wPgYPDKLuIcjN6LFE',
+      ),
+      const _Order(
+        customerName: 'Jessica Pearson',
+        orderId: '#ORD-1020',
+        dateLabel: 'Oct 24',
+        status: 'Delivered',
+        statusKind: _OrderStatus.delivered,
+        progress: 1.0,
+        itemsCount: 2,
+        avatarUrl:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuAZCby4ZPaPiSm2lYm3BZNNhE8dMtiOvSCByJZMbLPiEnVHTmJmoDj4-43zqu0HlVGGMbI9zvNTiKup4axv-z2SoRYGETQgLb1PfjAQ9K_F15Ls_y29U-Fhqv8uPauGR5EDyMGLlYqDYRQGRPzHSDEc6sRE1lFSNKJ_eY6Vd_pXe7fgz0Voe6hKE_efbIN5jlWHFj0VyDlMZUkNaOBzCYPsml4xASjN6yEp15bBDx2ihdQc9yyyO0EJUMNkGOsJVdy17YFy1Kx33369',
+      ),
+      const _Order(
+        customerName: 'Louis Litt',
+        orderId: '#ORD-1015',
+        dateLabel: 'Oct 20',
+        status: 'Cancelled',
+        statusKind: _OrderStatus.cancelled,
+        progress: 0.0,
+        itemsCount: 4,
+        avatarUrl:
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuCJsHtt6crJMGuJj1kUjxURWFzoH4J1yiZ2Pfs54CEsDvT7wsiQYBHy1aV4XNCshGXeZHVDqYOjbjr48utQytW5itNk-aqeebCQ65KYHwoHpTpMTMtGMXkUmh2RFO0v34CcpBiYtWGLO9MuPQmVsKAcMVEwT0BFD8co0BeJr2njztlC-Z9NT_mv8W3gu_6GPl-zX_OrwNIGMW_s3W2VEXOOpVsYjV5kViWM7_Dljl0un44ZN1F9g8aEUqGJiTeWowQT8_hKXDktA2CM',
+      ),
+    ];
+    switch (_selectedFilter) {
+      case 1:
+        return all.where((o) => o.statusKind == _OrderStatus.processing).toList();
+      case 2:
+        return all.where((o) => o.statusKind == _OrderStatus.readyForPickup).toList();
+      case 3:
+        return all.where((o) => o.statusKind == _OrderStatus.delivered).toList();
+      case 4:
+        return all.where((o) => o.statusKind == _OrderStatus.cancelled).toList();
+      default:
+        return all;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final items = List.generate(20, (i) => ListItemData('Order #${1000 + i}', 'In progress', i));
-    return _IosListScaffold(title: 'Orders', items: items, detailBuilder: (item) => OrderTrackingScreen(orderId: item.title, customerName: 'Customer ${item.id}', customerPhone: '+91 9876543210', expectedDate: DateTime.now().add(const Duration(days: 5)), balanceAmount: 1200, initialStageIndex: 1));
+    return Scaffold(
+      backgroundColor: backgroundLight,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFF58A39B), Color(0xFF92B3A9)],
+            stops: [0.41, 0.81],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () => Navigator.pop(context),
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        alignment: Alignment.center,
+                        child: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                      ),
+                    ),
+                    Text(
+                      'Order Tracking',
+                      style: GoogleFonts.manrope(color: Colors.white, fontSize: 20, fontWeight: FontWeight.w800),
+                    ),
+                    InkWell(
+                      borderRadius: BorderRadius.circular(20),
+                      onTap: () {},
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.filter_list, color: Colors.white, size: 20),
+                            const SizedBox(width: 6),
+                            Text('Filter', style: GoogleFonts.manrope(color: Colors.white, fontWeight: FontWeight.w700)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                  child: Container(
+                    color: backgroundLight,
+                    child: Column(
+                      children: [
+                        Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 840),
+                            child: Column(
+                              children: [
+                                SizedBox(
+                                  height: 60,
+                                  child: ListView.separated(
+                                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                                    scrollDirection: Axis.horizontal,
+                                    physics: const BouncingScrollPhysics(),
+                                    itemBuilder: (_, i) {
+                                      final selected = _selectedFilter == i;
+                                      return InkWell(
+                                        onTap: () => setState(() => _selectedFilter = i),
+                                        borderRadius: BorderRadius.circular(24),
+                                        child: Container(
+                                          height: 40,
+                                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                                          decoration: BoxDecoration(
+                                            color: selected ? Colors.white : Colors.white.withValues(alpha: 0.2),
+                                            borderRadius: BorderRadius.circular(24),
+                                            border: Border.all(color: selected ? Colors.white : Colors.white.withValues(alpha: 0.3)),
+                                            boxShadow: selected
+                                                ? [
+                                                    BoxShadow(
+                                                      color: primary.withValues(alpha: 0.1),
+                                                      blurRadius: 12,
+                                                      offset: const Offset(0, 4),
+                                                    )
+                                                  ]
+                                                : null,
+                                          ),
+                                          alignment: Alignment.center,
+                                          child: Text(
+                                            _filters[i],
+                                            style: GoogleFonts.manrope(
+                                              fontSize: 13,
+                                              fontWeight: selected ? FontWeight.w800 : FontWeight.w600,
+                                              color: selected ? primary : Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    separatorBuilder: (_, __) => const SizedBox(width: 8),
+                                    itemCount: _filters.length,
+                                  ),
+                                ),
+                                SingleChildScrollView(
+                                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 80),
+                                  physics: const BouncingScrollPhysics(),
+                                  child: Column(
+                                    children: _orders
+                                        .map((o) => Padding(
+                                              padding: const EdgeInsets.only(bottom: 12),
+                                              child: _OrderCard(
+                                                order: o,
+                                                onDetails: () {
+                                                  Navigator.push(
+                                                    context,
+                                                    PageTransition(
+                                                      type: PageTransitionType.rightToLeft,
+                                                      child: OrderTrackingScreen(
+                                                        orderId: o.orderId,
+                                                        customerName: o.customerName,
+                                                        customerPhone: '+91 9876543210',
+                                                        avatarUrl: o.avatarUrl,
+                                                        dateLabel: 'Placed on ${o.dateLabel}',
+                                                        statusText: o.status,
+                                                        items: _detailItemsForOrder(o),
+                                                        expectedDate: DateTime.now().add(const Duration(days: 3)),
+                                                        balanceAmount: 1200,
+                                                        initialStageIndex: _stageIndexForProgress(o.progress),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ))
+                                        .toList(),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: Container(
+        margin: const EdgeInsets.only(bottom: 12, right: 4),
+        child: _HoverFab(),
+      ),
+    );
+  }
+
+  int _stageIndexForProgress(double p) {
+    if (p <= 0.0) return 0;
+    if (p < 0.4) return 1;
+    if (p < 0.7) return 2;
+    if (p < 1.0) return 3;
+    return 4;
+  }
+}
+
+enum _OrderStatus { processing, readyForPickup, delivered, cancelled }
+
+class _Order {
+  final String customerName;
+  final String orderId;
+  final String dateLabel;
+  final String status;
+  final _OrderStatus statusKind;
+  final double progress;
+  final int itemsCount;
+  final String avatarUrl;
+  const _Order({
+    required this.customerName,
+    required this.orderId,
+    required this.dateLabel,
+    required this.status,
+    required this.statusKind,
+    required this.progress,
+    required this.itemsCount,
+    required this.avatarUrl,
+  });
+}
+
+class _OrderCard extends StatefulWidget {
+  static const Color primary = Color(0xFF58A39B);
+  static const Color primaryDark = Color(0xFF3D736E);
+  final _Order order;
+  final VoidCallback onDetails;
+  const _OrderCard({required this.order, required this.onDetails});
+
+  @override
+  State<_OrderCard> createState() => _OrderCardState();
+}
+
+class _OrderCardState extends State<_OrderCard> {
+  bool _hovering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final o = widget.order;
+    final statusStyle = _statusChipStyle(o.statusKind);
+    Widget card = Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: _OrderCard.primary.withValues(alpha: 0.1),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xFFF1F5F9),
+                      border: Border.all(color: Colors.white),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: Image.network(o.avatarUrl, fit: BoxFit.cover),
+                  ),
+                  const SizedBox(width: 12),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(o.customerName, style: GoogleFonts.manrope(fontSize: 14, fontWeight: FontWeight.w800, color: const Color(0xFF121716))),
+                      Text('${o.orderId} • ${o.dateLabel}', style: GoogleFonts.manrope(fontSize: 11, fontWeight: FontWeight.w600, color: Colors.grey[600]!)),
+                    ],
+                  ),
+                ],
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                decoration: BoxDecoration(
+                  color: statusStyle.bg,
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: statusStyle.ring.withValues(alpha: 0.2)),
+                ),
+                child: Text(o.status, style: GoogleFonts.manrope(fontSize: 11, fontWeight: FontWeight.w800, color: statusStyle.text)),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          _ProgressBar(progress: o.progress, statusKind: o.statusKind),
+          const SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.shopping_bag, size: 18, color: Colors.grey[600]),
+                  const SizedBox(width: 6),
+                  Text('${o.itemsCount} Items', style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey[600])),
+                ],
+              ),
+              const SizedBox(width: 8),
+            ],
+          ),
+        ],
+      ),
+    );
+
+    if (o.statusKind == _OrderStatus.cancelled) {
+      card = Opacity(
+        opacity: 0.75,
+        child: ColorFiltered(
+          colorFilter: const ColorFilter.matrix([
+            0.2126, 0.7152, 0.0722, 0, 0, //
+            0.2126, 0.7152, 0.0722, 0, 0, //
+            0.2126, 0.7152, 0.0722, 0, 0, //
+            0, 0, 0, 1, 0, //
+          ]),
+          child: card,
+        ),
+      );
+    }
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovering = true),
+      onExit: (_) => setState(() => _hovering = false),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(24),
+        onTap: widget.onDetails,
+        child: AnimatedScale(
+          scale: _hovering ? 1.01 : 1.0,
+          duration: const Duration(milliseconds: 160),
+          curve: Curves.easeOut,
+          child: card,
+        ),
+      ),
+    );
+  }
+
+  _StatusChipStyle _statusChipStyle(_OrderStatus kind) {
+    switch (kind) {
+      case _OrderStatus.processing:
+        return _StatusChipStyle(bg: const Color(0xFFFFF3C7), text: const Color(0xFFB45309), ring: const Color(0xFFB45309));
+      case _OrderStatus.readyForPickup:
+        return _StatusChipStyle(bg: _OrderCard.primary.withValues(alpha: 0.15), text: _OrderCard.primaryDark, ring: _OrderCard.primary);
+      case _OrderStatus.delivered:
+        return _StatusChipStyle(bg: const Color(0xFFD1FAE5), text: const Color(0xFF065F46), ring: const Color(0xFF10B981));
+      case _OrderStatus.cancelled:
+        return _StatusChipStyle(bg: const Color(0xFFFECACA), text: const Color(0xFF991B1B), ring: const Color(0xFF991B1B));
+    }
+  }
+}
+
+List<DetailItem> _detailItemsForOrder(_Order o) {
+  final base = <DetailItem>[
+    const DetailItem(
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDaQstNZVP1oZH4O5h16fO9ioiTeExi-qJb0vLmxE-JTd_CLmXjts84uRdSXDLsjMTgi7uDE46mc5GkJzE38jbNQiH6FxKPJxsRO1ZhwkDjHBPJCaPkJ6LRx7clVYA3vWolYvotask9nnyxZXtxQdEsIKideoA4tKEhluhFDYA6aA82dTlkfW-UR066HTH9ldYg0ZA2F9u9GicQyg0VoiU54bYyYvUnG5TtocJFDGPpO8Fde2Z4azKsK9tOpX16_3oLGOpdZgjE0m29',
+      title: 'Emerald Silk Lehenga',
+      subtitle: 'Size: M • Color: Green',
+      qty: 1,
+      price: 450.00,
+    ),
+    const DetailItem(
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCGXSSZVwRdfhj82iLbYc_Y0ASgRfE-jmtrsw9thLU_tz2ACCgxXSQPjkTKGdKPGY7BmifaJPohl2d-iag31XHOgBkR2AsH69n66D_iULfD6PCAd_C9ygEPaCSP-lfuPmHpxwLGoTy8kwsAr1VQ4I_FU7-MeQOSURPCTt5SDMm72ylJquJ4nal7WwwDSbGDF_Elr6pyKKPzJOS6va67G65T-yb_Dkn6SDXIii-6cTdKjFGPJXFIwpVq3YjNpXiAILdf0NNGA6N-EW-U',
+      title: 'Custom Blouse Stitching',
+      subtitle: 'Pattern: Deep Neck',
+      qty: 1,
+      price: 75.00,
+      strikePrice: 85.00,
+    ),
+    const DetailItem(
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAGSktp1ffkTi11jErtxBFxIBNZqWHqfJbvmwVPlDO661vEYTRmIcMZN_E9LAksPIpviyZAV379DHkyCGug-BvYWxm4S4ze0fzPLMq1yokVpMkxNY05Gn-wRO-LXx64TOX-Tzz3_Hu63U5Jpha2HsIeAUdLhvJYg1lGHOrAlWIvlvd1Y6LhV9GWShAww1bE7JCt7Hw-Y0z-l1HzeDG8q67sr_37bKtuW6kFlFdT3eSu2pUUN7PktbGvcIAz9qMYHaW2e91Myeo5maWq',
+      title: 'Dupatta Embroidery',
+      subtitle: 'Design: Gold Border',
+      qty: 1,
+      price: 45.00,
+    ),
+  ];
+  if (o.itemsCount <= 3) return base.take(o.itemsCount).toList();
+  final extra = List<DetailItem>.generate(
+    o.itemsCount - 3,
+    (i) => DetailItem(
+      imageUrl: 'https://picsum.photos/seed/item$i/200',
+      title: 'Additional Item ${i + 1}',
+      subtitle: 'Custom work',
+      qty: 1,
+      price: 25.00 + i * 5,
+    ),
+  );
+  return [...base, ...extra];
+}
+class _StatusChipStyle {
+  final Color bg;
+  final Color text;
+  final Color ring;
+  const _StatusChipStyle({required this.bg, required this.text, required this.ring});
+}
+
+class _ProgressBar extends StatelessWidget {
+  final double progress;
+  final _OrderStatus statusKind;
+  const _ProgressBar({required this.progress, required this.statusKind});
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = statusKind == _OrderStatus.delivered ? const Color(0xFF10B981) : _OrderCard.primary;
+    final width = MediaQuery.of(context).size.width - 16 * 2 - 32;
+    final stages = const ['Order\nStarted', 'Stitching', 'Embroidery', 'Packed', 'Delivered'];
+    final activeCount = (progress <= 0.0) ? 1 : (progress >= 1.0 ? 5 : (progress * 5).ceil());
+    return Column(
+      children: [
+        Stack(
+          children: [
+            Container(height: 2, width: double.infinity, margin: const EdgeInsets.symmetric(horizontal: 8), decoration: BoxDecoration(color: Colors.grey[200], borderRadius: BorderRadius.circular(999))),
+            Positioned(
+              left: 8,
+              child: Container(height: 2, width: (width - 16) * progress, decoration: BoxDecoration(color: accent, borderRadius: BorderRadius.circular(999))),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: List.generate(stages.length, (i) {
+            final active = i < activeCount;
+            return SizedBox(
+              width: i == 2 ? 48 : 32,
+              child: Column(
+                children: [
+                  Container(
+                    width: 10,
+                    height: 10,
+                    decoration: BoxDecoration(
+                      color: active ? accent : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(999),
+                      border: Border.all(color: Colors.white),
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    stages[i],
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.manrope(fontSize: 9, fontWeight: active ? FontWeight.w700 : FontWeight.w600, color: active ? accent : Colors.grey[500]),
+                  ),
+                ],
+              ),
+            );
+          }),
+        ),
+      ],
+    );
+  }
+}
+
+class _HoverFab extends StatefulWidget {
+  @override
+  State<_HoverFab> createState() => _HoverFabState();
+}
+
+class _HoverFabState extends State<_HoverFab> {
+  bool _hovering = false;
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovering = true),
+      onExit: (_) => setState(() => _hovering = false),
+      child: FloatingActionButton(
+        backgroundColor: Colors.white,
+        foregroundColor: const Color(0xFF58A39B),
+        elevation: 10,
+        onPressed: () {},
+        child: AnimatedRotation(
+          turns: _hovering ? 0.25 : 0.0,
+          duration: const Duration(milliseconds: 300),
+          child: const Icon(Icons.add, size: 32),
+        ),
+      ),
+    );
   }
 }
 
 class StaffListScreen extends StatelessWidget {
   static const routeName = '/staff';
   const StaffListScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
-    final items = List.generate(20, (i) => ListItemData('Staff #$i', 'Present', i));
+    final store = StaffStore();
     const coral = Color(0xFFFF6B3A);
-    return _IosListScaffold(
-      title: 'Staff',
-      items: items,
-      detailBuilder: (item) => EditStaffScreen(name: item.title, role: 'Tailor'),
+    const teal = Color(0xFF00D4B7);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Staff'),
+        backgroundColor: Colors.white,
+        foregroundColor: teal,
+        elevation: 0,
+      ),
+      body: AnimatedBuilder(
+        animation: store,
+        builder: (context, _) {
+          final staffList = store.staffMembers;
+          if (staffList.isEmpty) {
+            return const Center(child: Text('No staff members yet'));
+          }
+          return ListView.builder(
+            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+            itemCount: staffList.length,
+            itemBuilder: (context, index) {
+              final staff = staffList[index];
+              return Dismissible(
+                key: ValueKey(staff.id),
+                background: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(left: 16),
+                  child: const Icon(Icons.delete, color: Colors.white),
+                ),
+                secondaryBackground: Container(
+                  color: Colors.red,
+                  alignment: Alignment.centerRight,
+                  padding: const EdgeInsets.only(right: 16),
+                  child: const Icon(Icons.delete, color: Colors.white),
+                ),
+                onDismissed: (_) {
+                  store.remove(staff.id);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('${staff.name} removed')),
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                  child: _StaffRow(staff: staff),
+                ),
+              );
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         backgroundColor: coral,
         foregroundColor: Colors.white,
-        onPressed: () => Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const AddStaffScreen())),
+        onPressed: () => Navigator.push(
+          context,
+          PageTransition(
+            type: PageTransitionType.rightToLeft,
+            child: const AddStaffScreen(),
+          ),
+        ),
         child: const Icon(Icons.person_add_rounded),
+      ),
+    );
+  }
+}
+
+class _StaffRow extends StatefulWidget {
+  final Staff staff;
+  const _StaffRow({required this.staff});
+  @override
+  State<_StaffRow> createState() => _StaffRowState();
+}
+
+class _StaffRowState extends State<_StaffRow> {
+  bool _pressed = false;
+  @override
+  Widget build(BuildContext context) {
+    final s = widget.staff;
+    return AnimatedScale(
+      scale: _pressed ? 0.98 : 1.0,
+      duration: const Duration(milliseconds: 120),
+      curve: Curves.easeOut,
+      child: Material(
+        color: const Color(0xFFF8FAFC),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () {
+            HapticFeedback.lightImpact();
+            Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: EditStaffScreen(name: s.name, role: s.role)));
+          },
+          onHighlightChanged: (v) => setState(() => _pressed = v),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
+            child: Row(children: [
+              CircleAvatar(
+                radius: 22,
+                backgroundColor: const Color(0xFF00D4B7).withValues(alpha: 0.12),
+                child: const Icon(Icons.person_rounded, size: 20, color: Color(0xFF00D4B7)),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(s.name, style: const TextStyle(fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 4),
+                    Text(s.role, style: const TextStyle(color: Colors.black54)),
+                  ],
+                ),
+              ),
+            ]),
+          ),
+        ),
       ),
     );
   }

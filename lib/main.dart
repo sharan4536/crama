@@ -12,6 +12,8 @@ import 'screens/customers/add_customer.dart';
 import 'screens/orders/order_tracking.dart';
 import 'package:crama/billing/billing_page.dart';
 import 'screens/settings.dart';
+import 'screens/inventory.dart';
+import 'screens/shop_profile.dart';
 
 void main() {
   runApp(const MyApp());
@@ -115,8 +117,14 @@ class MyApp extends StatelessWidget {
         if (settings.name == BillingScreen.routeName) {
           return PageTransition(type: PageTransitionType.rightToLeft, child: const BillingScreen());
         }
+        if (settings.name == InventoryScreen.routeName) {
+          return PageTransition(type: PageTransitionType.rightToLeft, child: const InventoryScreen());
+        }
         if (settings.name == SettingsScreen.routeName) {
           return PageTransition(type: PageTransitionType.rightToLeft, child: const SettingsScreen());
+        }
+        if (settings.name == ShopProfileScreen.routeName) {
+          return PageTransition(type: PageTransitionType.rightToLeft, child: const ShopProfileScreen());
         }
         return MaterialPageRoute(builder: (_) => const SplashScreen());
       },

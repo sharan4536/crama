@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math' as math;
+import '../../data/staff_store.dart';
 
 class AddStaffScreen extends StatefulWidget {
   static const routeName = '/add-staff';
@@ -412,10 +413,23 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
           width: double.infinity,
           height: 56,
           child: ElevatedButton(
-            onPressed: () {
-              // Save logic
-              Navigator.pop(context);
-            },
+              onPressed: () {
+                if (_nameController.text.trim().isEmpty) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Please enter staff name')),
+                  );
+                  return;
+                }
+                final newStaff = Staff(
+                  id: DateTime.now().millisecondsSinceEpoch.toString(),
+                  name: _nameController.text.trim(),
+                  phone: _phoneController.text.trim(),
+                  role: _selectedRole,
+                  salaryType: _salaryType,
+                );
+                StaffStore().add(newStaff);
+                Navigator.pop(context);
+              },
             style: ElevatedButton.styleFrom(
               backgroundColor: primaryColor,
               foregroundColor: Colors.white,
