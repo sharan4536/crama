@@ -613,128 +613,408 @@ class _HoverFabState extends State<_HoverFab> {
   }
 }
 
-class StaffListScreen extends StatelessWidget {
+class StaffListScreen extends StatefulWidget {
   static const routeName = '/staff';
   const StaffListScreen({super.key});
 
   @override
+  State<StaffListScreen> createState() => _StaffListScreenState();
+}
+
+class _StaffListScreenState extends State<StaffListScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final store = StaffStore();
-    const coral = Color(0xFFFF6B3A);
-    const teal = Color(0xFF00D4B7);
+    const primaryColor = Color(0xFF58A39B);
+    const primarySoft = Color(0xFF92B3A9);
+    const backgroundLight = Color(0xFFF6F7F7);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Staff'),
-        backgroundColor: Colors.white,
-        foregroundColor: teal,
-        elevation: 0,
-      ),
+      backgroundColor: backgroundLight,
       body: AnimatedBuilder(
         animation: store,
         builder: (context, _) {
-          final staffList = store.staffMembers;
-          if (staffList.isEmpty) {
-            return const Center(child: Text('No staff members yet'));
-          }
-          return ListView.builder(
-            physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-            itemCount: staffList.length,
-            itemBuilder: (context, index) {
-              final staff = staffList[index];
-              return Dismissible(
-                key: ValueKey(staff.id),
-                background: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(left: 16),
-                  child: const Icon(Icons.delete, color: Colors.white),
-                ),
-                secondaryBackground: Container(
-                  color: Colors.red,
-                  alignment: Alignment.centerRight,
-                  padding: const EdgeInsets.only(right: 16),
-                  child: const Icon(Icons.delete, color: Colors.white),
-                ),
-                onDismissed: (_) {
-                  store.remove(staff.id);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('${staff.name} removed')),
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                  child: _StaffRow(staff: staff),
-                ),
-              );
-            },
+          final query = _searchController.text.trim().toLowerCase();
+          final staffList = store.staffMembers.where((s) {
+            if (query.isEmpty) return true;
+            return s.name.toLowerCase().contains(query) ||
+                s.role.toLowerCase().contains(query) ||
+                s.phone.toLowerCase().contains(query);
+          }).toList();
+
+          return Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [primaryColor, primarySoft],
+                stops: [0.41, 0.81],
+              ),
+            ),
+            child: SafeArea(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        InkWell(
+                          onTap: () => Navigator.pop(context),
+                          borderRadius: BorderRadius.circular(999),
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.center,
+                            child: const Icon(Icons.arrow_back, color: Colors.white, size: 24),
+                          ),
+                        ),
+                        Text(
+                          'Manage Staff',
+                          style: GoogleFonts.manrope(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
+                            color: Colors.white,
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.rightToLeft,
+                                child: const AddStaffScreen(),
+                              ),
+                            );
+                          },
+                          borderRadius: BorderRadius.circular(999),
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.center,
+                            child: const Icon(Icons.add, color: Colors.white, size: 24),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    child: Container(
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(24),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.08),
+                            blurRadius: 16,
+                            offset: const Offset(0, 6),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+                          const SizedBox(width: 16),
+                          const Icon(Icons.search, color: primaryColor),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              onChanged: (_) => setState(() {}),
+                              decoration: InputDecoration(
+                                border: InputBorder.none,
+                                hintText: 'Search staff by name or role...',
+                                hintStyle: GoogleFonts.manrope(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey[500],
+                                ),
+                              ),
+                              style: GoogleFonts.manrope(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF121716),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(24),
+                        topRight: Radius.circular(24),
+                      ),
+                      child: Container(
+                        color: backgroundLight,
+                        child: staffList.isEmpty
+                            ? ListView(
+                                physics: const BouncingScrollPhysics(
+                                  parent: AlwaysScrollableScrollPhysics(),
+                                ),
+                                children: [
+                                  const SizedBox(height: 120),
+                                  Center(
+                                    child: Text(
+                                      'No staff members yet',
+                                      style: GoogleFonts.manrope(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.grey[600],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : ListView.builder(
+                                padding: const EdgeInsets.fromLTRB(16, 16, 16, 88),
+                                physics: const BouncingScrollPhysics(
+                                  parent: AlwaysScrollableScrollPhysics(),
+                                ),
+                                itemCount: staffList.length,
+                                itemBuilder: (context, index) {
+                                  final staff = staffList[index];
+                                  return Padding(
+                                    padding: const EdgeInsets.only(bottom: 12),
+                                    child: _StaffCard(
+                                      staff: staff,
+                                      onEdit: () {
+                                        HapticFeedback.lightImpact();
+                                        Navigator.push(
+                                          context,
+                                          PageTransition(
+                                            type: PageTransitionType.rightToLeft,
+                                            child: EditStaffScreen(
+                                              name: staff.name,
+                                              phone: staff.phone,
+                                              role: staff.role,
+                                              salaryType: staff.salaryType,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      onDelete: () {
+                                        store.remove(staff.id);
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          SnackBar(content: Text('${staff.name} removed')),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: coral,
-        foregroundColor: Colors.white,
-        onPressed: () => Navigator.push(
-          context,
-          PageTransition(
-            type: PageTransitionType.rightToLeft,
-            child: const AddStaffScreen(),
-          ),
-        ),
-        child: const Icon(Icons.person_add_rounded),
+        backgroundColor: Colors.white,
+        foregroundColor: primaryColor,
+        elevation: 10,
+        onPressed: () {
+          Navigator.push(
+            context,
+            PageTransition(
+              type: PageTransitionType.rightToLeft,
+              child: const AddStaffScreen(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add, size: 28),
       ),
     );
   }
 }
 
-class _StaffRow extends StatefulWidget {
+class _StaffCard extends StatelessWidget {
   final Staff staff;
-  const _StaffRow({required this.staff});
-  @override
-  State<_StaffRow> createState() => _StaffRowState();
-}
+  final VoidCallback onEdit;
+  final VoidCallback onDelete;
 
-class _StaffRowState extends State<_StaffRow> {
-  bool _pressed = false;
+  const _StaffCard({
+    required this.staff,
+    required this.onEdit,
+    required this.onDelete,
+  });
+
   @override
   Widget build(BuildContext context) {
-    final s = widget.staff;
-    return AnimatedScale(
-      scale: _pressed ? 0.98 : 1.0,
-      duration: const Duration(milliseconds: 120),
-      curve: Curves.easeOut,
-      child: Material(
-        color: const Color(0xFFF8FAFC),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: () {
-            HapticFeedback.lightImpact();
-            Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: EditStaffScreen(name: s.name, role: s.role)));
-          },
-          onHighlightChanged: (v) => setState(() => _pressed = v),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 16),
-            child: Row(children: [
+    const primaryColor = Color(0xFF58A39B);
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 14,
+            offset: const Offset(0, 6),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
               CircleAvatar(
-                radius: 22,
-                backgroundColor: const Color(0xFF00D4B7).withValues(alpha: 0.12),
-                child: const Icon(Icons.person_rounded, size: 20, color: Color(0xFF00D4B7)),
+                radius: 24,
+                backgroundColor: const Color(0xFFF1F5F9),
+                child: Text(
+                  staff.name.isNotEmpty ? staff.name[0].toUpperCase() : '?',
+                  style: GoogleFonts.manrope(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: primaryColor,
+                  ),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(s.name, style: const TextStyle(fontWeight: FontWeight.w700)),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Text(
+                            staff.name,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: GoogleFonts.manrope(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w800,
+                              color: const Color(0xFF121716),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: primaryColor.withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: Text(
+                            staff.role.isEmpty ? 'Staff' : staff.role,
+                            style: GoogleFonts.manrope(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w700,
+                              color: primaryColor,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                     const SizedBox(height: 4),
-                    Text(s.role, style: const TextStyle(color: Colors.black54)),
+                    if (staff.salaryType.isNotEmpty)
+                      Text(
+                        staff.salaryType,
+                        style: GoogleFonts.manrope(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    const SizedBox(height: 8),
+                    if (staff.phone.isNotEmpty)
+                      Row(
+                        children: [
+                          Icon(
+                            Icons.call,
+                            size: 18,
+                            color: Colors.grey[500],
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            staff.phone,
+                            style: GoogleFonts.manrope(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                        ],
+                      ),
                   ],
                 ),
               ),
-            ]),
+            ],
           ),
-        ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton.icon(
+                onPressed: onEdit,
+                style: TextButton.styleFrom(
+                  foregroundColor: primaryColor,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                icon: const Icon(Icons.edit, size: 18),
+                label: Text(
+                  'Edit',
+                  style: GoogleFonts.manrope(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              TextButton.icon(
+                onPressed: onDelete,
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.red,
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                icon: const Icon(Icons.delete, size: 18),
+                label: Text(
+                  'Delete',
+                  style: GoogleFonts.manrope(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
@@ -745,7 +1025,12 @@ class _IosListScaffold extends StatefulWidget {
   final List<ListItemData> items;
   final Widget Function(ListItemData item) detailBuilder;
   final Widget? floatingActionButton;
-  const _IosListScaffold({required this.title, required this.items, required this.detailBuilder, this.floatingActionButton});
+  const _IosListScaffold({
+    required this.title,
+    required this.items,
+    required this.detailBuilder,
+    this.floatingActionButton,
+  });
   @override
   State<_IosListScaffold> createState() => _IosListScaffoldState();
 }
