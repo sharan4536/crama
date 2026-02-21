@@ -32,6 +32,14 @@ class StaffStore extends ChangeNotifier {
     notifyListeners();
   }
 
+  void update(Staff updated) {
+    final index = _staffMembers.indexWhere((s) => s.id == updated.id);
+    if (index != -1) {
+      _staffMembers[index] = updated;
+      notifyListeners();
+    }
+  }
+
   void remove(String id) {
     _staffMembers.removeWhere((s) => s.id == id);
     notifyListeners();

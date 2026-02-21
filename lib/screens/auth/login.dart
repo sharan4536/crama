@@ -5,7 +5,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'otp.dart';
 import 'email_login.dart';
-import '../home.dart';
 
 class LoginScreen extends StatefulWidget {
   static const routeName = '/login';
@@ -249,6 +248,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                                 contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
                                               ),
                                               validator: (v) => (v == null || !_validIndiaPhone(v)) ? 'Invalid phone' : null,
+                                              textInputAction: TextInputAction.done,
+                                              onFieldSubmitted: (_) => _continue(),
                                             ),
                                           ),
                                         ),

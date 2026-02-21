@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io';
 import 'data/customer_store.dart';
 import 'customers/add_customer.dart';
@@ -120,8 +121,12 @@ class _CustomerRowState extends State<_CustomerRow> {
     final c = widget.customer;
     ImageProvider? avatar;
     if (c.photoPath != null && c.photoPath!.isNotEmpty) {
-      final file = File(c.photoPath!);
-      if (file.existsSync()) avatar = FileImage(file);
+      if (kIsWeb) {
+        avatar = NetworkImage(c.photoPath!);
+      } else {
+        final file = File(c.photoPath!);
+        if (file.existsSync()) avatar = FileImage(file);
+      }
     }
     return AnimatedScale(
       scale: _pressed ? 0.98 : 1.0,

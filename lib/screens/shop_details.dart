@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ShopDetailsScreen extends StatefulWidget {
   static const routeName = '/shop-details';
@@ -21,7 +24,8 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
   final _contactPersonController = TextEditingController();
   final _mobileController = TextEditingController();
   final _emailController = TextEditingController();
-  
+  final _picker = ImagePicker();
+  String? _logoPath;
   String? _selectedState;
   final List<String> _states = ['Maharashtra', 'Delhi', 'Karnataka', 'Tamil Nadu'];
 
@@ -36,6 +40,44 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
     _mobileController.dispose();
     _emailController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickLogo(ImageSource source) async {
+    final xfile = await _picker.pickImage(source: source, maxWidth: 1024, imageQuality: 85);
+    if (xfile != null) {
+      setState(() => _logoPath = xfile.path);
+    }
+  }
+
+  void _showLogoSourceSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt, color: Color(0xFF58A39B)),
+              title: const Text('Take Photo'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickLogo(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library, color: Color(0xFF58A39B)),
+              title: const Text('Choose from Gallery'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickLogo(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -128,50 +170,58 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Logo Upload
                             Center(
                               child: Column(
                                 children: [
-                                  Stack(
-                                    children: [
-                                      Container(
-                                        width: 96,
-                                        height: 96,
-                                        decoration: BoxDecoration(
-                                          color: backgroundLight,
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                            color: primary.withOpacity(0.4),
-                                            width: 2,
-                                            style: BorderStyle.solid, // Dashed not directly supported in simple Border
-                                          ),
-                                        ),
-                                        // Use CustomPaint for dashed border if strictly needed, but solid is fine for now or use a package
-                                        // For now using simple border
-                                        child: Center(
-                                          child: Icon(Icons.add_a_photo_outlined, color: primary, size: 32),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        bottom: 0,
-                                        right: 0,
-                                        child: Container(
-                                          padding: const EdgeInsets.all(6),
+                                  GestureDetector(
+                                    onTap: _showLogoSourceSheet,
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          width: 96,
+                                          height: 96,
                                           decoration: BoxDecoration(
-                                            color: primary,
+                                            color: backgroundLight,
                                             shape: BoxShape.circle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.black.withOpacity(0.1),
-                                                blurRadius: 4,
-                                                offset: const Offset(0, 2),
-                                              ),
-                                            ],
+                                            border: Border.all(
+                                              color: primary.withOpacity(0.4),
+                                              width: 2,
+                                              style: BorderStyle.solid,
+                                            ),
+                                            image: _logoPath == null
+                                                ? null
+                                                : DecorationImage(
+                                                    image: kIsWeb ? NetworkImage(_logoPath!) : FileImage(File(_logoPath!)) as ImageProvider,
+                                                    fit: BoxFit.cover,
+                                                  ),
                                           ),
-                                          child: const Icon(Icons.edit, color: Colors.white, size: 14),
+                                          child: _logoPath == null
+                                              ? Center(
+                                                  child: Icon(Icons.add_a_photo_outlined, color: primary, size: 32),
+                                                )
+                                              : null,
                                         ),
-                                      ),
-                                    ],
+                                        Positioned(
+                                          bottom: 0,
+                                          right: 0,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(6),
+                                            decoration: BoxDecoration(
+                                              color: primary,
+                                              shape: BoxShape.circle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black.withOpacity(0.1),
+                                                  blurRadius: 4,
+                                                  offset: const Offset(0, 2),
+                                                ),
+                                              ],
+                                            ),
+                                            child: const Icon(Icons.edit, color: Colors.white, size: 14),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   const SizedBox(height: 8),
                                   Text(
@@ -465,6 +515,8 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
         keyboardType: keyboardType,
         textCapitalization: isUppercase ? TextCapitalization.characters : TextCapitalization.none,
         maxLength: maxLength,
+        textInputAction: TextInputAction.next,
+        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
         decoration: InputDecoration(
           hintText: placeholder,
           hintStyle: GoogleFonts.manrope(color: Colors.grey[400], fontSize: 16),

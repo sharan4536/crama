@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditStaffScreen extends StatefulWidget {
   static const routeName = '/edit-staff';
@@ -27,6 +30,8 @@ class _EditStaffScreenState extends State<EditStaffScreen> {
   late TextEditingController _phoneController;
   late String _selectedRole;
   late String _salaryType;
+  final _picker = ImagePicker();
+  String? _photoPath;
 
   // Colors
   static const Color primaryColor = Color(0xFF58A39B);
@@ -48,6 +53,44 @@ class _EditStaffScreenState extends State<EditStaffScreen> {
     _nameController.dispose();
     _phoneController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final xfile = await _picker.pickImage(source: source, maxWidth: 1024, imageQuality: 85);
+    if (xfile != null) {
+      setState(() => _photoPath = xfile.path);
+    }
+  }
+
+  void _showImageSourceSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt, color: primaryColor),
+              title: const Text('Take Photo'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library, color: primaryColor),
+              title: const Text('Choose from Gallery'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -126,46 +169,51 @@ class _EditStaffScreenState extends State<EditStaffScreen> {
                       const SizedBox(height: 16),
                       Column(
                         children: [
-                          Stack(
-                            children: [
-                              Container(
-                                width: 112,
-                                height: 112,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(color: Colors.white, width: 4),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.1),
-                                      blurRadius: 10,
-                                      offset: const Offset(0, 4),
-                                    ),
-                                  ],
-                                  image: const DecorationImage(
-                                    image: NetworkImage("https://lh3.googleusercontent.com/aida-public/AB6AXuBDyKPcFMnG1siDDE1jtskURiP5cdaCRwWaml-oC6Of1ne3Axz5aq_XGxlhIaoDzppBTUMEmumSoWhIkDAcy_zq5LEoUiG4q1SlWBXP-w0UXBsOccgsmN8R5c2udd9G6wNaSN1FB4YaCU5_LcFQ_Wg4asx9vsdRIo6GBILcvasyswoVoelDVve1Z_hxeHCqIsm1WAIGvmr6c49VVYNSQj9cJjZyY_x0df2pvVfHt_PSLYjawE60KEjf_G891twn8d6XCbws8RL4iKjj"),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ),
-                              Positioned(
-                                bottom: 0,
-                                right: 0,
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
+                          GestureDetector(
+                            onTap: _showImageSourceSheet,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  width: 112,
+                                  height: 112,
                                   decoration: BoxDecoration(
-                                    color: Colors.white,
                                     shape: BoxShape.circle,
+                                    border: Border.all(color: Colors.white, width: 4),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.black.withOpacity(0.1),
-                                        blurRadius: 4,
+                                        blurRadius: 10,
+                                        offset: const Offset(0, 4),
                                       ),
                                     ],
+                                    image: DecorationImage(
+                                      image: _photoPath == null
+                                          ? const NetworkImage("https://lh3.googleusercontent.com/aida-public/AB6AXuBDyKPcFMnG1siDDE1jtskURiP5cdaCRwWaml-oC6Of1ne3Axz5aq_XGxlhIaoDzppBTUMEmumSoWhIkDAcy_zq5LEoUiG4q1SlWBXP-w0UXBsOccgsmN8R5c2udd9G6wNaSN1FB4YaCU5_LcFQ_Wg4asx9vsdRIo6GBILcvasyswoVoelDVve1Z_hxeHCqIsm1WAIGvmr6c49VVYNSQj9cJjZyY_x0df2pvVfHt_PSLYjawE60KEjf_G891twn8d6XCbws8RL4iKjj")
+                                          : (kIsWeb ? NetworkImage(_photoPath!) : FileImage(File(_photoPath!)) as ImageProvider),
+                                      fit: BoxFit.cover,
+                                    ),
                                   ),
-                                  child: const Icon(Icons.edit, color: primaryColor, size: 14),
                                 ),
-                              ),
-                            ],
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 4,
+                                        ),
+                                      ],
+                                    ),
+                                    child: const Icon(Icons.edit, color: primaryColor, size: 14),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           const SizedBox(height: 12),
                           Text(

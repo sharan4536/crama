@@ -1,6 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
+import '../data/shop_profile_store.dart';
 import 'lists.dart';
 import 'package:crama/billing/billing_page.dart';
 import 'settings.dart';
@@ -102,67 +105,96 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
+    final store = ShopProfileStore();
+    const defaultAvatar = NetworkImage(
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuC6lwNYWA1pLXMALT03RKbuVZJBcJiA8sTiFOolzTT-XMqnuLTTaEvpZB-g_d_MZq2X0hKRe5DQ7BxcNuqwyDA_HSPnHohJIFvAikcsj2_w3HhGi8PwzHf7HLL5wyhZ5CK5YC8Bo-2GFpMte9Agg6S6AlBT-oWSxBdL2tGr6CpiL5WU87yq1FCpFexqryEPTu_98RtD5u6HLnmz4Y1xQOEIWTagx2scpfzfZYCTQNfVm72CMK5m6DOfacZRTlhJ0xZoCxCMSneZ9Frh",
+    );
+
+    return AnimatedBuilder(
+      animation: store,
+      builder: (context, _) {
+        ImageProvider avatarImage = defaultAvatar;
+        final path = store.logoPath;
+        if (path != null && path.isNotEmpty) {
+          if (kIsWeb) {
+            avatarImage = NetworkImage(path);
+          } else {
+            final file = File(path);
+            if (file.existsSync()) {
+              avatarImage = FileImage(file);
+            }
+          }
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              InkWell(
-                onTap: () => _scaffoldKey.currentState?.openDrawer(),
-                borderRadius: BorderRadius.circular(50),
-                child: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(Icons.menu, color: Colors.white, size: 24),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  Text(
-                    "Chic Boutique",
-                    style: GoogleFonts.manrope(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w800,
-                      color: Colors.white,
-                      height: 1.0,
+                  InkWell(
+                    onTap: () => _scaffoldKey.currentState?.openDrawer(),
+                    borderRadius: BorderRadius.circular(50),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.menu, color: Colors.white, size: 24),
                     ),
                   ),
-                  Text(
-                    currentDate,
-                    style: GoogleFonts.manrope(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.white.withOpacity(0.8),
-                    ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Chic Boutique",
+                        style: GoogleFonts.manrope(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w800,
+                          color: Colors.white,
+                          height: 1.0,
+                        ),
+                      ),
+                      Text(
+                        currentDate,
+                        style: GoogleFonts.manrope(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white.withOpacity(0.8),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
+              Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white.withOpacity(0.5), width: 1),
+                ),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(22),
+                  onTap: () => Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.rightToLeft,
+                      child: const ShopProfileScreen(),
+                    ),
+                  ),
+                  child: CircleAvatar(
+                    radius: 20,
+                    backgroundImage: avatarImage,
+                  ),
+                ),
+              ),
             ],
           ),
-          Container(
-            padding: const EdgeInsets.all(2),
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withOpacity(0.5), width: 1),
-            ),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(22),
-              onTap: () => Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const ShopProfileScreen())),
-              child: const CircleAvatar(
-                radius: 20,
-                backgroundImage: NetworkImage("https://lh3.googleusercontent.com/aida-public/AB6AXuC6lwNYWA1pLXMALT03RKbuVZJBcJiA8sTiFOolzTT-XMqnuLTTaEvpZB-g_d_MZq2X0hKRe5DQ7BxcNuqwyDA_HSPnHohJIFvAikcsj2_w3HhGi8PwzHf7HLL5wyhZ5CK5YC8Bo-2GFpMte9Agg6S6AlBT-oWSxBdL2tGr6CpiL5WU87yq1FCpFexqryEPTu_98RtD5u6HLnmz4Y1xQOEIWTagx2scpfzfZYCTQNfVm72CMK5m6DOfacZRTlhJ0xZoCxCMSneZ9Frh"),
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
 import 'dart:io';
@@ -143,9 +144,13 @@ class _CustomerProfileScreenState extends State<CustomerProfileScreen> {
   Widget _buildProfileInfo(Customer c) {
     ImageProvider? imageProvider;
     if (c.photoPath != null && c.photoPath!.isNotEmpty) {
-      final file = File(c.photoPath!);
-      if (file.existsSync()) {
-        imageProvider = FileImage(file);
+      if (kIsWeb) {
+        imageProvider = NetworkImage(c.photoPath!);
+      } else {
+        final file = File(c.photoPath!);
+        if (file.existsSync()) {
+          imageProvider = FileImage(file);
+        }
       }
     }
     // Fallback image if file doesn't exist or not provided

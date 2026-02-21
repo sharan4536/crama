@@ -203,6 +203,15 @@ class _OtpScreenState extends State<OtpScreen> {
                                 LengthLimitingTextInputFormatter(1),
                                 FilteringTextInputFormatter.digitsOnly,
                               ],
+                              textInputAction: index < 5 ? TextInputAction.next : TextInputAction.done,
+                              onSubmitted: (_) {
+                                if (index < 5) {
+                                  _nodes[index + 1].requestFocus();
+                                } else {
+                                  _nodes[index].unfocus();
+                                  _verify();
+                                }
+                              },
                               style: GoogleFonts.manrope(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,

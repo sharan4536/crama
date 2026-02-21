@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../services/customer_store.dart';
@@ -106,7 +107,14 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
           key: _formKey,
           child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Row(children: [
-              CircleAvatar(radius: 36, backgroundColor: Colors.black12, backgroundImage: _photoPath != null ? FileImage(File(_photoPath!)) : null, child: _photoPath == null ? const Icon(Icons.person, color: Colors.white70) : null),
+              CircleAvatar(
+                radius: 36,
+                backgroundColor: Colors.black12,
+                backgroundImage: _photoPath != null
+                    ? (kIsWeb ? NetworkImage(_photoPath!) : FileImage(File(_photoPath!)) as ImageProvider)
+                    : null,
+                child: _photoPath == null ? const Icon(Icons.person, color: Colors.white70) : null,
+              ),
               const SizedBox(width: 12),
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 ElevatedButton.icon(onPressed: () => _pickImage(ImageSource.camera), icon: const Icon(Icons.photo_camera), label: const Text('Camera')),
@@ -117,18 +125,47 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             const SizedBox(height: 16),
             const Text('Name', style: TextStyle(fontWeight: FontWeight.w700, color: indigo)),
             const SizedBox(height: 6),
-            TextFormField(controller: _nameController, decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Customer name (తెలుగు / English)'), validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter name' : null),
+            TextFormField(
+              controller: _nameController,
+              decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Customer name (తెలుగు / English)'),
+              validator: (v) => (v == null || v.trim().isEmpty) ? 'Enter name' : null,
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+            ),
             const SizedBox(height: 12),
             const Text('Phone', style: TextStyle(fontWeight: FontWeight.w700, color: indigo)),
             const SizedBox(height: 6),
-            TextFormField(controller: _phoneController, keyboardType: TextInputType.phone, inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d +-]'))], decoration: const InputDecoration(border: OutlineInputBorder(), hintText: '+91 98765 43210'), onChanged: _autofillExisting, validator: (v) => (v == null || v.trim().length < 8) ? 'Enter phone' : null),
+            TextFormField(
+              controller: _phoneController,
+              keyboardType: TextInputType.phone,
+              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d +-]'))],
+              decoration: const InputDecoration(border: OutlineInputBorder(), hintText: '+91 98765 43210'),
+              onChanged: _autofillExisting,
+              validator: (v) => (v == null || v.trim().length < 8) ? 'Enter phone' : null,
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+            ),
             const SizedBox(height: 16),
             const Text('Measurements (cm)', style: TextStyle(fontWeight: FontWeight.w700, color: indigo)),
             const SizedBox(height: 8),
             Wrap(
               spacing: 12,
               runSpacing: 12,
-              children: _measureCtrls.entries.map((e) => SizedBox(width: 160, child: TextFormField(controller: e.value, keyboardType: const TextInputType.numberWithOptions(decimal: true), inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))], decoration: InputDecoration(labelText: e.key, suffixText: 'cm', border: const OutlineInputBorder())))).toList(),
+              children: _measureCtrls.entries
+                  .map(
+                    (e) => SizedBox(
+                      width: 160,
+                      child: TextFormField(
+                        controller: e.value,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.]'))],
+                        decoration: InputDecoration(labelText: e.key, suffixText: 'cm', border: const OutlineInputBorder()),
+                        textInputAction: TextInputAction.next,
+                        onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      ),
+                    ),
+                  )
+                  .toList(),
             ),
             const SizedBox(height: 16),
             const Text('Favorite Styles', style: TextStyle(fontWeight: FontWeight.w700, color: indigo)),
@@ -137,7 +174,12 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
             const SizedBox(height: 16),
             const Text('Notes', style: TextStyle(fontWeight: FontWeight.w700, color: indigo)),
             const SizedBox(height: 6),
-            TextFormField(controller: _notesController, maxLines: 3, decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Special instructions')),
+            TextFormField(
+              controller: _notesController,
+              maxLines: 3,
+              decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Special instructions'),
+              textInputAction: TextInputAction.newline,
+            ),
             const SizedBox(height: 20),
             SizedBox(width: double.infinity, child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: gold, foregroundColor: Colors.black, padding: const EdgeInsets.symmetric(vertical: 14), shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12))), onPressed: _save, child: const Text('Save'))),
           ]),
@@ -146,4 +188,3 @@ class _AddCustomerScreenState extends State<AddCustomerScreen> {
     );
   }
 }
-

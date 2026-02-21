@@ -1,5 +1,8 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AddProductScreen extends StatefulWidget {
   static const routeName = '/add-product';
@@ -15,6 +18,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final _sellingPriceController = TextEditingController();
   final _costPriceController = TextEditingController();
   final _stockController = TextEditingController();
+  final _picker = ImagePicker();
+  String? _imagePath;
 
   @override
   void dispose() {
@@ -24,6 +29,44 @@ class _AddProductScreenState extends State<AddProductScreen> {
     _costPriceController.dispose();
     _stockController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final xfile = await _picker.pickImage(source: source, maxWidth: 1024, imageQuality: 85);
+    if (xfile != null) {
+      setState(() => _imagePath = xfile.path);
+    }
+  }
+
+  void _showImageSourceSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt, color: Color(0xFF58A39B)),
+              title: const Text('Take Photo'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library, color: Color(0xFF58A39B)),
+              title: const Text('Choose from Gallery'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -96,7 +139,6 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     padding: const EdgeInsets.fromLTRB(16, 0, 16, 100),
                     child: Column(
                       children: [
-                        // Image Upload Section
                         Container(
                           margin: const EdgeInsets.only(bottom: 16),
                           decoration: BoxDecoration(
@@ -107,37 +149,48 @@ class _AddProductScreenState extends State<AddProductScreen> {
                             ],
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF9FBFA),
-                              borderRadius: BorderRadius.circular(12),
-                              border: Border.all(color: const Color(0xFFD7E0DF), width: 2, style: BorderStyle.solid), // Dashed effect requires CustomPainter
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 40),
-                            child: Column(
-                              children: [
-                                Container(
-                                  width: 56,
-                                  height: 56,
-                                  decoration: BoxDecoration(
-                                    color: primary.withOpacity(0.1),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: const Icon(Icons.add_a_photo_outlined, color: primary, size: 32),
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  'Product Image',
-                                  style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.bold, color: textMain),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  'Tap to upload a photo of the item',
-                                  style: GoogleFonts.manrope(fontSize: 14, color: Colors.grey[500]),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
+                          child: GestureDetector(
+                            onTap: _showImageSourceSheet,
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF9FBFA),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: const Color(0xFFD7E0DF), width: 2, style: BorderStyle.solid),
+                                image: _imagePath == null
+                                    ? null
+                                    : DecorationImage(
+                                        image: kIsWeb ? NetworkImage(_imagePath!) : FileImage(File(_imagePath!)) as ImageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 40),
+                              child: _imagePath == null
+                                  ? Column(
+                                      children: [
+                                        Container(
+                                          width: 56,
+                                          height: 56,
+                                          decoration: BoxDecoration(
+                                            color: primary.withOpacity(0.1),
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(Icons.add_a_photo_outlined, color: primary, size: 32),
+                                        ),
+                                        const SizedBox(height: 12),
+                                        Text(
+                                          'Product Image',
+                                          style: GoogleFonts.manrope(fontSize: 16, fontWeight: FontWeight.bold, color: textMain),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Text(
+                                          'Tap to upload a photo of the item',
+                                          style: GoogleFonts.manrope(fontSize: 14, color: Colors.grey[500]),
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      ],
+                                    )
+                                  : null,
                             ),
                           ),
                         ),
@@ -340,6 +393,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
         controller: controller,
         maxLines: maxLines,
         minLines: minLines,
+        textInputAction: TextInputAction.next,
+        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
         decoration: InputDecoration(
           hintText: placeholder,
           hintStyle: GoogleFonts.manrope(color: Colors.grey[400], fontSize: 16),
@@ -360,6 +415,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
       child: TextField(
         controller: controller,
         keyboardType: const TextInputType.numberWithOptions(decimal: true),
+        textInputAction: TextInputAction.next,
+        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
         decoration: InputDecoration(
           prefixIcon: const Icon(Icons.currency_rupee, color: Colors.grey, size: 20), // Using $ as per design or Rupee if preferred
           hintText: '0.00',
@@ -386,6 +443,8 @@ class _AddProductScreenState extends State<AddProductScreen> {
       child: TextField(
         controller: controller,
         keyboardType: keyboardType,
+        textInputAction: TextInputAction.next,
+        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
         decoration: InputDecoration(
           prefixIcon: Icon(icon, color: Colors.grey[400], size: 20),
           hintText: placeholder,

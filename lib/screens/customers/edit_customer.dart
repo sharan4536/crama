@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../services/customer_store.dart';
@@ -127,7 +127,9 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
                     child: CircleAvatar(
                       radius: 50,
                       backgroundColor: Colors.white,
-                      backgroundImage: _photoPath != null ? FileImage(File(_photoPath!)) : null,
+                      backgroundImage: _photoPath != null
+                          ? (kIsWeb ? NetworkImage(_photoPath!) : FileImage(File(_photoPath!)) as ImageProvider)
+                          : null,
                       child: _photoPath == null ? const Icon(Icons.person, size: 50, color: Colors.grey) : null,
                     ),
                   ),
@@ -299,6 +301,12 @@ class _EditCustomerScreenState extends State<EditCustomerScreen> {
       keyboardType: keyboardType,
       validator: validator,
       maxLines: maxLines,
+      textInputAction: maxLines == 1 ? TextInputAction.next : TextInputAction.newline,
+      onFieldSubmitted: (_) {
+        if (maxLines == 1) {
+          FocusScope.of(context).nextFocus();
+        }
+      },
       style: GoogleFonts.manrope(fontWeight: FontWeight.w600, color: textMain),
       decoration: InputDecoration(
         labelText: label,

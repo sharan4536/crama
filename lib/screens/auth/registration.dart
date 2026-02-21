@@ -359,6 +359,8 @@ class _ShopRegistrationScreenState extends State<ShopRegistrationScreen> {
       obscureText: obscureText,
       keyboardType: keyboardType,
       validator: validator,
+      textInputAction: TextInputAction.next,
+      onFieldSubmitted: (_) => FocusScope.of(context).nextFocus(),
       style: GoogleFonts.plusJakartaSans(
         fontSize: 16,
         color: const Color(0xFF181114),

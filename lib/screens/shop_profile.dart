@@ -1,6 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:page_transition/page_transition.dart';
+import '../data/shop_profile_store.dart';
 import 'shop_details.dart';
 
 class ShopProfileScreen extends StatefulWidget {
@@ -12,6 +16,54 @@ class ShopProfileScreen extends StatefulWidget {
 }
 
 class _ShopProfileScreenState extends State<ShopProfileScreen> {
+  final _picker = ImagePicker();
+  String? _logoPath;
+
+  @override
+  void initState() {
+    super.initState();
+    _logoPath = ShopProfileStore().logoPath;
+  }
+
+  Future<void> _pickLogo(ImageSource source) async {
+    final xfile = await _picker.pickImage(source: source, maxWidth: 1024, imageQuality: 85);
+    if (xfile != null) {
+      setState(() => _logoPath = xfile.path);
+      ShopProfileStore().updateLogo(_logoPath);
+    }
+  }
+
+  void _showLogoSourceSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt, color: Color(0xFF58A39B)),
+              title: const Text('Take Photo'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickLogo(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library, color: Color(0xFF58A39B)),
+              title: const Text('Choose from Gallery'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickLogo(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     const primary = Color(0xFF58A39B);
@@ -64,39 +116,47 @@ class _ShopProfileScreenState extends State<ShopProfileScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                   child: Column(
                     children: [
-                      Stack(
-                        children: [
-                          Container(
-                            width: 96,
-                            height: 96,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 4),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.16),
-                                  blurRadius: 12,
-                                  offset: const Offset(0, 4),
-                                ),
-                              ],
-                              image: const DecorationImage(
-                                image: NetworkImage('https://lh3.googleusercontent.com/aida-public/AB6AXuAXcYkF_kEJL7KrJjMrTLPgihAKV6_EjaMWZHV2Tgjgd4vR6eMSrh7OgIqOy5AgmRbXSztEKo0Z7vHE859OitNZYTqLX1Jygu2wdrVKRxwCF8eeeaZ5ffRrUq0x3Wj24PkHHhMFRVs3QrGLnkVoK4j1zSORJ3rqk3i11nUWblHo0-Zz0DgyArhpatzTNMs90pc6689XWxYEII1p7b2RyQblZis5pjpIvmGfIpUSZ-fBz8PoJiSbnu-c8lDCAga8yxoGQH1VZH_d2HI2'),
-                                fit: BoxFit.cover,
+                      GestureDetector(
+                        onTap: _showLogoSourceSheet,
+                        child: Stack(
+                          children: [
+                            Container(
+                              width: 96,
+                              height: 96,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white.withValues(alpha: 0.2), width: 4),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.16),
+                                    blurRadius: 12,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                                image: _logoPath == null
+                                    ? const DecorationImage(
+                                        image: NetworkImage('https://lh3.googleusercontent.com/aida-public/AB6AXuAXcYkF_kEJL7KrJjMrTLPgihAKV6_EjaMWZHV2Tgjgd4vR6eMSrh7OgIqOy5AgmRbXSztEKo0Z7vHE859OitNZYTqLX1Jygu2wdrVKRxwCF8eeeaZ5ffRrUq0x3Wj24PkHHhMFRVs3QrGLnkVoK4j1zSORJ3rqk3i11nUWblHo0-Zz0DgyArhpatzTNMs90pc6689XWxYEII1p7b2RyQblZis5pjpIvmGfIpUSZ-fBz8PoJiSbnu-c8lDCAga8yxoGQH1VZH_d2HI2'),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : DecorationImage(
+                                        image: kIsWeb ? NetworkImage(_logoPath!) : FileImage(File(_logoPath!)) as ImageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
                               ),
                             ),
-                          ),
-                          Positioned(
-                            right: 0,
-                            bottom: 0,
-                            child: Container(
-                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [
-                                BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 2)),
-                              ]),
-                              padding: const EdgeInsets.all(6),
-                              child: Icon(Icons.edit, size: 16, color: primary),
+                            Positioned(
+                              right: 0,
+                              bottom: 0,
+                              child: Container(
+                                decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20), boxShadow: [
+                                  BoxShadow(color: Colors.black.withValues(alpha: 0.08), blurRadius: 8, offset: const Offset(0, 2)),
+                                ]),
+                                padding: const EdgeInsets.all(6),
+                                child: Icon(Icons.edit, size: 16, color: primary),
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(height: 10),
                       Text('Chic Boutique', style: GoogleFonts.manrope(color: Colors.white, fontSize: 22, fontWeight: FontWeight.w800)),

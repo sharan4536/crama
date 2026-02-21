@@ -85,11 +85,19 @@ class _OtpScreenState extends State<OtpScreen> {
                       maxLength: 1,
                       keyboardType: TextInputType.number,
                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                      textInputAction: i < 5 ? TextInputAction.next : TextInputAction.done,
                       decoration: const InputDecoration(counterText: '', border: OutlineInputBorder()),
                       onChanged: (v) {
                         if (v.isNotEmpty) {
                           if (i < 5) FocusScope.of(context).requestFocus(_nodes[i + 1]);
                           if (_code.length == 6) _verify();
+                        }
+                      },
+                      onSubmitted: (_) {
+                        if (i < 5) {
+                          FocusScope.of(context).requestFocus(_nodes[i + 1]);
+                        } else {
+                          _verify();
                         }
                       },
                     ),

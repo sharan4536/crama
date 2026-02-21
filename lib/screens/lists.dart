@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'dart:io';
 import '../services/customer_store.dart';
 import '../data/staff_store.dart';
@@ -864,6 +865,17 @@ class _StaffCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFF58A39B);
+    ImageProvider? imageProvider;
+    if (staff.photoPath != null && staff.photoPath!.isNotEmpty) {
+      if (kIsWeb) {
+        imageProvider = NetworkImage(staff.photoPath!);
+      } else {
+        final file = File(staff.photoPath!);
+        if (file.existsSync()) {
+          imageProvider = FileImage(file);
+        }
+      }
+    }
 
     return Container(
       decoration: BoxDecoration(
@@ -886,14 +898,17 @@ class _StaffCard extends StatelessWidget {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: const Color(0xFFF1F5F9),
-                child: Text(
-                  staff.name.isNotEmpty ? staff.name[0].toUpperCase() : '?',
-                  style: GoogleFonts.manrope(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: primaryColor,
-                  ),
-                ),
+                backgroundImage: imageProvider,
+                child: imageProvider == null
+                    ? Text(
+                        staff.name.isNotEmpty ? staff.name[0].toUpperCase() : '?',
+                        style: GoogleFonts.manrope(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: primaryColor,
+                        ),
+                      )
+                    : null,
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -1134,8 +1149,12 @@ class _CustomerRowState extends State<_CustomerRow> {
     ImageProvider? avatar;
     final c = widget.customer;
     if (c.photoPath != null && c.photoPath!.isNotEmpty) {
-      final file = File(c.photoPath!);
-      if (file.existsSync()) avatar = FileImage(file);
+      if (kIsWeb) {
+        avatar = NetworkImage(c.photoPath!);
+      } else {
+        final file = File(c.photoPath!);
+        if (file.existsSync()) avatar = FileImage(file);
+      }
     }
     return AnimatedScale(
       scale: _pressed ? 0.98 : 1.0,

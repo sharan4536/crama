@@ -87,6 +87,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[\d +-]'))],
                         decoration: const InputDecoration(hintText: '+91 98765 43210', border: OutlineInputBorder()),
                         validator: (v) => _validIndiaPhone(v ?? '') ? null : 'Enter a valid India number',
+                        textInputAction: TextInputAction.done,
+                        onFieldSubmitted: (_) => _continue(),
                       ),
                       const Spacer(),
                       SizedBox(

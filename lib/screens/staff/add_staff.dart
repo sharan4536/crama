@@ -1,6 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'dart:io';
 import 'dart:math' as math;
+import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../data/staff_store.dart';
 
 class AddStaffScreen extends StatefulWidget {
@@ -14,11 +17,12 @@ class AddStaffScreen extends StatefulWidget {
 class _AddStaffScreenState extends State<AddStaffScreen> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
-  
+  final _picker = ImagePicker();
+
   String _selectedRole = 'cashier';
   String _salaryType = 'monthly';
+  String? _photoPath;
 
-  // Colors from HTML
   static const Color primaryColor = Color(0xFF58A39B);
   static const Color gradientStart = Color(0xFF58A39B);
   static const Color gradientEnd = Color(0xFF92B3A9);
@@ -28,6 +32,44 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
     _nameController.dispose();
     _phoneController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final xfile = await _picker.pickImage(source: source, maxWidth: 1024, imageQuality: 85);
+    if (xfile != null) {
+      setState(() => _photoPath = xfile.path);
+    }
+  }
+
+  void _showImageSourceSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt, color: primaryColor),
+              title: const Text('Take Photo'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library, color: primaryColor),
+              title: const Text('Choose from Gallery'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override
@@ -147,52 +189,70 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
 
   Widget _buildProfileUpload() {
     return Center(
-      child: SizedBox(
-        width: 96,
-        height: 96,
-        child: Stack(
-          children: [
-            // Dashed Border Container
-            CustomPaint(
-              size: const Size(96, 96),
-              painter: DashedCirclePainter(color: primaryColor, strokeWidth: 2, gap: 4),
-              child: Container(
-                width: 96,
-                height: 96,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 4,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
+      child: GestureDetector(
+        onTap: _showImageSourceSheet,
+        child: SizedBox(
+          width: 96,
+          height: 96,
+          child: Stack(
+            children: [
+              CustomPaint(
+                size: const Size(96, 96),
+                painter: DashedCirclePainter(color: primaryColor, strokeWidth: 2, gap: 4),
+                child: Container(
+                  width: 96,
+                  height: 96,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: _photoPath == null
+                      ? const Icon(Icons.add_a_photo_outlined, color: primaryColor, size: 32)
+                      : ClipOval(
+                          child: kIsWeb
+                              ? Image.network(
+                                  _photoPath!,
+                                  fit: BoxFit.cover,
+                                  width: 96,
+                                  height: 96,
+                                )
+                              : Image.file(
+                                  File(_photoPath!),
+                                  fit: BoxFit.cover,
+                                  width: 96,
+                                  height: 96,
+                                ),
+                        ),
                 ),
-                child: const Icon(Icons.add_a_photo_outlined, color: primaryColor, size: 32),
               ),
-            ),
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: primaryColor,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 2,
-                    ),
-                  ],
+              Positioned(
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: primaryColor,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.white, width: 2),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        blurRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: const Icon(Icons.edit, color: Colors.white, size: 12),
                 ),
-                child: const Icon(Icons.edit, color: Colors.white, size: 12),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -238,6 +298,8 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
       child: TextField(
         controller: controller,
         style: GoogleFonts.manrope(fontSize: 16, color: Colors.grey[800]),
+        textInputAction: TextInputAction.next,
+        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
         decoration: InputDecoration(
           hintText: hint,
           hintStyle: GoogleFonts.manrope(color: Colors.grey[400]),
@@ -270,6 +332,8 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
               controller: _phoneController,
               keyboardType: TextInputType.phone,
               style: GoogleFonts.manrope(fontSize: 16, color: Colors.grey[800]),
+              textInputAction: TextInputAction.next,
+              onSubmitted: (_) => FocusScope.of(context).nextFocus(),
               decoration: InputDecoration(
                 hintText: "e.g. +1 555-0123",
                 hintStyle: GoogleFonts.manrope(color: Colors.grey[400]),
@@ -426,6 +490,7 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                   phone: _phoneController.text.trim(),
                   role: _selectedRole,
                   salaryType: _salaryType,
+                  photoPath: _photoPath,
                 );
                 StaffStore().add(newStaff);
                 Navigator.pop(context);
