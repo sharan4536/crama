@@ -201,18 +201,95 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
 
   Future<void> _saveShopDetails() async {
     // Validate required fields
-    if (_shopNameController.text.isEmpty) {
+    if (_shopNameController.text.isEmpty ||
+        _gstinController.text.isEmpty ||
+        _streetController.text.isEmpty ||
+        _cityController.text.isEmpty ||
+        _selectedState == null ||
+        _pincodeController.text.isEmpty ||
+        _contactPersonController.text.isEmpty ||
+        _mobileController.text.isEmpty ||
+        _emailController.text.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter Shop Name')),
+        const SnackBar(content: Text('Please fill all fields')),
       );
       return;
     }
     
-    // Validate Pincode-City match if manually entered
-    if (_pincodeController.text.isNotEmpty && _cityController.text.isNotEmpty) {
-       // Ideally we trust the auto-fill, but if user changed it, we might want to re-verify.
-       // For now, let's just save. The user asked "make sure the city name matches eith corerect pincode".
-       // The best way is to force fetch on save if not fetched.
+    // Validate Pincode-City match
+    final pincode = _pincodeController.text;
+    final enteredCity = _cityController.text.trim();
+    
+    if (pincode.length == 6) {
+       // Show loading indicator
+       showDialog(
+         context: context,
+         barrierDismissible: false,
+         builder: (context) => const Center(child: CircularProgressIndicator()),
+       );
+
+       try {
+         final url = Uri.parse('https://api.postalpincode.in/pincode/$pincode');
+         final response = await http.get(url);
+         
+         // Remove loading indicator
+         Navigator.pop(context);
+
+         if (response.statusCode == 200) {
+           final List<dynamic> data = json.decode(response.body);
+           if (data.isNotEmpty && data[0]['Status'] == 'Success') {
+             final postOffices = data[0]['PostOffice'] as List<dynamic>;
+             
+             // Check if entered city matches any district or block in the response
+             bool cityMatch = false;
+             Set<String> validDistricts = {};
+             
+             for (var office in postOffices) {
+               final district = office['District']?.toString() ?? '';
+               final block = office['Block']?.toString() ?? '';
+               final name = office['Name']?.toString() ?? '';
+               
+               if (district.isNotEmpty) validDistricts.add(district);
+               
+               final entered = enteredCity.toLowerCase();
+               
+               if ((district.isNotEmpty && entered == district.toLowerCase()) || 
+                   (block.isNotEmpty && entered == block.toLowerCase()) || 
+                   (name.isNotEmpty && entered == name.toLowerCase())) {
+                 cityMatch = true;
+                 break;
+               }
+             }
+
+             if (!cityMatch) {
+                // Construct a helpful message with valid cities
+                final validCities = validDistricts.join(', ');
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('City name does not match Pincode. Valid districts: $validCities')),
+                );
+                return;
+             }
+             
+           } else {
+             ScaffoldMessenger.of(context).showSnackBar(
+               const SnackBar(content: Text('Invalid Pincode')),
+             );
+             return;
+           }
+         } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+               const SnackBar(content: Text('Error validating pincode')),
+             );
+             return;
+         }
+       } catch (e) {
+         Navigator.pop(context); // Remove loading if error
+         debugPrint('Error validating pincode: $e');
+         ScaffoldMessenger.of(context).showSnackBar(
+           const SnackBar(content: Text('Network error validating pincode')),
+         );
+         return;
+       }
     }
 
     ShopProfileStore().updateShopDetails(
