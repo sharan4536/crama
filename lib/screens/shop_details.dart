@@ -201,15 +201,15 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
 
   Future<void> _saveShopDetails() async {
     // Validate required fields
-    if (_shopNameController.text.isEmpty ||
-        _gstinController.text.isEmpty ||
-        _streetController.text.isEmpty ||
-        _cityController.text.isEmpty ||
+    if (_shopNameController.text.trim().isEmpty ||
+        _gstinController.text.trim().isEmpty ||
+        _streetController.text.trim().isEmpty ||
+        _cityController.text.trim().isEmpty ||
         _selectedState == null ||
-        _pincodeController.text.isEmpty ||
-        _contactPersonController.text.isEmpty ||
-        _mobileController.text.isEmpty ||
-        _emailController.text.isEmpty) {
+        _pincodeController.text.trim().isEmpty ||
+        _contactPersonController.text.trim().isEmpty ||
+        _mobileController.text.trim().isEmpty ||
+        _emailController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill all fields')),
       );
@@ -217,7 +217,7 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
     }
     
     // Validate Pincode-City match
-    final pincode = _pincodeController.text;
+    final pincode = _pincodeController.text.trim();
     final enteredCity = _cityController.text.trim();
     
     if (pincode.length == 6) {
