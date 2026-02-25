@@ -48,7 +48,18 @@ class _ShopRegistrationScreenState extends State<ShopRegistrationScreen> {
     await Future.delayed(const Duration(milliseconds: 600));
     if (!mounted) return;
     setState(() => _submitting = false);
-    Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: OtpScreen(phone: _phoneController.text.trim())));
+    Navigator.push(
+      context,
+      PageTransition(
+        type: PageTransitionType.rightToLeft,
+        child: OtpScreen(
+          phone: _phoneController.text.trim(),
+          shopName: _shopController.text.trim(),
+          ownerName: _ownerController.text.trim(),
+          email: _emailController.text.trim(),
+        ),
+      ),
+    );
   }
 
   @override

@@ -30,6 +30,7 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
   final _emailController = TextEditingController();
   final _picker = ImagePicker();
   String? _logoPath;
+  String? _ownerPhotoPath;
   String? _selectedState;
   final List<String> _states = [
     'Andhra Pradesh',
@@ -84,6 +85,7 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
     _emailController.text = store.email ?? '';
     _selectedState = store.state;
     _logoPath = store.logoPath;
+    _ownerPhotoPath = store.ownerPhotoPath;
   }
 
   @override
@@ -99,10 +101,59 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
     super.dispose();
   }
 
-  Future<void> _pickLogo(ImageSource source) async {
+  Future<void> _pickOwnerPhoto(ImageSource source) async {
     final xfile = await _picker.pickImage(source: source, maxWidth: 1024, imageQuality: 85);
     if (xfile != null) {
-      setState(() => _logoPath = xfile.path);
+      setState(() => _ownerPhotoPath = xfile.path);
+    }
+  }
+
+  void _showOwnerPhotoSourceSheet() {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
+      builder: (ctx) => Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt, color: Color(0xFF58A39B)),
+              title: const Text('Take Photo'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickOwnerPhoto(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library, color: Color(0xFF58A39B)),
+              title: const Text('Choose from Gallery'),
+              onTap: () {
+                Navigator.pop(ctx);
+                _pickOwnerPhoto(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickLogo(ImageSource source) async {
+    try {
+      final xfile = await _picker.pickImage(source: source, maxWidth: 1024, imageQuality: 85);
+      if (xfile != null) {
+        setState(() => _logoPath = xfile.path);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to pick image: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -201,17 +252,49 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
 
   Future<void> _saveShopDetails() async {
     // Validate required fields
-    if (_shopNameController.text.trim().isEmpty ||
-        _gstinController.text.trim().isEmpty ||
-        _streetController.text.trim().isEmpty ||
-        _cityController.text.trim().isEmpty ||
-        _selectedState == null ||
-        _pincodeController.text.trim().isEmpty ||
-        _contactPersonController.text.trim().isEmpty ||
-        _mobileController.text.trim().isEmpty ||
-        _emailController.text.trim().isEmpty) {
+    List<String> missingFields = [];
+    if (_shopNameController.text.trim().isEmpty) missingFields.add('Shop Name');
+    if (_gstinController.text.trim().isEmpty) missingFields.add('GSTIN');
+    if (_streetController.text.trim().isEmpty) missingFields.add('Street Address');
+    if (_cityController.text.trim().isEmpty) missingFields.add('City');
+    if (_selectedState == null) missingFields.add('State');
+    if (_pincodeController.text.trim().isEmpty) missingFields.add('Pincode');
+    if (_contactPersonController.text.trim().isEmpty) missingFields.add('Contact Person');
+    if (_mobileController.text.trim().isEmpty) missingFields.add('Mobile Number');
+    if (_emailController.text.trim().isEmpty) missingFields.add('Email Address');
+
+    if (missingFields.isNotEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fill all fields')),
+        SnackBar(
+          content: Text('Please fill: ${missingFields.join(', ')}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Validate Mobile Number
+    final mobile = _mobileController.text.trim();
+    if (mobile.length != 10 || !RegExp(r'^[6-9]\d{9}$').hasMatch(mobile)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a valid 10-digit mobile number starting with 6-9'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // Validate Email
+    final email = _emailController.text.trim();
+    // Simple regex for email validation
+    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,}$');
+    if (!emailRegex.hasMatch(email)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter a valid email address (e.g. shop@gmail.com)'),
+          backgroundColor: Colors.red,
+        ),
       );
       return;
     }
@@ -261,24 +344,30 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
                }
              }
 
+             debugPrint('Pincode validation: entered="$enteredCity", match=$cityMatch, valid=${validDistricts.join(", ")}');
+
              if (!cityMatch) {
                 // Construct a helpful message with valid cities
                 final validCities = validDistricts.join(', ');
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('City name does not match Pincode. Valid districts: $validCities')),
+                  SnackBar(
+                    content: Text('City name does not match Pincode. Valid districts: $validCities'),
+                    backgroundColor: Colors.red,
+                    duration: const Duration(seconds: 5),
+                  ),
                 );
                 return;
              }
              
            } else {
              ScaffoldMessenger.of(context).showSnackBar(
-               const SnackBar(content: Text('Invalid Pincode')),
+               const SnackBar(content: Text('Invalid Pincode'), backgroundColor: Colors.red),
              );
              return;
            }
          } else {
             ScaffoldMessenger.of(context).showSnackBar(
-               const SnackBar(content: Text('Error validating pincode')),
+               const SnackBar(content: Text('Error validating pincode'), backgroundColor: Colors.red),
              );
              return;
          }
@@ -286,10 +375,15 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
          Navigator.pop(context); // Remove loading if error
          debugPrint('Error validating pincode: $e');
          ScaffoldMessenger.of(context).showSnackBar(
-           const SnackBar(content: Text('Network error validating pincode')),
+           const SnackBar(content: Text('Network error validating pincode'), backgroundColor: Colors.red),
          );
          return;
        }
+    } else {
+       ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Pincode must be 6 digits'), backgroundColor: Colors.red),
+       );
+       return;
     }
 
     ShopProfileStore().updateShopDetails(
@@ -306,6 +400,10 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
     
     if (_logoPath != null) {
       ShopProfileStore().updateLogo(_logoPath);
+    }
+
+    if (_ownerPhotoPath != null) {
+      ShopProfileStore().updateOwnerPhoto(_ownerPhotoPath);
     }
     
     ScaffoldMessenger.of(context).showSnackBar(
@@ -573,6 +671,73 @@ class _ShopDetailsScreenState extends State<ShopDetailsScreen> {
                             // Contact Section
                             _buildSectionHeader(Icons.contact_phone_outlined, 'Contact', primary),
                             const SizedBox(height: 20),
+
+                            Center(
+                              child: Column(
+                                children: [
+                                  GestureDetector(
+                                    onTap: _showOwnerPhotoSourceSheet,
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          width: 80,
+                                          height: 80,
+                                          decoration: BoxDecoration(
+                                            color: backgroundLight,
+                                            shape: BoxShape.circle,
+                                            border: Border.all(
+                                              color: primary.withOpacity(0.4),
+                                              width: 2,
+                                              style: BorderStyle.solid,
+                                            ),
+                                            image: _ownerPhotoPath == null
+                                                ? null
+                                                : DecorationImage(
+                                                    image: kIsWeb ? NetworkImage(_ownerPhotoPath!) : FileImage(File(_ownerPhotoPath!)) as ImageProvider,
+                                                    fit: BoxFit.cover,
+                                                  ),
+                                          ),
+                                          child: _ownerPhotoPath == null
+                                              ? Center(
+                                                  child: Icon(Icons.person_add_alt_1_outlined, color: primary, size: 28),
+                                                )
+                                              : null,
+                                        ),
+                                        Positioned(
+                                          bottom: 0,
+                                          right: 0,
+                                          child: Container(
+                                            padding: const EdgeInsets.all(6),
+                                            decoration: BoxDecoration(
+                                              color: primary,
+                                              shape: BoxShape.circle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black.withOpacity(0.1),
+                                                  blurRadius: 4,
+                                                  offset: const Offset(0, 2),
+                                                ),
+                                              ],
+                                            ),
+                                            child: const Icon(Icons.edit, color: Colors.white, size: 12),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    'Owner Photo',
+                                    style: GoogleFonts.manrope(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      color: textLight,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 16),
+                                ],
+                              ),
+                            ),
                             
                             _buildLabel('Contact Person'),
                             _buildTextField(

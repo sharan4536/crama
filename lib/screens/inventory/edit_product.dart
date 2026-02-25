@@ -3,23 +3,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../models/product.dart';
 
-class AddProductScreen extends StatefulWidget {
-  static const routeName = '/add-product';
-  const AddProductScreen({super.key});
+class EditProductScreen extends StatefulWidget {
+  static const routeName = '/edit-product';
+  final Product product;
+
+  const EditProductScreen({super.key, required this.product});
 
   @override
-  State<AddProductScreen> createState() => _AddProductScreenState();
+  State<EditProductScreen> createState() => _EditProductScreenState();
 }
 
-class _AddProductScreenState extends State<AddProductScreen> {
-  final _productNameController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _sellingPriceController = TextEditingController();
-  final _costPriceController = TextEditingController();
-  final _stockController = TextEditingController();
+class _EditProductScreenState extends State<EditProductScreen> {
+  late final TextEditingController _productNameController;
+  final _descriptionController = TextEditingController(); // Description not in Product model yet, keeping empty for now or could be added
+  late final TextEditingController _sellingPriceController;
+  final _costPriceController = TextEditingController(); // Not in Product model
+  late final TextEditingController _stockController;
   final _picker = ImagePicker();
   String? _imagePath;
+
+  @override
+  void initState() {
+    super.initState();
+    _productNameController = TextEditingController(text: widget.product.title);
+    _sellingPriceController = TextEditingController(text: widget.product.price.toString());
+    _stockController = TextEditingController(text: widget.product.stock.toString());
+    _imagePath = widget.product.imageUrl;
+  }
 
   @override
   void dispose() {
@@ -134,7 +146,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       ),
                       Expanded(
                         child: Text(
-                          'Add Inventory',
+                          'Edit Product',
                           textAlign: TextAlign.center,
                           style: GoogleFonts.manrope(
                             fontSize: 18,
@@ -175,7 +187,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                 image: _imagePath == null
                                     ? null
                                     : DecorationImage(
-                                        image: kIsWeb ? NetworkImage(_imagePath!) : FileImage(File(_imagePath!)) as ImageProvider,
+                                        image: _imagePath!.startsWith('http') 
+                                            ? NetworkImage(_imagePath!) 
+                                            : FileImage(File(_imagePath!)) as ImageProvider,
                                         fit: BoxFit.cover,
                                       ),
                               ),
@@ -279,7 +293,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
-                                      _buildLabel('Initial Stock'),
+                                      _buildLabel('Current Stock'),
                                       Container(
                                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                                         decoration: BoxDecoration(
@@ -287,7 +301,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                                           borderRadius: BorderRadius.circular(12),
                                         ),
                                         child: Text(
-                                          'Required',
+                                          'Editable',
                                           style: GoogleFonts.manrope(fontSize: 12, fontWeight: FontWeight.w500, color: primary),
                                         ),
                                       ),
@@ -338,15 +352,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
                         return;
                       }
 
-                      final productData = {
-                        'title': _productNameController.text,
-                        'sku': 'SKU-${DateTime.now().millisecondsSinceEpoch.toString().substring(8)}', // Simple SKU generation
-                        'price': double.tryParse(_sellingPriceController.text) ?? 0.0,
-                        'stock': int.tryParse(_stockController.text) ?? 0,
-                        'imageUrl': _imagePath ?? 'https://lh3.googleusercontent.com/aida-public/AB6AXuDioCvInjJ6_LNODATpn6UgMu-bUyO338X2QSqKttM0iywCAaM3ZhhC2oxWsD8lW3MNCpXmmyENSkLRNDLdfu62u9NmsnNDYOVUxmSCpTxzsRTmAEMTDw3mw2vhvYCYCHbgtzkSE2PX2w1Iyi6FUHGWvQNxHmgGduBmbaqBrw1v1feJLZ-c11qdAp_b9wjaMC0FFvNvJevLBdc_1WP8DL8wFi2Poz3gefl62mvtnYQnePVbfSDNnSPCmyQxt-pNpcGI6Vcq_UN3Ylcc', // Default image if none selected
-                      };
+                      final updatedProduct = widget.product.copyWith(
+                        title: _productNameController.text,
+                        price: double.tryParse(_sellingPriceController.text) ?? 0.0,
+                        stock: int.tryParse(_stockController.text) ?? 0,
+                        imageUrl: _imagePath,
+                      );
 
-                      Navigator.pop(context, productData);
+                      Navigator.pop(context, updatedProduct);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: primary,
@@ -355,7 +368,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                       shadowColor: primary.withOpacity(0.3),
                     ),
                     child: Text(
-                      'Add Product to Inventory',
+                      'Save Changes',
                       style: GoogleFonts.manrope(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -448,7 +461,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
         textInputAction: TextInputAction.next,
         onSubmitted: (_) => FocusScope.of(context).nextFocus(),
         decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.currency_rupee, color: Colors.grey, size: 20), // Using $ as per design or Rupee if preferred
+          prefixIcon: const Icon(Icons.currency_rupee, color: Colors.grey, size: 20),
           hintText: '0.00',
           hintStyle: GoogleFonts.manrope(color: Colors.grey[400], fontSize: 16),
           border: InputBorder.none,

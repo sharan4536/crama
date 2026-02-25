@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
+import '../inventory.dart';
+import 'best_sellers.dart';
 
 class SalesReportsPage extends StatefulWidget {
   const SalesReportsPage({super.key});
@@ -10,6 +13,7 @@ class SalesReportsPage extends StatefulWidget {
 
 class _SalesReportsPageState extends State<SalesReportsPage> {
   String _selectedFilter = 'Weekly';
+  String _selectedDay = 'Fri';
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +77,11 @@ class _SalesReportsPageState extends State<SalesReportsPage> {
           ),
           _buildIconButton(
             icon: Icons.share,
-            onTap: () {},
+            onTap: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Sharing sales report...')),
+              );
+            },
           ),
         ],
       ),
@@ -81,8 +89,9 @@ class _SalesReportsPageState extends State<SalesReportsPage> {
   }
 
   Widget _buildIconButton({required IconData icon, required VoidCallback onTap}) {
-    return GestureDetector(
+    return InkWell(
       onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
       child: Container(
         width: 40,
         height: 40,
@@ -124,7 +133,16 @@ class _SalesReportsPageState extends State<SalesReportsPage> {
     final isSelected = _selectedFilter == label;
     return Expanded(
       child: GestureDetector(
-        onTap: () => setState(() => _selectedFilter = label),
+        onTap: () {
+          setState(() => _selectedFilter = label);
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Showing $label sales report'),
+              duration: const Duration(seconds: 1),
+            ),
+          );
+        },
         child: Container(
           decoration: BoxDecoration(
             color: isSelected ? Colors.white : Colors.transparent,
@@ -279,7 +297,7 @@ class _SalesReportsPageState extends State<SalesReportsPage> {
                 _buildAxisLabel('Tue'),
                 _buildAxisLabel('Wed'),
                 _buildAxisLabel('Thu'),
-                _buildAxisLabel('Fri', isSelected: true),
+                _buildAxisLabel('Fri'),
                 _buildAxisLabel('Sat'),
                 _buildAxisLabel('Sun'),
               ],
@@ -290,13 +308,31 @@ class _SalesReportsPageState extends State<SalesReportsPage> {
     );
   }
 
-  Widget _buildAxisLabel(String text, {bool isSelected = false}) {
-    return Text(
-      text,
-      style: GoogleFonts.manrope(
-        fontSize: 12,
-        fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-        color: isSelected ? const Color(0xFF57a29b) : Colors.grey[400],
+  Widget _buildAxisLabel(String text) {
+    bool isSelected = text == _selectedDay;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedDay = text;
+        });
+      },
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+        decoration: isSelected
+            ? BoxDecoration(
+                color: const Color(0xFF57a29b).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              )
+            : null,
+        child: Text(
+          text,
+          style: GoogleFonts.manrope(
+            fontSize: 12,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+            color: isSelected ? const Color(0xFF57a29b) : Colors.grey[400],
+          ),
+        ),
       ),
     );
   }
@@ -319,12 +355,27 @@ class _SalesReportsPageState extends State<SalesReportsPage> {
                     color: Colors.white,
                   ),
                 ),
-                Text(
-                  'View All',
-                  style: GoogleFonts.manrope(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white.withOpacity(0.8),
+                InkWell(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.rightToLeft,
+                        child: const BestSellersScreen(),
+                      ),
+                    );
+                  },
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Text(
+                      'View All',
+                      style: GoogleFonts.manrope(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.white.withOpacity(0.8),
+                      ),
+                    ),
                   ),
                 ),
               ],
@@ -380,61 +431,68 @@ class _SalesReportsPageState extends State<SalesReportsPage> {
     required String imageUrl,
     required bool isLast,
   }) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: isLast ? null : Border(bottom: BorderSide(color: Colors.grey[100]!)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(12),
-              image: DecorationImage(
-                image: NetworkImage(imageUrl),
-                fit: BoxFit.cover,
+    return InkWell(
+      onTap: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Opening details for $title')),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          border: isLast ? null : Border(bottom: BorderSide(color: Colors.grey[100]!)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 56,
+              height: 56,
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(12),
+                image: DecorationImage(
+                  image: NetworkImage(imageUrl),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: GoogleFonts.manrope(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF121716),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: GoogleFonts.manrope(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: const Color(0xFF121716),
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  sold,
-                  style: GoogleFonts.manrope(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.grey[500],
+                  const SizedBox(height: 2),
+                  Text(
+                    sold,
+                    style: GoogleFonts.manrope(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.grey[500],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          Text(
-            price,
-            style: GoogleFonts.manrope(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: const Color(0xFF121716),
+            Text(
+              price,
+              style: GoogleFonts.manrope(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF121716),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -610,7 +668,7 @@ class ChartPainter extends CustomPainter {
     path.cubicTo(sx(310), sy(60), sx(320), sy(120), sx(375), sy(100));
 
     // Draw fill first
-    final fillPath = Path.from(path);
+    final fillPath = Path()..addPath(path, Offset.zero);
     fillPath.lineTo(sx(375), sy(220));
     fillPath.lineTo(sx(0), sy(220));
     fillPath.close();

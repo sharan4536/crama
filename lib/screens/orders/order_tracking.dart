@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:ui';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -63,6 +62,114 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
     if (_stageIndex < 4) {
       setState(() => _stageIndex++);
     }
+  }
+
+  void _printInvoice() {
+    final items = widget.items ?? _defaultItems();
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Container(
+          width: 400,
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.receipt_long, size: 48, color: Color(0xFF58A39B)),
+              const SizedBox(height: 16),
+              Text(
+                'Invoice Preview',
+                style: GoogleFonts.manrope(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF121716),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Order ${widget.orderId}',
+                style: GoogleFonts.manrope(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 24),
+              const Divider(),
+              const SizedBox(height: 16),
+              ...items.take(3).map((item) => Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        item.title,
+                        style: GoogleFonts.manrope(fontSize: 14, fontWeight: FontWeight.w600),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text(
+                      '₹${item.price.toStringAsFixed(2)}',
+                      style: GoogleFonts.manrope(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              )),
+              if (items.length > 3)
+                Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Text(
+                    '...and ${items.length - 3} more items',
+                    style: GoogleFonts.manrope(color: Colors.grey[500], fontSize: 12),
+                  ),
+                ),
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        side: BorderSide(color: Colors.grey[300]!),
+                      ),
+                      child: Text('Cancel', style: GoogleFonts.manrope(color: Colors.black, fontWeight: FontWeight.w600)),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Sending invoice to printer...'),
+                            behavior: SnackBarBehavior.floating,
+                            backgroundColor: Color(0xFF58A39B),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.print, size: 18),
+                      label: Text('Print', style: GoogleFonts.manrope(fontWeight: FontWeight.bold)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF58A39B),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                        elevation: 0,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -357,7 +464,7 @@ class _OrderTrackingScreenState extends State<OrderTrackingScreen> {
                         children: [
                 Expanded(
                   child: TextButton.icon(
-                    onPressed: () {},
+                    onPressed: _printInvoice,
                     icon: const Icon(Icons.print, size: 20),
                     label: Text('Print Invoice', style: GoogleFonts.manrope(fontWeight: FontWeight.w800)),
                     style: TextButton.styleFrom(

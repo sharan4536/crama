@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
+import '../data/sales_store.dart';
 import '../data/shop_profile_store.dart';
 import 'lists.dart';
 import 'package:crama/billing/billing_page.dart';
@@ -114,7 +115,7 @@ class _HomePageState extends State<HomePage> {
       animation: store,
       builder: (context, _) {
         ImageProvider avatarImage = defaultAvatar;
-        final path = store.logoPath;
+        final path = store.ownerPhotoPath ?? store.logoPath;
         if (path != null && path.isNotEmpty) {
           if (kIsWeb) {
             avatarImage = NetworkImage(path);
@@ -199,102 +200,111 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildRevenueCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: surfaceLight,
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF141B0E).withOpacity(0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Stack(
-        children: [
-          // Background blobs for decoration
-          Positioned(
-            top: -20,
-            right: -20,
-            child: Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                color: primaryColor.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "TOTAL REVENUE TODAY",
-                    style: GoogleFonts.manrope(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                      color: textSecondary,
-                      letterSpacing: 1.0,
-                    ),
-                  ),
-                  const Icon(Icons.payments_outlined, color: primaryColor),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "₹${todaysSales.toStringAsFixed(2)}",
-                style: GoogleFonts.manrope(
-                  fontSize: 36,
-                  fontWeight: FontWeight.w800,
-                  color: textMain,
-                  letterSpacing: -1.0,
+    return ListenableBuilder(
+      listenable: SalesStore(),
+      builder: (context, child) {
+        return InkWell(
+          onTap: () => Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const SalesReportsPage())),
+          borderRadius: BorderRadius.circular(24),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: surfaceLight,
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF141B0E).withOpacity(0.05),
+                  blurRadius: 20,
+                  offset: const Offset(0, 4),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              ],
+            ),
+            child: Stack(
+              children: [
+                // Background blobs for decoration
+                Positioned(
+                  top: -20,
+                  right: -20,
+                  child: Container(
+                    width: 100,
+                    height: 100,
                     decoration: BoxDecoration(
                       color: primaryColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
+                      shape: BoxShape.circle,
                     ),
-                    child: Row(
+                  ),
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Icon(Icons.trending_up, size: 16, color: primaryColor),
-                        const SizedBox(width: 4),
                         Text(
-                          "+12% vs yesterday",
+                          "TOTAL REVENUE TODAY",
                           style: GoogleFonts.manrope(
                             fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: primaryColor,
+                            fontWeight: FontWeight.w600,
+                            color: textSecondary,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                        const Icon(Icons.payments_outlined, color: primaryColor),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      "₹${SalesStore().totalRevenueToday.toStringAsFixed(2)}",
+                      style: GoogleFonts.manrope(
+                        fontSize: 36,
+                        fontWeight: FontWeight.w800,
+                        color: textMain,
+                        letterSpacing: -1.0,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: primaryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.trending_up, size: 16, color: primaryColor),
+                              const SizedBox(width: 4),
+                              Text(
+                                "+12% vs yesterday",
+                                style: GoogleFonts.manrope(
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          "${SalesStore().ordersToday} Orders processed",
+                          style: GoogleFonts.manrope(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                            color: textSecondary,
                           ),
                         ),
                       ],
                     ),
-                  ),
-                  const Spacer(),
-                  Text(
-                    "$activeOrders Orders processed",
-                    style: GoogleFonts.manrope(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      color: textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -461,6 +471,16 @@ class _HomePageState extends State<HomePage> {
                   label: "Home",
                   isSelected: true,
                   onTap: () => Navigator.pop(context),
+                ),
+                const SizedBox(height: 8),
+                _buildDrawerItem(
+                  icon: Icons.inventory_2,
+                  label: "Inventory",
+                  isSelected: false,
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const InventoryScreen()));
+                  },
                 ),
                 const SizedBox(height: 8),
                 _buildDrawerItem(

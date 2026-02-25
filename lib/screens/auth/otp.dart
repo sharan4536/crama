@@ -2,12 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:page_transition/page_transition.dart';
+import '../../data/shop_profile_store.dart';
 import '../home.dart';
 
 class OtpScreen extends StatefulWidget {
   static const routeName = '/otp';
   final String phone;
-  const OtpScreen({super.key, required this.phone});
+  final String? shopName;
+  final String? ownerName;
+  final String? email;
+
+  const OtpScreen({
+    super.key,
+    required this.phone,
+    this.shopName,
+    this.ownerName,
+    this.email,
+  });
 
   @override
   State<OtpScreen> createState() => _OtpScreenState();
@@ -44,6 +55,15 @@ class _OtpScreenState extends State<OtpScreen> {
     await Future.delayed(const Duration(milliseconds: 800)); // Simulate network
     if (!mounted) return;
     setState(() => _verifying = false);
+
+    if (widget.shopName != null || widget.ownerName != null || widget.email != null) {
+      ShopProfileStore().updateShopDetails(
+        name: widget.shopName,
+        contact: widget.ownerName,
+        mob: widget.phone,
+        mail: widget.email,
+      );
+    }
 
     Navigator.pushReplacement(context, PageTransition(type: PageTransitionType.rightToLeft, child: const HomePage()));
   }

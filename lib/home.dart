@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'dart:ui';
 import 'lists.dart';
+import 'screens/settings.dart';
 import 'customers/add_customer.dart';
 import 'billing/billing_page.dart';
 
@@ -51,50 +52,71 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    const indigo = Color(0xFF1A237E);
     const gold = Color(0xFFFFD700);
     return Scaffold(
       extendBody: true,
-      body: CustomScrollView(
-        controller: _scrollController,
-        physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
-        slivers: [
-          CupertinoSliverRefreshControl(onRefresh: _onRefresh),
-          SliverAppBar(
-            pinned: true,
-            backgroundColor: indigo,
-            title: const Text('Crama'),
-            elevation: 0,
-          ),
-      SliverPadding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-        sliver: SliverGrid(
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 16,
-            crossAxisSpacing: 16,
-            childAspectRatio: 1.05,
-          ),
-          delegate: SliverChildBuilderDelegate(
-            (context, index) {
-              final parallax = (_scrollOffset * 0.02) - index * 0.8;
-              return _buildCard(index, parallax)
-                  .animate(delay: (index * 120).ms)
-                  .fadeIn(duration: 380.ms, curve: Curves.easeOut)
-                  .scale(begin: const Offset(0.92, 0.92));
-            },
-            childCount: _cardSlots.length,
-          ),
-        ),
-      ),
-        ],
-      ),
+      body: _buildBody(),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: _PulsingFab(controller: _fabPulse, color: gold, icon: Icons.add),
+      floatingActionButton: _tabIndex == 0 ? _PulsingFab(controller: _fabPulse, color: gold, icon: Icons.add) : null,
       bottomNavigationBar: _BlurBottomNav(
         index: _tabIndex,
         onChanged: (i) => setState(() => _tabIndex = i),
       ),
+    );
+  }
+
+  Widget _buildBody() {
+    switch (_tabIndex) {
+      case 0:
+        return _buildHomeContent();
+      case 1:
+        return const OrdersListScreen();
+      case 2:
+        return const CustomersListScreen();
+      case 3:
+        return const StaffListScreen();
+      case 4:
+        return const SettingsScreen();
+      default:
+        return _buildHomeContent();
+    }
+  }
+
+  Widget _buildHomeContent() {
+    const indigo = Color(0xFF1A237E);
+    return CustomScrollView(
+      controller: _scrollController,
+      physics: const BouncingScrollPhysics(parent: AlwaysScrollableScrollPhysics()),
+      slivers: [
+        CupertinoSliverRefreshControl(onRefresh: _onRefresh),
+        SliverAppBar(
+          pinned: true,
+          backgroundColor: indigo,
+          title: const Text('Crama'),
+          elevation: 0,
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+          sliver: SliverGrid(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              mainAxisSpacing: 16,
+              crossAxisSpacing: 16,
+              childAspectRatio: 1.05,
+            ),
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final parallax = (_scrollOffset * 0.02) - index * 0.8;
+                return _buildCard(index, parallax)
+                    .animate(delay: (index * 120).ms)
+                    .fadeIn(duration: 380.ms, curve: Curves.easeOut)
+                    .scale(begin: const Offset(0.92, 0.92));
+              },
+              childCount: _cardSlots.length,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

@@ -6,6 +6,7 @@ class ShopProfileStore extends ChangeNotifier {
   factory ShopProfileStore() => _instance;
 
   String? logoPath;
+  String? ownerPhotoPath;
   String? shopName;
   String? gstin;
   String? street;
@@ -18,6 +19,11 @@ class ShopProfileStore extends ChangeNotifier {
 
   void updateLogo(String? path) {
     logoPath = path;
+    notifyListeners();
+  }
+
+  void updateOwnerPhoto(String? path) {
+    ownerPhotoPath = path;
     notifyListeners();
   }
 
@@ -41,6 +47,21 @@ class ShopProfileStore extends ChangeNotifier {
     if (contact != null) contactPerson = contact;
     if (mob != null) mobile = mob;
     if (mail != null) email = mail;
+    notifyListeners();
+  }
+
+  void clearState() {
+    logoPath = null;
+    ownerPhotoPath = null;
+    shopName = null;
+    gstin = null;
+    street = null;
+    city = null;
+    state = null;
+    pincode = null;
+    contactPerson = null;
+    mobile = null;
+    email = null;
     notifyListeners();
   }
 }

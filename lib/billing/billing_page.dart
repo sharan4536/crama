@@ -1,5 +1,12 @@
+import 'dart:io';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:page_transition/page_transition.dart';
+import '../screens/billing/payment_screen.dart';
+import '../screens/customers/add_customer.dart';
+import '../screens/inventory.dart';
+import '../models/product.dart';
 
 class BillingScreen extends StatefulWidget {
   static const routeName = '/billing';
@@ -202,7 +209,9 @@ class _BillingScreenState extends State<BillingScreen> {
             ],
           ),
           child: IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(context, PageTransition(type: PageTransitionType.rightToLeft, child: const AddCustomerScreen()));
+            },
             icon: const Icon(Icons.person_add, color: primaryColor, size: 28),
           ),
         ),
@@ -254,7 +263,26 @@ class _BillingScreenState extends State<BillingScreen> {
         ..._cartItems.map((item) => _buildCartItemRow(item)),
         const SizedBox(height: 12),
         InkWell(
-          onTap: () {},
+          onTap: () async {
+            final result = await Navigator.push(
+              context,
+              PageTransition(
+                type: PageTransitionType.rightToLeft,
+                child: const InventoryScreen(isSelectionMode: true),
+              ),
+            );
+
+            if (result != null && result is Product) {
+              setState(() {
+                _cartItems.add(CartItem(
+                  name: result.title,
+                  price: result.price,
+                  quantity: 1,
+                  image: result.imageUrl,
+                ));
+              });
+            }
+          },
           borderRadius: BorderRadius.circular(12),
           child: Container(
             width: double.infinity,
@@ -295,6 +323,28 @@ class _BillingScreenState extends State<BillingScreen> {
     );
   }
 
+  Widget _buildImage(String path) {
+    if (kIsWeb) {
+      return Image.network(
+        path,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, color: Colors.grey),
+      );
+    }
+    if (path.startsWith('http')) {
+      return Image.network(
+        path,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, color: Colors.grey),
+      );
+    }
+    return Image.file(
+      File(path),
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) => const Icon(Icons.broken_image, color: Colors.grey),
+    );
+  }
+
   Widget _buildCartItemRow(CartItem item) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -318,10 +368,10 @@ class _BillingScreenState extends State<BillingScreen> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               color: Colors.grey[100],
-              image: DecorationImage(
-                image: NetworkImage(item.image),
-                fit: BoxFit.cover,
-              ),
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: _buildImage(item.image),
             ),
           ),
           const SizedBox(width: 16),
@@ -760,7 +810,25 @@ class _BillingScreenState extends State<BillingScreen> {
       child: SafeArea(
         top: false,
         child: InkWell(
-          onTap: () {},
+          onTap: () async {
+            double subtotal = _cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
+            double tax = _includeGst ? subtotal * 0.18 : 0;
+            double total = subtotal - _discount + tax;
+
+            final result = await Navigator.push(
+              context,
+              PageTransition(
+                type: PageTransitionType.rightToLeft,
+                child: PaymentScreen(amount: total),
+              ),
+            );
+
+            if (result == true) {
+              if (mounted) {
+                Navigator.pop(context);
+              }
+            }
+          },
           borderRadius: BorderRadius.circular(16),
           child: Container(
             width: double.infinity,
