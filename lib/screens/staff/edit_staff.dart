@@ -12,6 +12,7 @@ class EditStaffScreen extends StatefulWidget {
   final String phone;
   final String role;
   final String salaryType;
+  final double hourlyRate;
 
   const EditStaffScreen({
     super.key, 
@@ -19,6 +20,7 @@ class EditStaffScreen extends StatefulWidget {
     this.phone = '+1 555 019 2834',
     this.role = 'Tailor',
     this.salaryType = 'Monthly',
+    this.hourlyRate = 18.50,
   });
 
   @override
@@ -28,6 +30,7 @@ class EditStaffScreen extends StatefulWidget {
 class _EditStaffScreenState extends State<EditStaffScreen> {
   late TextEditingController _nameController;
   late TextEditingController _phoneController;
+  late TextEditingController _hourlyRateController;
   late String _selectedRole;
   late String _salaryType;
   final _picker = ImagePicker();
@@ -44,6 +47,7 @@ class _EditStaffScreenState extends State<EditStaffScreen> {
     super.initState();
     _nameController = TextEditingController(text: widget.name);
     _phoneController = TextEditingController(text: widget.phone);
+    _hourlyRateController = TextEditingController(text: widget.hourlyRate.toStringAsFixed(2));
     _selectedRole = widget.role;
     _salaryType = widget.salaryType;
   }
@@ -52,6 +56,7 @@ class _EditStaffScreenState extends State<EditStaffScreen> {
   void dispose() {
     _nameController.dispose();
     _phoneController.dispose();
+    _hourlyRateController.dispose();
     super.dispose();
   }
 
@@ -281,6 +286,18 @@ class _EditStaffScreenState extends State<EditStaffScreen> {
                                 const SizedBox(width: 12),
                                 Expanded(child: _buildRoleCard("Tailor", Icons.content_cut)),
                               ],
+                            ),
+
+                            const SizedBox(height: 24),
+
+                            // Hourly Rate
+                            _buildLabel("Hourly Rate (\$)"),
+                            const SizedBox(height: 8),
+                            _buildInputField(
+                              controller: _hourlyRateController,
+                              hint: "e.g. 15.00",
+                              icon: Icons.attach_money,
+                              keyboardType: TextInputType.numberWithOptions(decimal: true),
                             ),
 
                             const SizedBox(height: 24),

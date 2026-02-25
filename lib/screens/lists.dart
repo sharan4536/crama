@@ -12,6 +12,7 @@ import 'customers/customer_profile.dart';
 import 'orders/order_tracking.dart';
 import 'staff/add_staff.dart';
 import 'staff/edit_staff.dart';
+import 'staff/staff_attendance.dart';
 
 class CustomersListScreen extends StatefulWidget {
   static const routeName = '/customers';
@@ -696,6 +697,29 @@ class _StaffListScreenState extends State<StaffListScreen> {
                               context,
                               PageTransition(
                                 type: PageTransitionType.rightToLeft,
+                                child: const StaffAttendanceScreen(),
+                              ),
+                            );
+                          },
+                          borderRadius: BorderRadius.circular(999),
+                          child: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              shape: BoxShape.circle,
+                            ),
+                            alignment: Alignment.center,
+                            child: const Icon(Icons.event_available, color: Colors.white, size: 20),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.rightToLeft,
                                 child: const AddStaffScreen(),
                               ),
                             );
@@ -851,7 +875,7 @@ class _StaffListScreenState extends State<StaffListScreen> {
   }
 }
 
-class _StaffCard extends StatelessWidget {
+class _StaffCard extends StatefulWidget {
   final Staff staff;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -863,14 +887,77 @@ class _StaffCard extends StatelessWidget {
   });
 
   @override
+  State<_StaffCard> createState() => _StaffCardState();
+}
+
+class _StaffCardState extends State<_StaffCard> {
+  double? _calculatedWage;
+
+  void _showWageDialog(BuildContext context) {
+    final hoursController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text(
+            "Calculate Wage",
+            style: GoogleFonts.manrope(fontWeight: FontWeight.bold),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Hourly Rate: \$${widget.staff.hourlyRate.toStringAsFixed(2)}/hr",
+                style: GoogleFonts.manrope(fontSize: 14, color: Colors.grey.shade700),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: hoursController,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  labelText: "Hours Worked",
+                  hintText: "e.g. 5.5",
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text("Cancel", style: GoogleFonts.manrope(color: Colors.grey.shade600)),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final hours = double.tryParse(hoursController.text) ?? 0.0;
+                setState(() {
+                  _calculatedWage = hours * widget.staff.hourlyRate;
+                });
+                Navigator.pop(ctx);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF58A39B),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: Text("Calculate", style: GoogleFonts.manrope(color: Colors.white, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     const primaryColor = Color(0xFF58A39B);
     ImageProvider? imageProvider;
-    if (staff.photoPath != null && staff.photoPath!.isNotEmpty) {
+    if (widget.staff.photoPath != null && widget.staff.photoPath!.isNotEmpty) {
       if (kIsWeb) {
-        imageProvider = NetworkImage(staff.photoPath!);
+        imageProvider = NetworkImage(widget.staff.photoPath!);
       } else {
-        final file = File(staff.photoPath!);
+        final file = File(widget.staff.photoPath!);
         if (file.existsSync()) {
           imageProvider = FileImage(file);
         }
@@ -901,7 +988,7 @@ class _StaffCard extends StatelessWidget {
                 backgroundImage: imageProvider,
                 child: imageProvider == null
                     ? Text(
-                        staff.name.isNotEmpty ? staff.name[0].toUpperCase() : '?',
+                        widget.staff.name.isNotEmpty ? widget.staff.name[0].toUpperCase() : '?',
                         style: GoogleFonts.manrope(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -920,7 +1007,7 @@ class _StaffCard extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            staff.name,
+                            widget.staff.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.manrope(
@@ -941,7 +1028,7 @@ class _StaffCard extends StatelessWidget {
                             borderRadius: BorderRadius.circular(999),
                           ),
                           child: Text(
-                            staff.role.isEmpty ? 'Staff' : staff.role,
+                            widget.staff.role.isEmpty ? 'Staff' : widget.staff.role,
                             style: GoogleFonts.manrope(
                               fontSize: 11,
                               fontWeight: FontWeight.w700,
@@ -952,9 +1039,9 @@ class _StaffCard extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 4),
-                    if (staff.salaryType.isNotEmpty)
+                    if (widget.staff.salaryType.isNotEmpty)
                       Text(
-                        staff.salaryType,
+                        '${widget.staff.salaryType} • \$${widget.staff.hourlyRate.toStringAsFixed(2)}/hr',
                         style: GoogleFonts.manrope(
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
@@ -962,7 +1049,7 @@ class _StaffCard extends StatelessWidget {
                         ),
                       ),
                     const SizedBox(height: 8),
-                    if (staff.phone.isNotEmpty)
+                    if (widget.staff.phone.isNotEmpty)
                       Row(
                         children: [
                           Icon(
@@ -972,7 +1059,7 @@ class _StaffCard extends StatelessWidget {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            staff.phone,
+                            widget.staff.phone,
                             style: GoogleFonts.manrope(
                               fontSize: 13,
                               fontWeight: FontWeight.w500,
@@ -988,44 +1075,106 @@ class _StaffCard extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TextButton.icon(
-                onPressed: onEdit,
-                style: TextButton.styleFrom(
-                  foregroundColor: primaryColor,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+              // Wage Calculation badge
+              if (_calculatedWage != null)
+                InkWell(
+                  onTap: () => _showWageDialog(context),
+                  borderRadius: BorderRadius.circular(12),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.green.shade50,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.green.shade300),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.payments, size: 16, color: Colors.green.shade700),
+                        const SizedBox(width: 4),
+                        Text(
+                          "Wage: \$${_calculatedWage!.toStringAsFixed(2)}",
+                          style: GoogleFonts.manrope(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.green.shade800,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else
+                InkWell(
+                  onTap: () => _showWageDialog(context),
+                  borderRadius: BorderRadius.circular(8),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: primaryColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: primaryColor.withOpacity(0.3)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(Icons.calculate, size: 14, color: primaryColor),
+                        const SizedBox(width: 4),
+                        Text(
+                          "Calculate Wage",
+                          style: GoogleFonts.manrope(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: primaryColor,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                icon: const Icon(Icons.edit, size: 18),
-                label: Text(
-                  'Edit',
-                  style: GoogleFonts.manrope(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
+
+              // Action buttons (Edit / Delete)
+              Row(
+                children: [
+                  TextButton.icon(
+                    onPressed: widget.onEdit,
+                    style: TextButton.styleFrom(
+                      foregroundColor: primaryColor,
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    icon: const Icon(Icons.edit, size: 16),
+                    label: Text(
+                      'Edit',
+                      style: GoogleFonts.manrope(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(width: 8),
-              TextButton.icon(
-                onPressed: onDelete,
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  TextButton.icon(
+                    onPressed: widget.onDelete,
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    icon: const Icon(Icons.delete, size: 16),
+                    label: Text(
+                      'Delete',
+                      style: GoogleFonts.manrope(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
-                ),
-                icon: const Icon(Icons.delete, size: 18),
-                label: Text(
-                  'Delete',
-                  style: GoogleFonts.manrope(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                ],
               ),
             ],
           ),

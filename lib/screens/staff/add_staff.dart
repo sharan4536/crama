@@ -17,6 +17,7 @@ class AddStaffScreen extends StatefulWidget {
 class _AddStaffScreenState extends State<AddStaffScreen> {
   final _nameController = TextEditingController();
   final _phoneController = TextEditingController();
+  final _hourlyRateController = TextEditingController();
   final _picker = ImagePicker();
 
   String _selectedRole = 'cashier';
@@ -31,6 +32,7 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
   void dispose() {
     _nameController.dispose();
     _phoneController.dispose();
+    _hourlyRateController.dispose();
     super.dispose();
   }
 
@@ -119,6 +121,13 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                           const SizedBox(height: 24),
                           _buildLabel("Role"),
                           _buildRoleGrid(),
+                          const SizedBox(height: 24),
+                          _buildLabel("Hourly Rate (\$)"),
+                          _buildTextField(
+                            controller: _hourlyRateController,
+                            hint: "e.g. 15.00",
+                            keyboardType: TextInputType.numberWithOptions(decimal: true),
+                          ),
                           const SizedBox(height: 24),
                           _buildLabel("Salary Type"),
                           _buildSalaryToggle(),
@@ -280,7 +289,11 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
     );
   }
 
-  Widget _buildTextField({required TextEditingController controller, required String hint}) {
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
     return Container(
       height: 56,
       decoration: BoxDecoration(
@@ -297,6 +310,7 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
       ),
       child: TextField(
         controller: controller,
+        keyboardType: keyboardType,
         style: GoogleFonts.manrope(fontSize: 16, color: Colors.grey[800]),
         textInputAction: TextInputAction.next,
         onSubmitted: (_) => FocusScope.of(context).nextFocus(),
@@ -490,6 +504,7 @@ class _AddStaffScreenState extends State<AddStaffScreen> {
                   phone: _phoneController.text.trim(),
                   role: _selectedRole,
                   salaryType: _salaryType,
+                  hourlyRate: double.tryParse(_hourlyRateController.text) ?? 0.0,
                   photoPath: _photoPath,
                 );
                 StaffStore().add(newStaff);

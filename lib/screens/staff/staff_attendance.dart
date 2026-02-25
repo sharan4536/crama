@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class StaffAttendanceScreen extends StatelessWidget {
+  static const routeName = '/staff-attendance';
   const StaffAttendanceScreen({super.key});
 
   static const Color primaryColor = Color(0xFF58A39B);
@@ -28,6 +29,7 @@ class StaffAttendanceScreen extends StatelessWidget {
                   inTime: "09:15 AM",
                   outTime: "--:--",
                   activeTime: "4h 30m",
+                  hourlyRate: 15.0,
                   isLate: false,
                   isAbsent: false,
                   isHalfDay: false,
@@ -41,6 +43,7 @@ class StaffAttendanceScreen extends StatelessWidget {
                   inTime: "10:30 AM",
                   outTime: "--:--",
                   activeTime: "3h 15m",
+                  hourlyRate: 20.0,
                   isLate: true,
                   isAbsent: false,
                   isHalfDay: false,
@@ -54,6 +57,7 @@ class StaffAttendanceScreen extends StatelessWidget {
                   inTime: "--:--",
                   outTime: "--:--",
                   activeTime: "",
+                  hourlyRate: 18.0,
                   isLate: false,
                   isAbsent: true,
                   isHalfDay: false,
@@ -67,6 +71,7 @@ class StaffAttendanceScreen extends StatelessWidget {
                   inTime: "09:00 AM",
                   outTime: "01:30 PM",
                   activeTime: "4h 30m",
+                  hourlyRate: 12.5,
                   isLate: false,
                   isAbsent: false,
                   isHalfDay: true,
@@ -242,16 +247,122 @@ class StaffAttendanceScreen extends StatelessWidget {
     required String inTime,
     required String outTime,
     required String activeTime,
+    required double hourlyRate,
     required bool isLate,
     required bool isAbsent,
     required bool isHalfDay,
   }) {
+    return _StaffCardWidget(
+      name: name,
+      role: role,
+      imageUrl: imageUrl,
+      status: status,
+      inTime: inTime,
+      outTime: outTime,
+      activeTime: activeTime,
+      hourlyRate: hourlyRate,
+      isLate: isLate,
+      isAbsent: isAbsent,
+      isHalfDay: isHalfDay,
+    );
+  }
+}
+
+class _StaffCardWidget extends StatefulWidget {
+  final String name;
+  final String role;
+  final String imageUrl;
+  final String status;
+  final String inTime;
+  final String outTime;
+  final String activeTime;
+  final double hourlyRate;
+  final bool isLate;
+  final bool isAbsent;
+  final bool isHalfDay;
+
+  const _StaffCardWidget({
+    required this.name,
+    required this.role,
+    required this.imageUrl,
+    required this.status,
+    required this.inTime,
+    required this.outTime,
+    required this.activeTime,
+    required this.hourlyRate,
+    required this.isLate,
+    required this.isAbsent,
+    required this.isHalfDay,
+  });
+
+  @override
+  State<_StaffCardWidget> createState() => _StaffCardWidgetState();
+}
+
+class _StaffCardWidgetState extends State<_StaffCardWidget> {
+  double? _calculatedWage;
+
+  void _showWageDialog(BuildContext context) {
+    final hoursController = TextEditingController();
+    
+    showDialog(
+      context: context,
+      builder: (ctx) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: Text("Calculate Wage for ${widget.name}", 
+            style: GoogleFonts.manrope(fontWeight: FontWeight.bold, fontSize: 18)
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Hourly Rate: \$${widget.hourlyRate.toStringAsFixed(2)}/hr",
+                style: GoogleFonts.manrope(fontSize: 14, color: Colors.grey.shade700),
+              ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: hoursController,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                decoration: InputDecoration(
+                  labelText: "Hours Worked",
+                  hintText: "e.g. 5.5",
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx),
+              child: Text("Cancel", style: GoogleFonts.manrope(color: Colors.grey)),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                final hours = double.tryParse(hoursController.text) ?? 0.0;
+                setState(() => _calculatedWage = hours * widget.hourlyRate);
+                Navigator.pop(ctx);
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: StaffAttendanceScreen.primaryColor,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              ),
+              child: Text("Calculate", style: GoogleFonts.manrope(color: Colors.white, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     Color statusColor = Colors.green;
     Color statusBgColor = Colors.green.shade50;
-    if (isAbsent) {
+    if (widget.isAbsent) {
       statusColor = Colors.red;
       statusBgColor = Colors.red.shade50;
-    } else if (isHalfDay) {
+    } else if (widget.isHalfDay) {
       statusColor = Colors.blue;
       statusBgColor = Colors.blue.shade50;
     }
@@ -282,17 +393,17 @@ class StaffAttendanceScreen extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(
-                        color: isLate ? Colors.orange.shade200 : (isAbsent ? Colors.transparent : primaryColor),
+                        color: widget.isLate ? Colors.orange.shade200 : (widget.isAbsent ? Colors.transparent : StaffAttendanceScreen.primaryColor),
                         width: 2,
                       ),
                     ),
                     child: CircleAvatar(
                       radius: 24,
-                      backgroundImage: NetworkImage(imageUrl),
+                      backgroundImage: NetworkImage(widget.imageUrl),
                       backgroundColor: Colors.grey.shade200,
-                      child: isAbsent ? ColorFiltered(
+                      child: widget.isAbsent ? ColorFiltered(
                         colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.saturation),
-                        child: CircleAvatar(radius: 24, backgroundImage: NetworkImage(imageUrl)),
+                        child: CircleAvatar(radius: 24, backgroundImage: NetworkImage(widget.imageUrl)),
                       ) : null,
                     ),
                   ),
@@ -301,24 +412,24 @@ class StaffAttendanceScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        name,
+                        widget.name,
                         style: GoogleFonts.manrope(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: textMain,
+                          color: StaffAttendanceScreen.textMain,
                         ),
                       ),
                       Row(
                         children: [
                           Text(
-                            role,
+                            widget.role,
                             style: GoogleFonts.manrope(
                               fontSize: 12,
                               fontWeight: FontWeight.w500,
                               color: Colors.grey,
                             ),
                           ),
-                          if (isLate) ...[
+                          if (widget.isLate) ...[
                             const SizedBox(width: 8),
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -350,7 +461,7 @@ class StaffAttendanceScreen extends StatelessWidget {
                 ),
                 child: Row(
                   children: [
-                    if (status == "Present")
+                    if (widget.status == "Present")
                       Container(
                         width: 6,
                         height: 6,
@@ -361,7 +472,7 @@ class StaffAttendanceScreen extends StatelessWidget {
                         ),
                       ),
                     Text(
-                      status,
+                      widget.status,
                       style: GoogleFonts.manrope(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
@@ -374,13 +485,13 @@ class StaffAttendanceScreen extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 16),
-          if (isAbsent)
+          if (widget.isAbsent)
              Align(
               alignment: Alignment.centerRight,
                child: TextButton(
                  onPressed: () {},
                  style: TextButton.styleFrom(
-                   backgroundColor: primaryColor,
+                   backgroundColor: StaffAttendanceScreen.primaryColor,
                    foregroundColor: Colors.white,
                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -395,16 +506,16 @@ class StaffAttendanceScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: backgroundLight,
+                      color: StaffAttendanceScreen.backgroundLight,
                       borderRadius: BorderRadius.circular(12),
-                      border: isLate ? Border.all(color: Colors.orange.shade100) : null,
+                      border: widget.isLate ? Border.all(color: Colors.orange.shade100) : null,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.login, size: 16, color: isLate ? Colors.orange.shade400 : Colors.grey.shade400),
+                            Icon(Icons.login, size: 16, color: widget.isLate ? Colors.orange.shade400 : Colors.grey.shade400),
                             const SizedBox(width: 4),
                             Text(
                               "In Time",
@@ -420,11 +531,11 @@ class StaffAttendanceScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
                           child: Text(
-                            inTime,
+                            widget.inTime,
                             style: GoogleFonts.manrope(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: textMain,
+                              color: StaffAttendanceScreen.textMain,
                             ),
                           ),
                         ),
@@ -437,7 +548,7 @@ class StaffAttendanceScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: backgroundLight,
+                      color: StaffAttendanceScreen.backgroundLight,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -446,9 +557,9 @@ class StaffAttendanceScreen extends StatelessWidget {
                         Row(
                           children: [
                             Icon(
-                              isHalfDay ? Icons.check_circle : Icons.logout,
+                              widget.isHalfDay ? Icons.check_circle : Icons.logout,
                               size: 16,
-                              color: isHalfDay ? primaryColor : Colors.grey.shade400,
+                              color: widget.isHalfDay ? StaffAttendanceScreen.primaryColor : Colors.grey.shade400,
                             ),
                             const SizedBox(width: 4),
                             Text(
@@ -465,11 +576,11 @@ class StaffAttendanceScreen extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
                           child: Text(
-                            outTime,
+                            widget.outTime,
                             style: GoogleFonts.manrope(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
-                              color: textMain,
+                              color: StaffAttendanceScreen.textMain,
                             ),
                           ),
                         ),
@@ -493,7 +604,7 @@ class StaffAttendanceScreen extends StatelessWidget {
                       Icon(Icons.schedule, size: 18, color: Colors.grey.shade400),
                       const SizedBox(width: 6),
                       Text(
-                        isHalfDay ? "Total: $activeTime" : "Active: $activeTime",
+                        widget.isHalfDay ? "Total: ${widget.activeTime}" : "Active: ${widget.activeTime}",
                         style: GoogleFonts.manrope(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -502,33 +613,59 @@ class StaffAttendanceScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (isHalfDay)
-                    Text(
-                      "Shift completed",
-                      style: GoogleFonts.manrope(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.grey.shade400,
+                  if (_calculatedWage != null)
+                    InkWell(
+                      onTap: () => _showWageDialog(context),
+                      borderRadius: BorderRadius.circular(12),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade50,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.green.shade300),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.payments, size: 18, color: Colors.green.shade700),
+                            const SizedBox(width: 6),
+                            Text(
+                              "Wage: \$${_calculatedWage!.toStringAsFixed(2)}",
+                              style: GoogleFonts.manrope(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.green.shade800,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   else
                     InkWell(
-                      onTap: () {},
+                      onTap: () => _showWageDialog(context),
                       borderRadius: BorderRadius.circular(8),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF2F4F4),
+                          color: StaffAttendanceScreen.primaryColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: StaffAttendanceScreen.primaryColor.withOpacity(0.3)),
                         ),
-                        child: Text(
-                          "Check Out",
-                          style: GoogleFonts.manrope(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: textMain,
-                          ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.calculate, size: 16, color: StaffAttendanceScreen.primaryColor),
+                            const SizedBox(width: 6),
+                            Text(
+                              "Calculate Wage",
+                              style: GoogleFonts.manrope(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                                color: StaffAttendanceScreen.primaryColor,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
